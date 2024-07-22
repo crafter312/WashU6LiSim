@@ -1,0 +1,4 @@
+*.png
+*.root
+*.zip
+/bin/*.o

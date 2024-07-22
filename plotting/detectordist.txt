@@ -1,0 +1,915 @@
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 5e-05
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.002736
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.010079
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.022141
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.037062
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.054912
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.072056
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.08631
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.100642
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.113927
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.125698
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.138111
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.149293
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.159068
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.16845
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.177354
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.185246
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.191942
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.19851
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.204427
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.209059
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.213627
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.216055
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.219425
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.221272
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.22304
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.224922
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.225088
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.224924
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.224582
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.224879
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.223191
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.222472
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.220904
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.219924
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.218785
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.217364
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.216268
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.213747
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.212259
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.210602
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.208671
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.205735
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.204546
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.200929
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.200415
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.197333
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.195096
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.191876
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.189365
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.188389
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.185398
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.183169
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.180698
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.177995
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.175394
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.172232
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.170093
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.166983
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.163974
+Q 9.97387
+energy loss of proton on polyethylene  E/A Mev/mg/cm2
+energy loss of He-6 on polyethylene  E/A Mev/mg/cm2
+Differential Cross Section filename /home/n.dronchi/Documents/Li7Excited/Li7out_saved/new_36_fort.202
+0
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+detection efficiency = 0.16126

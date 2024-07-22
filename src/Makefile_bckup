@@ -1,0 +1,20 @@
+OBJECTS = decay.o frag.o fragneut.o Gobiarray.o Neutarray.o loss.o mScat.o random.o frame.o fragment.o tele.o correlations.o
+ALLOBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+CFLAGS= -c -ggdb -std=c++11 -I$(shell root-config --incdir) -I/usr/local/include/gsl $(shell gsl-config --cflags)  
+COMPILER= c++
+LINKOPTION = -lgsl -lgslcblas $(shell root-config --libs) 
+
+
+sim: sim.o $(OBJECTS)
+	$(COMPILER) -o sim sim.o $(OBJECTS) $(LINKOPTION)
+ 
+$(ALLOBJECTS): %.o : %.cpp
+	$(COMPILER) $(CFLAGS) $< -o $@
+
+
+clean:
+	rm -f *.o
+
+multi: simmulti.o $(OBJECTS)
+	$(COMPILER) -o simmulti simmulti.o $(OBJECTS) $(LINKOPTION)
+  

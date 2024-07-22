@@ -1,0 +1,105 @@
+#include <stdexcept>
+#include <sstream>
+#include <iomanip>
+
+void plot_resolution(){
+
+  bool save = true;
+  
+  TCanvas *c1 = new TCanvas();
+  if (save) c1->SetWindowSize(1600,1200);
+  if (!save) c1->SetWindowSize(1280,960);
+  c1->SetRightMargin(0.09);
+  c1->SetLeftMargin(0.15);
+  c1->SetBottomMargin(0.15);
+  gPad->SetTickx();
+  gPad->SetTicky();
+  
+  TFile *input = new TFile("/home/n.dronchi/Documents/li7sim/simmulti_resolution.root", "read");
+  
+  TTree *tree = (TTree*)input->Get("tree");
+  
+  double eff,sigma,sigma_err,Ex,distanceFromTarget,thickness;
+  int entries = tree->GetEntries();
+  
+  tree->SetBranchAddress("eff", &eff);
+  tree->SetBranchAddress("sigma", &sigma);
+  tree->SetBranchAddress("sigma_err", &sigma_err);  
+  tree->SetBranchAddress("Ex", &Ex);
+  tree->SetBranchAddress("distanceFromTarget", &distanceFromTarget);
+  tree->SetBranchAddress("thickness", &thickness);
+
+ 
+  
+  const int Ex_num = 5;
+  const int thick_num = 20;
+  
+  if (Ex_num*thick_num != entries) throw invalid_argument("Ex_num*dist_num != entries");
+  
+  TGraphErrors *gr[Ex_num];// = new TGraph();
+  TLegend *legend = new TLegend(0.15, 0.65, 0.48, 0.9);
+  
+  int index = 0;
+  for (int Ex_i=0; Ex_i<Ex_num; Ex_i++){
+    gr[Ex_i] = new TGraphErrors();
+    
+    for (int thick_i=0; thick_i<thick_num; thick_i++){
+      index = Ex_i*thick_num + thick_i;
+      tree->GetEntry(index);
+      cout << index << " " << sigma << " " << sigma_err << " " << Ex << " " << thickness << endl;
+      gr[Ex_i]->SetPoint(thick_i, thickness, sigma*2.355*1000);
+      gr[Ex_i]->SetPointError(thick_i, 0, sigma_err*2.355*1000);
+      
+    }
+  }
+ 
+  gr[0]->SetTitle("Ex_S Resolution (no gate on transverse)");
+  gr[0]->GetXaxis()->SetTitle("Target Thickness (mg/cm^2)");
+  gr[0]->GetYaxis()->SetTitle("fwhm_{Ex} (keV)");
+  gr[0]->GetXaxis()->SetTitleSize(0.05);
+  gr[0]->GetYaxis()->SetTitleSize(0.05);
+  gr[0]->GetXaxis()->SetLabelSize(0.05);
+  gr[0]->GetYaxis()->SetLabelSize(0.05);
+  gr[0]->GetXaxis()->CenterTitle();
+  gr[0]->GetYaxis()->CenterTitle();
+  gr[0]->GetYaxis()->SetRangeUser(0,120);
+  
+  gr[0]->SetLineColor(1);
+  gr[0]->SetLineStyle(2);
+  gr[0]->SetMarkerStyle(20);
+  gr[0]->SetMarkerColor(1);
+  gr[0]->SetMarkerSize(2);
+
+  gr[0]->Draw("ACP");
+    
+  for (int Ex_i=1; Ex_i<Ex_num; Ex_i++){
+    gr[Ex_i]->SetLineColor(Ex_i+1);
+    gr[Ex_i]->SetMarkerColor(Ex_i+1);
+    if (Ex_i == 4){ gr[Ex_i]->SetLineColor(6); gr[Ex_i]->SetMarkerColor(6);}
+    gr[Ex_i]->SetMarkerStyle(Ex_i+20);
+    gr[Ex_i]->SetMarkerSize(2);
+    gr[Ex_i]->SetLineStyle(2);
+    gr[Ex_i]->Draw("CP");
+  }
+  
+  int line_num = 6;
+  for (int i=1; i<line_num; i++){
+    TLine *line = new TLine(0.6*i, 0, 0.6*i, 3);
+    line->SetLineColor(kRed);
+    line->Draw();
+  }
+  
+  for (int Ex_i=0; Ex_i<Ex_num; Ex_i++){
+    ostringstream leg;
+    leg << "Ex = 10." << Ex_i << "MeV";
+    legend->AddEntry(gr[Ex_i], leg.str().c_str());
+  }
+  legend->SetTextSize(0.05);
+  
+  legend->Draw();
+
+  if (save) c1->Print("plotting/resolution_thick.png", "png");
+  if (save) c1->Print("plotting/resolution_thick.svg", "svg");
+}
+
+
