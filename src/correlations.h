@@ -11,6 +11,25 @@
 
 using namespace std;
 
+struct SampledValues {
+	// Elastic values
+	double phi{-1};          // azimuthal angle sampled from uniform distribution
+	double thetaElastic{-1}; // sampled elastic polar angle in lab frame
+
+	// Inelastic values
+	double thetaLab{-1};     // lab angle of outgoing projectile
+	double Vpplab{-1};       // lab velocity of outgoing projectile
+	double VppX{-1};         // lab velocity x component
+	double VppY{-1};         // lab velocity y component
+	double VppZ{-1};         // lab velocity z component
+
+	void CalculateCartesian() {
+		VppX = Vpplab * sin(thetaLab) * cos(phi); // x
+		VppY = Vpplab * sin(thetaLab) * sin(phi); // y
+		VppZ = Vpplab * cos(thetaLab);            // z
+	};
+};
+
 class Correlations {
   public:
     Correlations(string*, string, double, double, double*, double*, size_t);
@@ -22,13 +41,12 @@ class Correlations {
 		double E;            // incoming beam energy
     double Exp;          // projectile excitation energy
 		double Ext;          // target excitation energy
-    double phi;          // azimuthal angle sampled from uniform distribution
     double thetaCM;      // sampled inelastic polar angle in CM frame
-    double thetaElastic; // sampled elastic polar angle in lab frame
-		double thetaLab;     // lab angle of outgoing projectile
-    double Vpplab;       // lab velocity of outgoing projectile
     double thetaTarg;    // lab angle of outgoing target
     double Vttlab;       // lab velocity of outgoing target
+
+		// Kinematic values to be saved
+		SampledValues sampledValues;
 
 		// Inelastic exit channel input
 		string *filenames;  // inelastic input file names

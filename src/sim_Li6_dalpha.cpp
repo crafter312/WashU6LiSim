@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 
 	// Q value here is calculated opposite from how it should to be,
 	// so I added a negative sign to the console output
-	double Q = Mass_d + Mass_alpha - Mass_6Li;
+	double Q = mass_d + mass_alpha - mass_6Li;
   cout << "Q " << -1 * Q << endl;
 
 	// Physical experiment parameters
@@ -147,13 +147,13 @@ int main(int argc, char *argv[]) {
 		/**** BEAM FRAGMENT PHYSICS ****/
 
 		// set angular properties of beam fragment for elastic scattering case
-		output.SetThetaElastP(sampler->thetaElastic * rad_to_deg);
-    fragBeam->real->theta = sampler->thetaElastic;
-    fragBeam->real->phi = sampler->phi;
+		output.SetThetaElastP(sampler->sampledValues.thetaElastic * rad_to_deg);
+    fragBeam->real->theta = sampler->sampledValues.thetaElastic;
+    fragBeam->real->phi = sampler->sampledValues.phi;
     fragBeam->real->energy = Ebeam; //~6.1MeV/u Li-7
-    fragBeam->real->v[0] = sin(sampler->thetaElastic) * cos(sampler->phi);
-    fragBeam->real->v[1] = sin(sampler->thetaElastic) * sin(sampler->phi);
-    fragBeam->real->v[2] = cos(sampler->thetaElastic);
+    fragBeam->real->v[0] = sin(sampler->sampledValues.thetaElastic) * cos(sampler->sampledValues.phi);
+    fragBeam->real->v[1] = sin(sampler->sampledValues.thetaElastic) * sin(sampler->sampledValues.phi);
+    fragBeam->real->v[2] = cos(sampler->sampledValues.thetaElastic);
 
     // determine if the beam hits the detector
     fragBeam->targetInteraction(dthick, thickness);
@@ -170,12 +170,12 @@ int main(int argc, char *argv[]) {
     // add kinematics to the charged particles
     // velocity vector of parent fragment, z axis is beam axis
     double VVparent[3];
-    VVparent[0] = sampler->Vpplab * sin(sampler->thetaLab) * cos(sampler->phi); // x
-    VVparent[1] = sampler->Vpplab * sin(sampler->thetaLab) * sin(sampler->phi); // y
-    VVparent[2] = sampler->Vpplab * cos(sampler->thetaLab);                     // z
+    VVparent[0] = sampler->sampledValues.VppX; // x
+    VVparent[1] = sampler->sampledValues.VppY; // y
+    VVparent[2] = sampler->sampledValues.VppZ; // z
 
 		// save info on beam primary distributions
-		output.SetPrimary(sampler->Vpplab, VVparent[0], VVparent[1], VVparent[2], sampler->phi * rad_to_deg, sampler->thetaLab * rad_to_deg);
+		output.SetPrimary(sampler->sampledValues.Vpplab, VVparent[0], VVparent[1], VVparent[2], sampler->sampledValues.phi * rad_to_deg, sampler->sampledValues.thetaLab * rad_to_deg);
 
     // decay parent fragment, add sets velocity vectors of fragments to the seperation
     decay.Mode2Body(Ex, gamma, Q);
