@@ -18,7 +18,6 @@ RootOutput::RootOutput(string suffix, int n) {
 	/**** Initialize tree ****/
 
 	t = new TTree("t", "t");
-	t->Branch("parentPrimary", &parentPrimary);
   t->Branch("parentSecondary", &parentSecondary);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
@@ -94,7 +93,6 @@ void RootOutput::Fill() {
 }
 
 void RootOutput::Clear() {
-	parentPrimary.clear();
 	parentSecondary.clear();
 	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i].clear();
@@ -120,19 +118,6 @@ void RootOutput::Clear() {
 // The first six inputs are for the case of inelastic scattering,
 // with this instance being for the "primary" distribution (prior to
 // detection, reconstruction, etc.)
-void RootOutput::SetPrimary(double v, double vx, double vy, double vz, double p, double th) {
-	parentPrimary.vel         = v;
-	parentPrimary.velx        = vx;
-	parentPrimary.vely        = vy;
-	parentPrimary.velz        = vz;
-	parentPrimary.phi         = p;
-	parentPrimary.theta       = th;
-
-	hist_vel_P->Fill(v);
-  hist_theta_P->Fill(th);
-  hist_phi_P->Fill(p);
-	kinematic_circle->Fill(vx, vz);
-}
 
 // Input: SEE PREVIOUS FUNCTION
 // These parameters are the same as the previous function, except that
@@ -222,7 +207,11 @@ void RootOutput::SetIsFragDet(bool h) {
 void RootOutput::SetSampledValues(SampledValues* s) {
 	sampler = *s;
 
+	hist_phi_P->Fill(sampler.phi);
 	hist_theta_beam_P->Fill(sampler.thetaElastic);
+	hist_theta_P->Fill(sampler.thetaLab);
+	hist_vel_P->Fill(sampler.Vpplab);
+	kinematic_circle->Fill(sampler.VppX, sampler.VppZ);
 }
 
 

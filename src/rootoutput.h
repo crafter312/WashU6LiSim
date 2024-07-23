@@ -86,7 +86,6 @@ class RootOutput {
 		void Fill();
 		void Clear();
 
-		void SetPrimary(double, double, double, double, double, double);
 		void SetSecondary(double, double, double);
 		void SetFragment(int, double, double, double, double, double);
 		void SetThetaNeut(double);
@@ -120,7 +119,6 @@ class RootOutput {
   	TH1I* hist_Ex;
   	TH1F* cos_thetaH;
 
-		PFragS parentPrimary {};
 		PFragS parentSecondary {};
 		CFragS* chargedFragments;
 		int nFrags;

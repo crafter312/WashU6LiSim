@@ -24,13 +24,14 @@ class SampledValues {
 		double GetThetaElasticRad();
 		double GetThetaLabRad();
 
-		// Elastic values
 		double phi{-1};          // azimuthal angle sampled from uniform distribution in degrees
+
+		// Elastic values
 		double thetaElastic{-1}; // sampled elastic polar angle in lab frame in degrees
 
 		// Inelastic values
 		double thetaLab{-1};     // lab angle of outgoing projectile in degrees
-		double Vpplab{-1};       // lab velocity of outgoing projectile
+		double Vpplab{-1};       // total lab velocity of outgoing projectile
 		double VppX{-1};         // lab velocity x component
 		double VppY{-1};         // lab velocity y component
 		double VppZ{-1};         // lab velocity z component

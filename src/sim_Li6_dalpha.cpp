@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
 
     // need to re-randomize the angles for each passthrough
     sampler->randomAngles();
-		output.SetSampledValues(&sampler->sampledValues);
+		output.SetSampledValues(&sampler->sampledValues); // save info on beam primary distributions
 
     //add kinematics to beam
     //simulate MARS having +-1.2% acceptance range
@@ -169,22 +169,15 @@ int main(int argc, char *argv[]) {
 
 		/**** PARENT FRAGMENT PHYSICS ****/
 
-    // add kinematics to the charged particles
-    // velocity vector of parent fragment, z axis is beam axis
-    double VVparent[3];
-    VVparent[0] = sampler->sampledValues.VppX; // x
-    VVparent[1] = sampler->sampledValues.VppY; // y
-    VVparent[2] = sampler->sampledValues.VppZ; // z
-
-		// save info on beam primary distributions
-		output.SetPrimary(sampler->sampledValues.Vpplab, VVparent[0], VVparent[1], VVparent[2], sampler->sampledValues.phi * rad_to_deg, sampler->sampledValues.thetaLab * rad_to_deg);
-
     // decay parent fragment, add sets velocity vectors of fragments to the seperation
     decay.Mode2Body(Ex, gamma, Q);
-
 		output.SetErelP(decay.ET);
 
     // transfrom decay vectors to lab frame by adding initial velocity of parent Li7 to all fragments
+		double VVparent[3];
+    VVparent[0] = sampler->sampledValues.VppX; // x
+    VVparent[1] = sampler->sampledValues.VppY; // y
+    VVparent[2] = sampler->sampledValues.VppZ; // z
     for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
 
     // interaction of fragements in target material. Calcs energy loss in target, change in scatter angle,
