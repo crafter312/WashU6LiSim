@@ -3,6 +3,9 @@
  * Created: 22 May 2024
  */
 
+#ifndef _rootoutput
+#define _rootoutput
+
 #include <math.h>
 
 #include "TFile.h"
@@ -10,8 +13,9 @@
 #include "TH1F.h"
 #include "TH2S.h"
 
-#include "frame.h"
 #include "constants.h"
+#include "correlations.h"
+#include "frame.h"
 
 using namespace std;
 
@@ -65,7 +69,6 @@ struct CFragS {
  * This handles the output file, histograms, and tree from the simulation.
  */
 class RootOutput {
-
 	public:
   	TH2I* DEE;
   	TH1F* protonenergy;
@@ -95,6 +98,8 @@ class RootOutput {
 		void SetCosThetaH(double);
 		void SetIsElasticHit(int);
 		void SetIsFragDet(bool);
+
+		void SetSampledValues(SampledValues*);
 
 	private:
 		TFile* file;
@@ -130,8 +135,7 @@ class RootOutput {
 		int isElasticHit { -1 };
 		bool isFragDet { 0 };
 
+		SampledValues sampler {};
 };
 
-
-
-
+#endif

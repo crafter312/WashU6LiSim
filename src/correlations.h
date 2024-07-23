@@ -28,6 +28,16 @@ struct SampledValues {
 		VppY = Vpplab * sin(thetaLab) * sin(phi); // y
 		VppZ = Vpplab * cos(thetaLab);            // z
 	};
+
+	void Clear() {
+		phi = -1;
+		thetaElastic = -1;
+		thetaLab = -1;
+		Vpplab = -1;
+		VppX = -1;
+		VppY = -1;
+		VppZ = -1;
+	};
 };
 
 class Correlations {

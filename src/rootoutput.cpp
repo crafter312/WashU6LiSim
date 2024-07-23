@@ -28,6 +28,8 @@ RootOutput::RootOutput(string suffix, int n) {
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
 
+	t->Branch("sampler", &sampler);
+
 	// Decay fragments
 	chargedFragments = new CFragS[nFrags];
 	for (int i=0; i<nFrags; i++)
@@ -105,6 +107,8 @@ void RootOutput::Clear() {
 	cosThetaH = NAN;
 	isElasticHit = -1;
 	isFragDet = false;
+
+	sampler.Clear();
 }
 
 // Input:
@@ -219,6 +223,11 @@ void RootOutput::SetIsElasticHit(int h) {
 // in the Si detectors
 void RootOutput::SetIsFragDet(bool h) {
 	isFragDet = h;
+}
+
+// Set values sampled from (in)elastic angular distributions
+void RootOutput::SetSampledValues(SampledValues* s) {
+	sampler = *s;
 }
 
 

@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
 
     // need to re-randomize the angles for each passthrough
     sampler->randomAngles();
+		output.SetSampledValues(&sampler->sampledValues);
 
     //add kinematics to beam
     //simulate MARS having +-1.2% acceptance range

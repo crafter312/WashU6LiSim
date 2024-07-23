@@ -44,96 +44,6 @@
 namespace std {} using namespace std;
 
 namespace ROOT {
-   static TClass *PFragS_Dictionary();
-   static void PFragS_TClassManip(TClass*);
-   static void *new_PFragS(void *p = nullptr);
-   static void *newArray_PFragS(Long_t size, void *p);
-   static void delete_PFragS(void *p);
-   static void deleteArray_PFragS(void *p);
-   static void destruct_PFragS(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::PFragS*)
-   {
-      ::PFragS *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::PFragS));
-      static ::ROOT::TGenericClassInfo 
-         instance("PFragS", "src/rootoutput.h", 23,
-                  typeid(::PFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &PFragS_Dictionary, isa_proxy, 4,
-                  sizeof(::PFragS) );
-      instance.SetNew(&new_PFragS);
-      instance.SetNewArray(&newArray_PFragS);
-      instance.SetDelete(&delete_PFragS);
-      instance.SetDeleteArray(&deleteArray_PFragS);
-      instance.SetDestructor(&destruct_PFragS);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::PFragS*)
-   {
-      return GenerateInitInstanceLocal((::PFragS*)nullptr);
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::PFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
-
-   // Dictionary for non-ClassDef classes
-   static TClass *PFragS_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::PFragS*)nullptr)->GetClass();
-      PFragS_TClassManip(theClass);
-   return theClass;
-   }
-
-   static void PFragS_TClassManip(TClass* ){
-   }
-
-} // end of namespace ROOT
-
-namespace ROOT {
-   static TClass *CFragS_Dictionary();
-   static void CFragS_TClassManip(TClass*);
-   static void *new_CFragS(void *p = nullptr);
-   static void *newArray_CFragS(Long_t size, void *p);
-   static void delete_CFragS(void *p);
-   static void deleteArray_CFragS(void *p);
-   static void destruct_CFragS(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CFragS*)
-   {
-      ::CFragS *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CFragS));
-      static ::ROOT::TGenericClassInfo 
-         instance("CFragS", "src/rootoutput.h", 47,
-                  typeid(::CFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &CFragS_Dictionary, isa_proxy, 4,
-                  sizeof(::CFragS) );
-      instance.SetNew(&new_CFragS);
-      instance.SetNewArray(&newArray_CFragS);
-      instance.SetDelete(&delete_CFragS);
-      instance.SetDeleteArray(&deleteArray_CFragS);
-      instance.SetDestructor(&destruct_CFragS);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::CFragS*)
-   {
-      return GenerateInitInstanceLocal((::CFragS*)nullptr);
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::CFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
-
-   // Dictionary for non-ClassDef classes
-   static TClass *CFragS_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::CFragS*)nullptr)->GetClass();
-      CFragS_TClassManip(theClass);
-   return theClass;
-   }
-
-   static void CFragS_TClassManip(TClass* ){
-   }
-
-} // end of namespace ROOT
-
-namespace ROOT {
    static TClass *SampledValues_Dictionary();
    static void SampledValues_TClassManip(TClass*);
    static void *new_SampledValues(void *p = nullptr);
@@ -179,6 +89,117 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *PFragS_Dictionary();
+   static void PFragS_TClassManip(TClass*);
+   static void *new_PFragS(void *p = nullptr);
+   static void *newArray_PFragS(Long_t size, void *p);
+   static void delete_PFragS(void *p);
+   static void deleteArray_PFragS(void *p);
+   static void destruct_PFragS(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::PFragS*)
+   {
+      ::PFragS *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::PFragS));
+      static ::ROOT::TGenericClassInfo 
+         instance("PFragS", "src/rootoutput.h", 27,
+                  typeid(::PFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &PFragS_Dictionary, isa_proxy, 4,
+                  sizeof(::PFragS) );
+      instance.SetNew(&new_PFragS);
+      instance.SetNewArray(&newArray_PFragS);
+      instance.SetDelete(&delete_PFragS);
+      instance.SetDeleteArray(&deleteArray_PFragS);
+      instance.SetDestructor(&destruct_PFragS);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::PFragS*)
+   {
+      return GenerateInitInstanceLocal((::PFragS*)nullptr);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::PFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *PFragS_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::PFragS*)nullptr)->GetClass();
+      PFragS_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void PFragS_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   static TClass *CFragS_Dictionary();
+   static void CFragS_TClassManip(TClass*);
+   static void *new_CFragS(void *p = nullptr);
+   static void *newArray_CFragS(Long_t size, void *p);
+   static void delete_CFragS(void *p);
+   static void deleteArray_CFragS(void *p);
+   static void destruct_CFragS(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::CFragS*)
+   {
+      ::CFragS *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CFragS));
+      static ::ROOT::TGenericClassInfo 
+         instance("CFragS", "src/rootoutput.h", 51,
+                  typeid(::CFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &CFragS_Dictionary, isa_proxy, 4,
+                  sizeof(::CFragS) );
+      instance.SetNew(&new_CFragS);
+      instance.SetNewArray(&newArray_CFragS);
+      instance.SetDelete(&delete_CFragS);
+      instance.SetDeleteArray(&deleteArray_CFragS);
+      instance.SetDestructor(&destruct_CFragS);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::CFragS*)
+   {
+      return GenerateInitInstanceLocal((::CFragS*)nullptr);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::CFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *CFragS_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::CFragS*)nullptr)->GetClass();
+      CFragS_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void CFragS_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_SampledValues(void *p) {
+      return  p ? new(p) ::SampledValues : new ::SampledValues;
+   }
+   static void *newArray_SampledValues(Long_t nElements, void *p) {
+      return p ? new(p) ::SampledValues[nElements] : new ::SampledValues[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_SampledValues(void *p) {
+      delete ((::SampledValues*)p);
+   }
+   static void deleteArray_SampledValues(void *p) {
+      delete [] ((::SampledValues*)p);
+   }
+   static void destruct_SampledValues(void *p) {
+      typedef ::SampledValues current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::SampledValues
+
+namespace ROOT {
    // Wrappers around operator new
    static void *new_PFragS(void *p) {
       return  p ? new(p) ::PFragS : new ::PFragS;
@@ -220,27 +241,6 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::CFragS
 
-namespace ROOT {
-   // Wrappers around operator new
-   static void *new_SampledValues(void *p) {
-      return  p ? new(p) ::SampledValues : new ::SampledValues;
-   }
-   static void *newArray_SampledValues(Long_t nElements, void *p) {
-      return p ? new(p) ::SampledValues[nElements] : new ::SampledValues[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_SampledValues(void *p) {
-      delete ((::SampledValues*)p);
-   }
-   static void deleteArray_SampledValues(void *p) {
-      delete [] ((::SampledValues*)p);
-   }
-   static void destruct_SampledValues(void *p) {
-      typedef ::SampledValues current_t;
-      ((current_t*)p)->~current_t();
-   }
-} // end of namespace ROOT for class ::SampledValues
-
 namespace {
   void TriggerDictionaryInitialization_libLi6sim_Impl() {
     static const char* headers[] = {
@@ -259,9 +259,9 @@ nullptr
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
+struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  PFragS;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
-struct __attribute__((annotate("$clingAutoload$src/correlations.h")))  SampledValues;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libLi6sim dictionary payload"
