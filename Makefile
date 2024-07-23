@@ -4,7 +4,7 @@ BIN = bin
 # List sources manually to exclude sim.cpp and simmulti.cpp
 SOURCE = decay.cpp frag.cpp Gobbiarray.cpp loss.cpp polyScat.cpp mScat.cpp random.cpp frame.cpp tele.cpp correlations.cpp rootoutput.cpp
 OBJECT = $(patsubst %, $(BIN)/%, $(notdir $(SOURCE:.cpp=.o)))
-HEADER = rootoutput.h
+HEADER = rootoutput.h correlations.h
 DICTSRC = $(patsubst %, $(SRC)/%, $(HEADER))
 LIB = /home/Li6Webb/simlib/simlib.a
 

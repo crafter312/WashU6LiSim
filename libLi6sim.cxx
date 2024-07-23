@@ -36,6 +36,7 @@
 
 // Header files passed as explicit arguments
 #include "src/rootoutput.h"
+#include "src/correlations.h"
 
 // Header files passed via #pragma extra_include
 
@@ -133,6 +134,51 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *SampledValues_Dictionary();
+   static void SampledValues_TClassManip(TClass*);
+   static void *new_SampledValues(void *p = nullptr);
+   static void *newArray_SampledValues(Long_t size, void *p);
+   static void delete_SampledValues(void *p);
+   static void deleteArray_SampledValues(void *p);
+   static void destruct_SampledValues(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::SampledValues*)
+   {
+      ::SampledValues *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::SampledValues));
+      static ::ROOT::TGenericClassInfo 
+         instance("SampledValues", "src/correlations.h", 14,
+                  typeid(::SampledValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &SampledValues_Dictionary, isa_proxy, 4,
+                  sizeof(::SampledValues) );
+      instance.SetNew(&new_SampledValues);
+      instance.SetNewArray(&newArray_SampledValues);
+      instance.SetDelete(&delete_SampledValues);
+      instance.SetDeleteArray(&deleteArray_SampledValues);
+      instance.SetDestructor(&destruct_SampledValues);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::SampledValues*)
+   {
+      return GenerateInitInstanceLocal((::SampledValues*)nullptr);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::SampledValues*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *SampledValues_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::SampledValues*)nullptr)->GetClass();
+      SampledValues_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void SampledValues_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
    // Wrappers around operator new
    static void *new_PFragS(void *p) {
       return  p ? new(p) ::PFragS : new ::PFragS;
@@ -174,10 +220,32 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::CFragS
 
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_SampledValues(void *p) {
+      return  p ? new(p) ::SampledValues : new ::SampledValues;
+   }
+   static void *newArray_SampledValues(Long_t nElements, void *p) {
+      return p ? new(p) ::SampledValues[nElements] : new ::SampledValues[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_SampledValues(void *p) {
+      delete ((::SampledValues*)p);
+   }
+   static void deleteArray_SampledValues(void *p) {
+      delete [] ((::SampledValues*)p);
+   }
+   static void destruct_SampledValues(void *p) {
+      typedef ::SampledValues current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::SampledValues
+
 namespace {
   void TriggerDictionaryInitialization_libLi6sim_Impl() {
     static const char* headers[] = {
 "src/rootoutput.h",
+"src/correlations.h",
 nullptr
     };
     static const char* includePaths[] = {
@@ -193,6 +261,7 @@ nullptr
 extern int __Cling_AutoLoading_Map;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  PFragS;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
+struct __attribute__((annotate("$clingAutoload$src/correlations.h")))  SampledValues;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libLi6sim dictionary payload"
@@ -201,12 +270,14 @@ struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 #define _BACKWARD_BACKWARD_WARNING_H
 // Inline headers
 #include "src/rootoutput.h"
+#include "src/correlations.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
 "CFragS", payloadCode, "@",
 "PFragS", payloadCode, "@",
+"SampledValues", payloadCode, "@",
 nullptr
 };
     static bool isInitialized = false;
