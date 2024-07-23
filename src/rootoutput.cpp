@@ -99,7 +99,6 @@ void RootOutput::Clear() {
 	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i].clear();
 	thetaNeut = -1;
-	thetaElastP = -1;
 	thetaElastS = -1;
 	ErelP = -1;
 	ErelS = -1;
@@ -174,17 +173,11 @@ void RootOutput::SetThetaNeut(double nth) {
 	hist_neut_theta->Fill(nth);
 }
 
-// Primary elastic scattering polar angle
-void RootOutput::SetThetaElastP(double thEl) {
-	thetaElastP = thEl;
-	hist_theta_beam_P->Fill(thEl);
-}
-
 // Secondary elastic scattering polar angle
 // Assumes primary elastic scattering polar angle has already been set
 void RootOutput::SetThetaElastS(double thEl) {
 	thetaElastS = thEl;
-	hist_theta_beam_S_sharp->Fill(thetaElastP);
+	hist_theta_beam_S_sharp->Fill(sampler.thetaElastic);
   hist_theta_beam_S_recon->Fill(thEl);
 }
 
@@ -228,6 +221,8 @@ void RootOutput::SetIsFragDet(bool h) {
 // Set values sampled from (in)elastic angular distributions
 void RootOutput::SetSampledValues(SampledValues* s) {
 	sampler = *s;
+
+	hist_theta_beam_P->Fill(sampler.thetaElastic);
 }
 
 

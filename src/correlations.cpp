@@ -7,6 +7,40 @@
 
 using namespace std;
 
+SampledValues::SampledValues() {}
+
+SampledValues::~SampledValues() {}
+
+void SampledValues::Clear() {
+	phi = -1;
+	thetaElastic = -1;
+	thetaLab = -1;
+	Vpplab = -1;
+	VppX = -1;
+	VppY = -1;
+	VppZ = -1;
+}
+
+void SampledValues::CalculateCartesian() {
+	VppX = Vpplab * sin(thetaLab) * cos(phi); // x
+	VppY = Vpplab * sin(thetaLab) * sin(phi); // y
+	VppZ = Vpplab * cos(thetaLab);            // z
+}
+
+double SampledValues::GetPhiRad() {
+	return phi * rad_to_deg;
+}
+
+double SampledValues::GetThetaElasticRad() {
+	return thetaElastic * rad_to_deg;
+}
+
+double SampledValues::GetThetaLabRad() {
+	return thetaLab * rad_to_deg;
+}
+
+/**********************************************************************************************/
+
 Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n) {
 	CRandom ran;
 	filenames = filenamein;
@@ -153,6 +187,11 @@ void Correlations::calculateLabAngles() {
 	/**** lab velocity and angle of the target ****/
 	Vttlab = sqrt((Vxttlab * Vxttlab) + (Vzttlab * Vzttlab));
 	thetaTarg = acos(Vzttlab / Vttlab);
+
+	// Convert angles to degrees
+	sampledValues.phi *= rad_to_deg;
+	sampledValues.thetaElastic *= rad_to_deg;
+	sampledValues.thetaLab *= rad_to_deg;
 }
 
 // Elastic scattering angles are converted to the lab frame when reading the file

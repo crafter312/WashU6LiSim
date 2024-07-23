@@ -259,7 +259,7 @@ nullptr
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
-struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
+class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  PFragS;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTFWDDCLS";

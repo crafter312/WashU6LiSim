@@ -11,33 +11,29 @@
 
 using namespace std;
 
-struct SampledValues {
-	// Elastic values
-	double phi{-1};          // azimuthal angle sampled from uniform distribution
-	double thetaElastic{-1}; // sampled elastic polar angle in lab frame
+class SampledValues {
+	public:
+		SampledValues();
+		~SampledValues();
 
-	// Inelastic values
-	double thetaLab{-1};     // lab angle of outgoing projectile
-	double Vpplab{-1};       // lab velocity of outgoing projectile
-	double VppX{-1};         // lab velocity x component
-	double VppY{-1};         // lab velocity y component
-	double VppZ{-1};         // lab velocity z component
+		void Clear();
 
-	void CalculateCartesian() {
-		VppX = Vpplab * sin(thetaLab) * cos(phi); // x
-		VppY = Vpplab * sin(thetaLab) * sin(phi); // y
-		VppZ = Vpplab * cos(thetaLab);            // z
-	};
+		void CalculateCartesian();
+		
+		double GetPhiRad();
+		double GetThetaElasticRad();
+		double GetThetaLabRad();
 
-	void Clear() {
-		phi = -1;
-		thetaElastic = -1;
-		thetaLab = -1;
-		Vpplab = -1;
-		VppX = -1;
-		VppY = -1;
-		VppZ = -1;
-	};
+		// Elastic values
+		double phi{-1};          // azimuthal angle sampled from uniform distribution in degrees
+		double thetaElastic{-1}; // sampled elastic polar angle in lab frame in degrees
+
+		// Inelastic values
+		double thetaLab{-1};     // lab angle of outgoing projectile in degrees
+		double Vpplab{-1};       // lab velocity of outgoing projectile
+		double VppX{-1};         // lab velocity x component
+		double VppY{-1};         // lab velocity y component
+		double VppZ{-1};         // lab velocity z component
 };
 
 class Correlations {

@@ -148,13 +148,14 @@ int main(int argc, char *argv[]) {
 		/**** BEAM FRAGMENT PHYSICS ****/
 
 		// set angular properties of beam fragment for elastic scattering case
-		output.SetThetaElastP(sampler->sampledValues.thetaElastic * rad_to_deg);
-    fragBeam->real->theta = sampler->sampledValues.thetaElastic;
-    fragBeam->real->phi = sampler->sampledValues.phi;
+		double thetaElastic = sampler->sampledValues.GetThetaElasticRad();
+		double phi = sampler->sampledValues.GetPhiRad();
+    fragBeam->real->theta = thetaElastic;
+    fragBeam->real->phi = phi;
     fragBeam->real->energy = Ebeam; //~6.1MeV/u Li-7
-    fragBeam->real->v[0] = sin(sampler->sampledValues.thetaElastic) * cos(sampler->sampledValues.phi);
-    fragBeam->real->v[1] = sin(sampler->sampledValues.thetaElastic) * sin(sampler->sampledValues.phi);
-    fragBeam->real->v[2] = cos(sampler->sampledValues.thetaElastic);
+    fragBeam->real->v[0] = sin(thetaElastic) * cos(phi);
+    fragBeam->real->v[1] = sin(thetaElastic) * sin(phi);
+    fragBeam->real->v[2] = cos(thetaElastic);
 
     // determine if the beam hits the detector
     fragBeam->targetInteraction(dthick, thickness);

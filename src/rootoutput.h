@@ -90,7 +90,6 @@ class RootOutput {
 		void SetSecondary(double, double, double);
 		void SetFragment(int, double, double, double, double, double);
 		void SetThetaNeut(double);
-		void SetThetaElastP(double);
 		void SetThetaElastS(double);
 		void SetErelP(double);
 		void SetErelS(double);
@@ -126,7 +125,6 @@ class RootOutput {
 		CFragS* chargedFragments;
 		int nFrags;
 		double thetaNeut { -1 };
-		double thetaElastP { -1 };
 		double thetaElastS { -1 };
 		double ErelP { -1 };
 		double ErelS { -1 };
