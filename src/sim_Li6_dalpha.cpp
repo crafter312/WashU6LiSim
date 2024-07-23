@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
       ishit = frag[i]->hit(xTarget, yTarget);
       nhit += ishit;
       if (ishit)
-        output.DEE->Fill(frag[i]->FrontEnergy, frag[i]->DeltaEnergy);
+        output.DEE->Fill(frag[i]->DeltaEnergy, frag[i]->FrontEnergy);
       if (ishit == -1)
         Nstuck++;
     }

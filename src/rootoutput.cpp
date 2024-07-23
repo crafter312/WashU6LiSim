@@ -56,7 +56,7 @@ RootOutput::RootOutput(string suffix, int n) {
   hist_theta_beam_S_recon = new TH1F("hist_theta_beam_S_recon","theta",200,0,30);
 
 	// Reconstructed fragment energy distributions
-  DEE          = new TH2I("DEE","",500,0,80,800,0,22); // E is x, DE is y
+  DEE          = new TH2I("DEE","",800,0,22,500,0,80); // E is x, DE is y
   protonenergy = new TH1F("protonenergy","", 100,0,30);
   alphaenergy  = new TH1F("alphaenergy","", 100,0,40);
 
