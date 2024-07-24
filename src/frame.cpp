@@ -1,13 +1,11 @@
 #include "frame.h"
 #include "constants.h"
 
-bool CFrame::einstein = 0;
-
-CFrame::CFrame(double A0)
-{
+CFrame::CFrame(double A0) {
   A = A0;
-  mass = m0*A;
-  //set initial velocity to 0 (used by Cfragneut but not needed if mode2body is used before)
+  mass = m0 * A;
+
+  // Set initial velocity to 0 (used by Cfragneut but not needed if mode2body is used before)
   v[0] = 0;
   v[1] = 0;
   v[2] = 0;
@@ -31,9 +29,9 @@ double CFrame::getEnergyFromMomentum()
 */
 
 //******************************************************
-double CFrame::getVelocity()
+double CFrame::getVelocity(bool* einstein)
 {
-  if (einstein) return getVelocityRel();
+  if (*einstein) return getVelocityRel();
   else return getVelocityNewton();
 }
 
@@ -73,9 +71,9 @@ double CFrame::getVelocityRel()
   return velocity;
 }
 //*************************************
-double CFrame::getEnergy()
+double CFrame::getEnergy(bool* einstein)
 {
-  if (einstein) return getEnergyRel();
+  if (*einstein) return getEnergyRel();
   else return getEnergyNewton();
 }
 
@@ -122,10 +120,10 @@ void CFrame::getAngle()
   phi = atan2(v[1],v[0]);
   if (phi < 0.) phi += 2.*pi;
 }
-void CFrame::transformVelocity(double *vReference)
+void CFrame::transformVelocity(double *vReference, bool* einstein)
 {
-  if (einstein) transformVelocityRel(vReference);
-  else transformVelocityNewton(vReference);
+  if (*einstein) transformVelocityRel(vReference);
+  else transformVelocityNewton(vReference, einstein);
 }
 
 //***********************************************
@@ -134,10 +132,10 @@ void CFrame::transformVelocity(double *vReference)
    * Non-Relativistic version
    \param vReference is velocity vector of new reference frame cm/ns
   */
-void CFrame::transformVelocityNewton(double * vReference)
+void CFrame::transformVelocityNewton(double * vReference, bool* einstein)
 {
   for (int i=0;i<3;i++) v[i] += vReference[i];
-  getEnergy();
+  getEnergy(einstein);
 }
 //***********************************************
   /**
@@ -184,9 +182,9 @@ void CFrame::transformVelocityRel(double * vReference)
 }
 
 //***********************************************************
-void CFrame::getVelocityFromMom()
+void CFrame::getVelocityFromMom(bool* einstein)
 {
-  if (einstein) getVelocityFromMomRel();
+  if (*einstein) getVelocityFromMomRel();
   else getVelocityFromMomNewton();
 }
 

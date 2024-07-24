@@ -88,10 +88,10 @@ int main(int argc, char *argv[]) {
 	// Initialize fragment objects
 	const int Nfrag = 2; // number of decay fragments
   CFrag** frag = new CFrag*[Nfrag];
-	frag[0] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, useRealP); // alpha
-  frag[1] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, useRealP);       // deuteron
+	frag[0] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
+  frag[1] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // deuteron
 
-  CFrag *fragBeam = new CFrag(2., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, useRealP);
+  CFrag *fragBeam = new CFrag(2., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
 
 	// Initialize decay class
   CDecay decay(Nfrag, frag, einstein);

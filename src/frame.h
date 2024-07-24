@@ -32,23 +32,22 @@ class CFrame
   double y;
   double totEnergy; //!< rest mass plus kinetic energy
 
-  double getVelocity();
+  double getVelocity(bool*);
   double getVelocityNewton();
   double getVelocityRel();
-  double getEnergy();
-  double getEnergyFromMomentum();
+  double getEnergy(bool*);
+  //double getEnergyFromMomentum();
   double getEnergyNewton();
   double getEnergyRel();
   void getAngle();
-  void transformVelocity(double*);
-  void transformVelocityNewton(double*);
+  void transformVelocity(double*, bool*);
+  void transformVelocityNewton(double*, bool*);
   void transformVelocityRel(double*);
-  void getVelocityFromMom();
+  void getVelocityFromMom(bool*);
   void getVelocityFromMomNewton();
   void getVelocityFromMomRel();
   void getMomFromVelocity();
   CFrame(double);
-  static bool  einstein;
 };
 
 

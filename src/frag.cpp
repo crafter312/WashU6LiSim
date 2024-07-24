@@ -17,7 +17,7 @@ CRandom CFrag::ran;
 */
 
 CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float CsI_res0,
-			 float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool useRealP0) {			 
+			 float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool einstein0, bool useRealP0) {			 
 	cout << "Fragment of Z = " << Z0 << ", mass = " << mass0 << endl;	
 	Z = Z0;
 	mass = mass0;
@@ -41,6 +41,7 @@ CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float
 	recon = new CFrame(mass);
 
 	scaleSmallAngle = scaleSmallAngle0;
+	einstein = einstein0;
 	useRealP = useRealP0;
 	stopped = false;
 }
@@ -73,7 +74,7 @@ int CFrag::hit(float xTarget, float yTarget) {
 		recon->y = Array->yRecon;
 
 		recon->energy = real->energy + real->energy*CsI_res*ran.Gaus(0.,1.);
-		recon->getVelocity();
+		recon->getVelocity(&einstein);
 	}
 
 	return is_hit;
@@ -95,7 +96,7 @@ void CFrag::getStripHit(int *stripx, int *stripy, int index) {
 * Used to transform between reference frames
 */
 void CFrag::AddVelocity(double *Vplf){ 
-	real->transformVelocity(Vplf);
+	real->transformVelocity(Vplf, &einstein);
 }
 //****************************************************************
 /**
@@ -118,7 +119,7 @@ float CFrag::Egain(float thick){
 		recon->energy = loss_C->getEin(recon->energy,thick/cos(recon->theta));
 	}
 
-	recon->getVelocity();
+	recon->getVelocity(&einstein);
 
 	return recon->energy;
 }

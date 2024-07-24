@@ -13,7 +13,6 @@ CRandom CDecay::ran;
 CDecay::CDecay(int Nfrag0, CFrag ** frag0, bool einstein0){
 
 	einstein = einstein0;
-	CFrame::einstein = einstein; //change einstein for all CFrame objects
 	Nfrag = Nfrag0;
 	frag = frag0;
 	
@@ -127,7 +126,7 @@ float CDecay::getErelNewton(CFrame** part)
 		 plfRecon->v[i] /= sumA;	
 	 }
 
-	plfRecon->getEnergy();
+	plfRecon->getEnergy(&einstein);
 
 	ErelRecon = 0.;
 	 for (int j=0;j<Nfrag;j++)
@@ -206,8 +205,8 @@ float CDecay::getErelRel(CFrame **part){
 	ErelRecon = 0.;
 	for (int j=0;j<Nfrag;j++){
 		//(plfRecon->v) provides reference frame velocity vectors
-		partCM[j]->transformVelocity(dv);
-		ErelRecon += partCM[j]->getEnergy();
+		partCM[j]->transformVelocity(dv, &einstein);
+		ErelRecon += partCM[j]->getEnergy(&einstein);
 	}
 
 	//emission angle of core - which should be last in the list
@@ -279,8 +278,8 @@ float CDecay::getErel_at(CFrame *part1,CFrame *part2){
 	ErelRecon = 0.;
 	for (int j=0;j<Nfrag;j++){
 		//(plfRecon->v) provides reference frame velocity vectors
-		partCM[j]->transformVelocity(dv);
-		ErelRecon += partCM[j]->getEnergy();
+		partCM[j]->transformVelocity(dv, &einstein);
+		ErelRecon += partCM[j]->getEnergy(&einstein);
 	}
 
 	//emission angle of core - which should be last in the list

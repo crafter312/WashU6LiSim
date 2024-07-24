@@ -25,8 +25,8 @@ class CFrag
   float mass;
   float CsI_res;   
 
-//(float Z0, float mass0, string lossfile_CD2, string lossfile_Si, float CsI_res0, float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool useRealP0)
-  CFrag(float,float,string,string,float,float,double,float=1.,bool=false);
+	//(float Z0, float mass0, string lossfile_CD2, string lossfile_Si, float CsI_res0, float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool einstein0, bool useRealP0)
+  CFrag(float,float,string,string,float,float,double,float=1.,bool=false,bool=false);
   ~CFrag();
   Gobbiarray * Array;
 
@@ -57,6 +57,7 @@ class CFrag
   float scaleSmallAngle;
 
 
+	bool einstein;
   bool useRealP;   //<! use the real momentum, instead of detected value
   bool extra;
   
