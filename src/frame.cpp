@@ -1,9 +1,6 @@
 #include "frame.h"
 #include "constants.h"
 
-double const CFrame::m0 = 931.478;
-double const CFrame::c=30.;
-double const CFrame::pi = acos(-1.);
 bool CFrame::einstein = 0;
 
 CFrame::CFrame(double A0)

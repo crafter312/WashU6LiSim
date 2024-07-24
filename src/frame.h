@@ -1,6 +1,11 @@
+// Modified by Henry Webb on 24 July 2024
+
 #ifndef frame_
 #define frame_
+
 #include <cmath>
+
+#include "constants.h"
 
 
 /**
@@ -26,9 +31,6 @@ class CFrame
   double x;
   double y;
   double totEnergy; //!< rest mass plus kinetic energy
-  static double const m0; //!< nucleon mass in MeV
-  static double const c; //!< speed of light (cm/ns)
-  static double const pi; //!< 3.14159....
 
   double getVelocity();
   double getVelocityNewton();
