@@ -63,17 +63,15 @@ CFrag::~CFrag() {
 */
 int CFrag::hit(float xTarget, float yTarget) {
 	//stopped is calculated in targetinteraction, determines if fragments is stopped in the target or in the DeltaE
-	if (stopped){ return -1;}
+	if (stopped) return -1;
 
-	is_hit = Array->hit(real->theta, real->phi, xTarget, yTarget, DeltaEnergy, FrontEnergy) ;
+	is_hit = Array->hit(real->GetTheta(), real->GetPhi(), xTarget, yTarget, DeltaEnergy, FrontEnergy) ;
 
-	if (is_hit){
-		recon->theta = Array->thetaRecon;
-		recon->phi = Array->phiRecon;
-		recon->x = Array->xRecon;
-		recon->y = Array->yRecon;
-
-		recon->energy = real->energy + real->energy*CsI_res*ran.Gaus(0.,1.);
+	if (is_hit) {
+		recon->SetTheta(Array->thetaRecon);
+		recon->SetPhi(Array->phiRecon);
+		recon->SetXY(Array->xRecon, Array->yRecon);
+		recon->SetEnergy(real->GetEnergy() * (1 + CsI_res * ran.Gaus(0.,1.)));
 		recon->getVelocity(&einstein);
 	}
 
@@ -104,9 +102,9 @@ void CFrag::AddVelocity(double *Vplf){
 \param thick is the thickness of target that the particle has to traverse (mg/cm2)
 */
 float CFrag::Eloss(float thick){
-	if (real->energy <=0. || real->energy != real->energy) return 0.;
-	real->energy = loss_C->getEout(real->energy,thick);
-	return real->energy;
+	if (real->GetEnergy() <= 0.) return 0.;
+	real->SetEnergy(loss_C->getEout(real->GetEnergy(), thick));
+	return real->GetEnergy();
 }
 //*******************************************************************
 /**
@@ -114,14 +112,11 @@ float CFrag::Eloss(float thick){
 * in the target.
 \param thick is the thickness of target material though which the particle passed (mg/cm2)
 */
-float CFrag::Egain(float thick){
-	if (thick > 0.){
-		recon->energy = loss_C->getEin(recon->energy,thick/cos(recon->theta));
-	}
-
+float CFrag::Egain(float thick) {
+	if (thick > 0.)
+		recon->SetEnergy(loss_C->getEin(recon->GetEnergy(), thick / cos(recon->GetTheta())));
 	recon->getVelocity(&einstein);
-
-	return recon->energy;
+	return recon->GetEnergy();
 }
 //***********************************************
 //include multiple scattering
@@ -131,7 +126,7 @@ float CFrag::Egain(float thick){
 */
 void CFrag::MultiScat(float fractionalThick){
 //float Zproj, float Eproj, float fractionalThick
-	float thetaRMS = pScat->thetaRMS(real->energy, fractionalThick);
+	float thetaRMS = pScat->thetaRMS(real->GetEnergy(), fractionalThick);
 	//cout << "thetaRMS " << thetaRMS*180/acos(-1.0) << endl;
 	float sigma = thetaRMS/sqrt(2.)*scaleSmallAngle;
 	//cout << "thetaRMS= " << thetaRMS << endl;
@@ -147,14 +142,16 @@ void CFrag::MultiScat(float fractionalThick){
 
 
 	//rotate in z-x plane by theta
-	float xx = x*cos(real->theta) + z*sin(real->theta);
+	double theta = real->GetTheta();
+	float xx = x*cos(theta) + z*sin(theta);
 	float yy = y;
-	float zz = z*cos(real->theta) - x*sin(real->theta);
+	float zz = z*cos(theta) - x*sin(theta);
 
 
 	//rotate in x-y plane
-	float xxx = xx*cos(real->phi) - yy*sin(real->phi);
-	float yyy = yy*cos(real->phi) + xx*sin(real->phi);
+	double phi = real->GetPhi();
+	float xxx = xx*cos(phi) - yy*sin(phi);
+	float yyy = yy*cos(phi) + xx*sin(phi);
 	float zzz = zz;
 
 
@@ -162,8 +159,8 @@ void CFrag::MultiScat(float fractionalThick){
 	float phiNew = atan2(yyy,xxx);
 
 
-	real->theta = thetaNew;
-	real->phi = phiNew;
+	real->SetTheta(thetaNew);
+	real->SetPhi(phiNew);
 }
 //*********************
 /**
@@ -171,27 +168,25 @@ void CFrag::MultiScat(float fractionalThick){
 \param dthick is thickness of target though the particle must pass (mg/cm2)
 \param thickness is total target thickness (mg/cm2)
 	 */
-bool CFrag::targetInteraction(float dthick, float thickness){
+bool CFrag::targetInteraction(float dthick, float thickness) {
 
 	stopped = 0;
 	//protect against random zero dthick
-	if (dthick == 0.){
-		return stopped;
-	}
+	if (dthick == 0.) return stopped;
 	//after scattering, takes path through target at angle
-	float thick = dthick/cos(real->theta);
+	float thick = dthick / cos(real->GetTheta());
 	//if (ran.Rndm() < 0.25) thick = thick*1.5;
 	
 	Eloss(thick); //returns the energy after the fragment has exited the target
 	
 	//check if fragment got stuck within the target
-	if (real->energy <= 0. || real->energy != real->energy){ 
+	if (real->GetEnergy() <= 0.) { 
 		stopped = 1;
 		return stopped;
 	}
 
 	//changes theta and phi based off of RMStheta of scattering
-	MultiScat(thick/thickness);
+	MultiScat(thick / thickness);
 
 	return stopped;
 }
@@ -200,22 +195,20 @@ bool CFrag::targetInteraction(float dthick, float thickness){
 /**
 * gets the energy deposited in the DeltaE and E detector needed for checking thresholds
 */
-bool CFrag::SiliconInteraction()
-{
+bool CFrag::SiliconInteraction() {
 	//no need to look at particles stopped in the target
 	if (stopped) return stopped;
 
 	//after scattering, takes path through Si at angle
-	float dE_thick = 14.85/cos(real->theta); //14.85 mg/cm^2 is 0.064mm thick Si
+	float dE_thick = 14.85 / cos(real->GetTheta()); //14.85 mg/cm^2 is 0.064mm thick Si
 	
-	FrontEnergy = loss_Si->getEout(real->energy,dE_thick);
-	DeltaEnergy = real->energy - FrontEnergy;
+	FrontEnergy = loss_Si->getEout(real->GetEnergy(), dE_thick);
+	DeltaEnergy = real->GetEnergy() - FrontEnergy;
 
-	if (ran.Rndm() < 0.3) FrontEnergy = FrontEnergy+0.08;
+	if (ran.Rndm() < 0.3) FrontEnergy = FrontEnergy + 0.08;
 
 	//check if particle was stopped in the dE detector, won't have PID
-	if (FrontEnergy <= 0.)
-	{
+	if (FrontEnergy <= 0.) {
 		DeltaEnergy = -1;
 		stopped = 1;
 		return stopped;

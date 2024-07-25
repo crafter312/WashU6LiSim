@@ -160,12 +160,14 @@ int main(int argc, char *argv[])
 		// set angular properties of beam fragment for elastic scattering case
 		double thetaElastic = sampler->sampledValues.GetThetaElasticRad();
 		double phi = sampler->sampledValues.GetPhiRad();
-    fragBeam->real->theta = thetaElastic;
-    fragBeam->real->phi = phi;
-    fragBeam->real->energy = Ebeam; //~5MeV/u Li-7
-    fragBeam->real->v[0] = sin(thetaElastic)*cos(phi);
-    fragBeam->real->v[1] = sin(thetaElastic)*sin(phi);
-    fragBeam->real->v[2] = cos(thetaElastic);
+    fragBeam->real->SetTheta(thetaElastic);
+    fragBeam->real->SetPhi(phi);
+    fragBeam->real->SetEnergy(Ebeam); //~5MeV/u Li-7
+    fragBeam->real->SetVelocityComps(
+			sin(thetaElastic) * cos(phi),
+			sin(thetaElastic) * sin(phi),
+			cos(thetaElastic)
+		);
 
     // determine if the beam hits the detector
     fragBeam->targetInteraction(dthick,thickness);
@@ -173,7 +175,7 @@ int main(int argc, char *argv[])
     int beamhit = fragBeam->hit(xTarget,yTarget);
 		output.SetIsElasticHit(beamhit);
     if (beamhit) {
-			output.SetThetaElastS(fragBeam->recon->theta*rad_to_deg);
+			output.SetThetaElastS(fragBeam->recon->GetTheta() * rad_to_deg);
       Nbeamscat++;
     }
 
@@ -220,20 +222,18 @@ int main(int argc, char *argv[])
         Nstuck++;
     }
 
-    if (nhit != Nfrag-1) continue;
+    if (nhit != Nfrag - 1) continue;
     //cout << frag[0]->recon->energy << endl;
 
     // taken out but not tested, please check
-    if (frag[0]->recon->energy < 2.5) continue;
+    if (frag[0]->recon->GetEnergy() < 2.5) continue;
 
     // if seperation energy is small, make sure they hit different silicon strips
     int stripx[Nfrag-1];
     int stripy[Nfrag-1];
     // collect what strips are hit
-    for (int i=0; i<Nfrag-1; i++)
-    {
-      frag[i]->getStripHit(stripx, stripy, i);
-    }
+    for (int i = 0; i < Nfrag - 1; i++)
+			frag[i]->getStripHit(stripx, stripy, i);
     
     // loop through all pairs of strips
 		bool doublehit = false;
@@ -267,8 +267,8 @@ int main(int argc, char *argv[])
 			
 		}
 
-    output.protonenergy->Fill(frag[0]->recon->energy);
-    output.alphaenergy->Fill(frag[1]->recon->energy);
+    output.protonenergy->Fill(frag[0]->recon->GetEnergy());
+    output.alphaenergy->Fill(frag[1]->recon->GetEnergy());
 
     //get reconstructed  relative energy between fragements
     float Erel_S = (useRealP_f * decay.getErelReal()) + ((1 - useRealP_f) * decay.getErelRecon());
@@ -286,19 +286,19 @@ int main(int argc, char *argv[])
     if (fabs(decay.cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
 
     output.hist_Ex_DE->Fill(Ex_S, frag[0]->FrontEnergy);
-		output.SetSecondary(decay.plfRecon->velocity, decay.plfRecon->phi, decay.plfRecon->theta*rad_to_deg);
+		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta()*rad_to_deg);
 
-    float x = frag[1]->recon->x/10.;
-    float y = frag[1]->recon->y/10.;
+    float x = frag[1]->recon->GetX()/10.;
+    float y = frag[1]->recon->GetY()/10.;
     output.protonXY_S->Fill(x,y);
-		output.SetFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->energy, x, y);
+		output.SetFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), x, y);
 
-    x = frag[0]->recon->x/10.;
-    y = frag[0]->recon->y/10.;
+    x = frag[0]->recon->GetX()/10.;
+    y = frag[0]->recon->GetY()/10.;
     output.coreXY_S->Fill(x,y);
-		output.SetFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->energy, x, y);
+		output.SetFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y);
 		
-		output.SetThetaNeut(frag[2]->real->theta*rad_to_deg);
+		output.SetThetaNeut(frag[2]->real->GetTheta()*rad_to_deg);
 		output.Fill();
   }
 

@@ -4,8 +4,11 @@
 #include <cmath>
 
 const double m0 = 931.494102;  // atomic mass unit
+const double m02 = m0 * m0;
 const double c = 30.;   //speed of light
+const double c2 = c * c;
 const double vfact = c/sqrt(m0);  //velocity (cm/ns) = vfact *sqrt(2.*E(MeV)/A(amu))
+const double vfact2 = vfact * vfact;
 const double pi = acos(-1.);
 const double deg_to_rad = pi/180;
 const double rad_to_deg = 180/pi;
