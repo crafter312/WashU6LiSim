@@ -88,8 +88,7 @@ CDecay::~CDecay()
 	 * returns the reconstructed kinetical energy of the fragmens in their
 	 * center-of-mass frame using the real fragment velocities.
 	 */
-float CDecay::getErelReal()
-{
+float CDecay::getErelReal() {
 	return getErel(real);
 }
 //********************************************************
@@ -99,13 +98,11 @@ float CDecay::getErelReal()
 	 * center-of-mass frame using the reconstructed or detected
 	 *	fragment velocities. 
 	 */
-float CDecay::getErelRecon()
-{
+float CDecay::getErelRecon() {
 	return getErel(recon);
 }
 //*********************************************************
-float CDecay::getErel(CFrame** part)
-{
+float CDecay::getErel(CFrame** part) {
 	if (einstein) return getErelRel(part);
 	else return getErelNewton(part);
 }
