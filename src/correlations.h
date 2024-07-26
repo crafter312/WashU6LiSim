@@ -30,6 +30,7 @@ class SampledValues {
 		double thetaElastic{-1}; // sampled elastic polar angle in lab frame in degrees
 
 		// Inelastic values
+		double Ext{-1};          // target excitation energy
 		double thetaLab{-1};     // lab angle of outgoing projectile in degrees
 		double Vpplab{-1};       // total lab velocity of outgoing projectile
 		double VppX{-1};         // lab velocity x component
@@ -47,7 +48,6 @@ class Correlations {
     // Kinematic values
 		double E;            // incoming beam energy
     double Exp;          // projectile excitation energy
-		double Ext;          // target excitation energy
     double thetaCM;      // sampled inelastic polar angle in CM frame
     double thetaTarg;    // lab angle of outgoing target
     double Vttlab;       // lab velocity of outgoing target

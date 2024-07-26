@@ -101,7 +101,7 @@ void Correlations::randomAngles() {
 		if ((Xsecs[i] > probtr) || (i + 1 == nexits)) break;
 		i++;
 	}
-	Ext = Exts[i];
+	sampledValues.Ext = Exts[i];
 	double* Xsec = Xsec_file[i];
 	double* th = th_file[i];
 	int length = lengths[i];
@@ -155,7 +155,7 @@ void Correlations::calculateLabAngles() {
 	// Energy of projectile and target in exit channel
 	// Note that the target nucleus excitation energy 
 	// changes depending on the exit channel chosen
-	double ECMout = ECMin - Qrxn - Exp - Ext;
+	double ECMout = ECMin - Qrxn - Exp - sampledValues.Ext;
 
 	double Vrel = sqrt(ECMout * 2 / Mred) * vfact; // relative velocity between projectile and target in exit channel
 	double Vpp = Vrel * Mtt / (Mtt + Mpp);         // center of mass velocity of projectile fragment in exit channel
