@@ -263,7 +263,7 @@ int main(int argc, char *argv[]) {
     if (fabs(decay.cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
 
     output.hist_Ex_DE->Fill(Ex_S, frag[0]->FrontEnergy);
-		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta()*rad_to_deg);
+		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta());
 
 		float x = frag[0]->recon->GetX()/10.;
     float y = frag[0]->recon->GetY()/10.;

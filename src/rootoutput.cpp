@@ -41,7 +41,7 @@ RootOutput::RootOutput(string suffix, int n) {
   hist_vel_P       = new TH1F("vel_P","vel",100,1.5,4);
   hist_theta_P     = new TH1F("theta_P","theta",200,0,30);
   hist_phi_P       = new TH1F("phi_P","phi",180,0,360);
-  kinematic_circle = new TH2F("kinematic_circle", "kin_circle", 200, -1, 1, 120, 2, 3.2);
+  kinematic_circle = new TH2F("kinematic_circle", "kin_circle", 200, -1, 1, 120, 2, 3.8);
 
 	// Primary elastic scattering distribution
   hist_theta_beam_P = new TH1F("theta_beam_P","theta",200,0,30);

@@ -147,7 +147,8 @@ void Correlations::setConstants() {
 
 	ECMin = (Mp * ((VpCM * VpCM) / (vfact * vfact)) + Mt * ((VtCM * VtCM) / (vfact * vfact))) * 0.5; // kinetic energy of incoming target and projectile in CM frame
 
-	Qrxn = (mass_7Li + mass_12C - mass_6Li - mass_13C) * 0.001; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
+	Qrxn = mass_7Li + mass_12C - mass_6Li - mass_13C; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
+	cout << "n-transfer Q-value: " << Qrxn << endl;
 }
 
 void Correlations::calculateLabAngles() {
