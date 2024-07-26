@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
 	// Initialize fragment objects
 	const int Nfrag = 2; // number of decay fragments
   CFrag** frag = new CFrag*[Nfrag];
-	frag[0] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
-  frag[1] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // deuteron
+	frag[0] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // deuteron
+	frag[1] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
 
   CFrag *fragBeam = new CFrag(2., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
 
@@ -210,7 +210,7 @@ int main(int argc, char *argv[]) {
 
     if (nhit != Nfrag) continue;
 
-    // taken out but not tested, please check
+    //TODO: taken out but not tested, please check
     if (frag[0]->recon->GetEnergy() < 2.5) continue;
 
     // if seperation energy is small, make sure they hit different silicon strips
@@ -244,8 +244,8 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < Nfrag; i++)
       frag[i]->Egain(thickness / 2.);
 
-		output.alphaenergy->Fill(frag[0]->recon->GetEnergy());
-    output.protonenergy->Fill(frag[1]->recon->GetEnergy());
+		output.alphaenergy->Fill(frag[1]->recon->GetEnergy());
+    output.protonenergy->Fill(frag[0]->recon->GetEnergy());
 
     // Get reconstructed  relative energy between fragements
     float Erel_S = (useRealP_f * decay.getErelReal()) + ((1 - useRealP_f) * decay.getErelRecon());
@@ -262,17 +262,17 @@ int main(int argc, char *argv[]) {
     if (fabs(decay.cos_thetaH) < 0.7) output.hist_Ex_trans->Fill(Ex_S);
     if (fabs(decay.cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
 
-    output.hist_Ex_DE->Fill(Ex_S, frag[0]->FrontEnergy);
+    output.hist_Ex_DE->Fill(Ex_S, frag[1]->FrontEnergy);
 		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta());
 
 		float x = frag[0]->recon->GetX()/10.;
     float y = frag[0]->recon->GetY()/10.;
-    output.coreXY_S->Fill(x,y);
+    output.protonXY_S->Fill(x,y);
 		output.SetFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), x, y);
 
     x = frag[1]->recon->GetX()/10.;
     y = frag[1]->recon->GetY()/10.;
-    output.protonXY_S->Fill(x,y);
+    output.coreXY_S->Fill(x,y);
 		output.SetFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y);
 
 		output.Fill();
