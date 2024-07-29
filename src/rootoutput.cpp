@@ -9,7 +9,7 @@
 //	nFrags -- number of decay fragments
 RootOutput::RootOutput(string suffix, int n) {
 	chargedFragments = new CFragS[nFrags];
-	for (int i=0; i<nFrags; i++)
+	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i] = CFragS();
 	nFrags = n;
 
@@ -25,7 +25,6 @@ RootOutput::RootOutput(string suffix, int n) {
 	t->Branch("chargedFragments", &chargedFragments);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
-	t->Branch("ErelS", &ErelS);
 	t->Branch("Ex", &Ex);
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
@@ -33,6 +32,7 @@ RootOutput::RootOutput(string suffix, int n) {
 
 	// Reworked simulation branches
 	t->Branch("sampler", &sampler);
+	t->Branch("recon", &recon);
 
 	/**** Initialize histograms ****/
 
@@ -83,7 +83,7 @@ RootOutput::RootOutput(string suffix, int n) {
 RootOutput::~RootOutput() {
 	file->Write();
 	file->Close();
-
+		
 	delete[] chargedFragments;
 }
 
@@ -98,13 +98,13 @@ void RootOutput::Clear() {
 	thetaNeut = NAN;
 	thetaElastS = NAN;
 	ErelP = NAN;
-	ErelS = NAN;
 	Ex = NAN;
 	cosThetaH = NAN;
 	isElasticHit = 0;
 	isFragDet = false;
 
 	sampler.Clear();
+	recon.Clear();
 }
 
 // Input:
@@ -171,12 +171,6 @@ void RootOutput::SetErelP(double e) {
 	hist_Erel_P->Fill(e);
 }
 
-// Secondary relative energy (decay energy)
-void RootOutput::SetErelS(double e) {
-	ErelS = e;
-	hist_Erel->Fill(e);
-}
-
 // Excitation energy of fragment
 void RootOutput::SetEx(double e) {
 	Ex = e;
@@ -211,6 +205,11 @@ void RootOutput::SetSampledValues(SampledValues* s) {
 	hist_theta_P->Fill(sampler.thetaLab);
 	hist_vel_P->Fill(sampler.Vpplab);
 	kinematic_circle->Fill(sampler.VppX, sampler.VppZ);
+}
+
+// Set reconstructed values from CDecay class
+void RootOutput::SetReconValues(KinematicValues* r) {
+	recon = *r;
 }
 
 

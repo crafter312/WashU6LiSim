@@ -262,7 +262,7 @@ int main(int argc, char *argv[]) {
     //get reconstructed excitation energy
     float Ex_S = Erel_S + Q;
 
-		output.SetErelS(Erel_S);
+		decay.plfRecon->SetEnergy(Erel_S);
 		output.SetEx(Ex_S);
 		output.SetCosThetaH(decay.cos_thetaH);
     output.hist_Erel_thetaH->Fill(Erel_S, decay.cos_thetaH);
@@ -273,6 +273,7 @@ int main(int argc, char *argv[]) {
 
     output.hist_Ex_DE->Fill(Ex_S, frag[1]->FrontEnergy);
 		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta());
+		output.SetReconValues(decay.plfRecon->GetKinematicValues());
 
 		float x = frag[0]->recon->GetX()/10.;
     float y = frag[0]->recon->GetY()/10.;

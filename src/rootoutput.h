@@ -91,13 +91,13 @@ class RootOutput {
 		void SetThetaNeut(double);
 		void SetThetaElastS(double);
 		void SetErelP(double);
-		void SetErelS(double);
 		void SetEx(double);
 		void SetCosThetaH(double);
 		void SetIsElasticHit(int);
 		void SetIsFragDet(bool);
 
 		void SetSampledValues(SampledValues*);
+		void SetReconValues(KinematicValues*);
 
 	private:
 		TFile* file;
@@ -125,13 +125,13 @@ class RootOutput {
 		double thetaNeut {NAN};
 		double thetaElastS {NAN};
 		double ErelP {NAN};
-		double ErelS {NAN};
 		double Ex {NAN};
 		double cosThetaH {NAN};
 		int isElasticHit {0};
 		bool isFragDet {false};
 
 		SampledValues sampler {};
+		KinematicValues recon {};
 		
 };
 

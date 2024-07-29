@@ -97,6 +97,8 @@ public:
 	double GetX();
 	double GetY();
 
+	KinematicValues* GetKinematicValues();
+
 	double A;         // mass number
 	double mass;      // rest mass of fragment in MeV
 	double totEnergy; // rest mass + kinetic energy

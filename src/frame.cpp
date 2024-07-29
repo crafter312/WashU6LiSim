@@ -393,3 +393,8 @@ double CFrame::GetX() {
 double CFrame::GetY() {
 	return kinematicValues.y;
 }
+
+// Returns pointer to KinematicValues class instance
+KinematicValues* CFrame::GetKinematicValues() {
+	return &kinematicValues;
+}
