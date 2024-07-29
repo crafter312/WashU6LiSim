@@ -228,7 +228,6 @@ float CDecay::getErel_at(CFrame *part1, CFrame *part2) {
 	plfRecon2->CalcPCMag();
 	plfRecon2->SetVelocity(plfRecon2->GetPC() / plfRecon2->totEnergy * c);
 	plfRecon2->CalcCartV();
-	plfRecon2->ScaleVVec(-1); //TODO: check extra minus sign in CalcCartV function, can potentially remove this line
 	
 	//TODO: if the minus sign in CalcCartV should stay, then this bit should be removed in addition to the above line
 	double dv[3] = {

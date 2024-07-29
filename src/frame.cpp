@@ -43,11 +43,10 @@ void KinematicValues::CalcPCMag() {
 }
 
 // Calculates V components from total PC, total V, and PC components
-//TODO: double check the extra minus sign here
 void KinematicValues::CalcCartV() {
-	v[0] = -pc[0] / pcTot * velocity;
-	v[1] = -pc[1] / pcTot * velocity;
-	v[2] = -pc[2] / pcTot * velocity;
+	v[0] = pc[0] / pcTot * velocity;
+	v[1] = pc[1] / pcTot * velocity;
+	v[2] = pc[2] / pcTot * velocity;
 }
 
 // Calculates PC components from total V, total PC, and V components 
