@@ -27,13 +27,14 @@ RootOutput::RootOutput(string suffix, int n) {
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
 
-	t->Branch("sampler", &sampler);
-
 	// Decay fragments
 	chargedFragments = new CFragS[nFrags];
 	for (int i=0; i<nFrags; i++)
 		chargedFragments[i] = CFragS();
 	t->Branch("chargedFragments", &chargedFragments);
+
+	// Reworked simulation branches
+	t->Branch("sampler", &sampler);
 
 	/**** Initialize histograms ****/
 

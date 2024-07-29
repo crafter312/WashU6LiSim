@@ -3,13 +3,26 @@
 #include "frame.h"
 
 KinematicValues::KinematicValues() {
-	// Set initial velocity to 0 (used by Cfragneut but not needed if mode2body is used before)
-  v[0] = 0;
-  v[1] = 0;
-  v[2] = 0;
+	Clear();
 }
 
 KinematicValues::~KinematicValues() {}
+
+void KinematicValues::Clear() {
+	energy = std::nan("");
+	velocity = std::nan("");
+	pcTot = std::nan("");
+	v[0] = 0; // Set initial velocity to 0 (used by Cfragneut but not needed if mode2body is used before)
+  v[1] = 0;
+  v[2] = 0;
+	pc[0] = std::nan("");
+  pc[1] = std::nan("");
+  pc[2] = std::nan("");
+	theta = std::nan("");
+	phi = std::nan("");
+	x = std::nan("");
+	y = std::nan("");
+}
 
 // Converts V from spherical to cartesian coordinates
 void KinematicValues::Sph2CartV() {

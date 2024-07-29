@@ -58,7 +58,7 @@ namespace ROOT {
       ::SampledValues *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::SampledValues));
       static ::ROOT::TGenericClassInfo 
-         instance("SampledValues", "src/correlations.h", 14,
+         instance("SampledValues", "src/correlations.h", 15,
                   typeid(::SampledValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &SampledValues_Dictionary, isa_proxy, 4,
                   sizeof(::SampledValues) );
@@ -89,6 +89,51 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *KinematicValues_Dictionary();
+   static void KinematicValues_TClassManip(TClass*);
+   static void *new_KinematicValues(void *p = nullptr);
+   static void *newArray_KinematicValues(Long_t size, void *p);
+   static void delete_KinematicValues(void *p);
+   static void deleteArray_KinematicValues(void *p);
+   static void destruct_KinematicValues(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::KinematicValues*)
+   {
+      ::KinematicValues *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::KinematicValues));
+      static ::ROOT::TGenericClassInfo 
+         instance("KinematicValues", "src/frame.h", 14,
+                  typeid(::KinematicValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &KinematicValues_Dictionary, isa_proxy, 4,
+                  sizeof(::KinematicValues) );
+      instance.SetNew(&new_KinematicValues);
+      instance.SetNewArray(&newArray_KinematicValues);
+      instance.SetDelete(&delete_KinematicValues);
+      instance.SetDeleteArray(&deleteArray_KinematicValues);
+      instance.SetDestructor(&destruct_KinematicValues);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::KinematicValues*)
+   {
+      return GenerateInitInstanceLocal((::KinematicValues*)nullptr);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::KinematicValues*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *KinematicValues_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::KinematicValues*)nullptr)->GetClass();
+      KinematicValues_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void KinematicValues_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
    static TClass *PFragS_Dictionary();
    static void PFragS_TClassManip(TClass*);
    static void *new_PFragS(void *p = nullptr);
@@ -103,7 +148,7 @@ namespace ROOT {
       ::PFragS *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::PFragS));
       static ::ROOT::TGenericClassInfo 
-         instance("PFragS", "src/rootoutput.h", 27,
+         instance("PFragS", "src/rootoutput.h", 28,
                   typeid(::PFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &PFragS_Dictionary, isa_proxy, 4,
                   sizeof(::PFragS) );
@@ -148,7 +193,7 @@ namespace ROOT {
       ::CFragS *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CFragS));
       static ::ROOT::TGenericClassInfo 
-         instance("CFragS", "src/rootoutput.h", 51,
+         instance("CFragS", "src/rootoutput.h", 52,
                   typeid(::CFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &CFragS_Dictionary, isa_proxy, 4,
                   sizeof(::CFragS) );
@@ -198,6 +243,27 @@ namespace ROOT {
       ((current_t*)p)->~current_t();
    }
 } // end of namespace ROOT for class ::SampledValues
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_KinematicValues(void *p) {
+      return  p ? new(p) ::KinematicValues : new ::KinematicValues;
+   }
+   static void *newArray_KinematicValues(Long_t nElements, void *p) {
+      return p ? new(p) ::KinematicValues[nElements] : new ::KinematicValues[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_KinematicValues(void *p) {
+      delete ((::KinematicValues*)p);
+   }
+   static void deleteArray_KinematicValues(void *p) {
+      delete [] ((::KinematicValues*)p);
+   }
+   static void destruct_KinematicValues(void *p) {
+      typedef ::KinematicValues current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::KinematicValues
 
 namespace ROOT {
    // Wrappers around operator new
@@ -260,6 +326,7 @@ nullptr
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
+class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  KinematicValues;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  PFragS;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTFWDDCLS";
@@ -276,6 +343,7 @@ struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
 "CFragS", payloadCode, "@",
+"KinematicValues", payloadCode, "@",
 "PFragS", payloadCode, "@",
 "SampledValues", payloadCode, "@",
 nullptr

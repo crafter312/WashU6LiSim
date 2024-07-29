@@ -16,6 +16,8 @@ public:
 	KinematicValues();
 	~KinematicValues();
 
+	void Clear();
+
 	void Sph2CartV();        // converts V from spherical to cartesian coordinates
 	void Sph2CartPC();       // converts PC from spherical to cartesian coordinates
 	void Cart2Sph();         // calculates spherical angles from V components

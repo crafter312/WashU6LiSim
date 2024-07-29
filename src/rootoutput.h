@@ -7,6 +7,7 @@
 #define _rootoutput
 
 #include <math.h>
+#include <optional>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -132,6 +133,7 @@ class RootOutput {
 		bool isFragDet { 0 };
 
 		SampledValues sampler {};
+		
 };
 
 #endif
