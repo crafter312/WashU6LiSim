@@ -167,11 +167,11 @@ float CDecay::getErelRel(CFrame **part){
 	//start bob changes////////////////////////////////////////////////////
 	plfRecon->CalcPCMag();
 	plfRecon->SetVelocity(plfRecon->GetPC() / plfRecon->totEnergy * c);
-	double momVel = plfRecon->GetPC() * plfRecon->GetVelocity();
+	double momVel = plfRecon->GetVelocity() / plfRecon->GetPC();
 	plfRecon->SetVelocityComps(
-		plfRecon->GetPCComp(0) / momVel,
-		plfRecon->GetPCComp(1) / momVel,
-		plfRecon->GetPCComp(2) / momVel
+		plfRecon->GetPCComp(0) * momVel,
+		plfRecon->GetPCComp(1) * momVel,
+		plfRecon->GetPCComp(2) * momVel
 	);
 	double dv[3] = {
 		-plfRecon->GetVComp(0),
