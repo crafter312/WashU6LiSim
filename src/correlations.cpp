@@ -7,20 +7,18 @@
 
 using namespace std;
 
-SampledValues::SampledValues() {
-	Clear();
-}
+SampledValues::SampledValues() {}
 
 SampledValues::~SampledValues() {}
 
 void SampledValues::Clear() {
-	phi = std::nan("");
-	thetaElastic = std::nan("");
-	thetaLab = std::nan("");
-	Vpplab = std::nan("");
-	VppX = std::nan("");
-	VppY = std::nan("");
-	VppZ = std::nan("");
+	phi = NAN;
+	thetaElastic = NAN;
+	thetaLab = NAN;
+	Vpplab = NAN;
+	VppX = NAN;
+	VppY = NAN;
+	VppZ = NAN;
 }
 
 void SampledValues::CalculateCartesian() {

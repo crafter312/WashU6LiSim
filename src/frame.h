@@ -3,7 +3,7 @@
 #ifndef frame_
 #define frame_
 
-#include <cmath>
+#include <math.h>
 
 #include "constants.h"
 
@@ -31,15 +31,15 @@ public:
 	double GetPC2();         // returns PC squared
 	double GetVDot(double*); // returns dot product of V vector with supplied vector
 
-	double energy;   // fragment energy in MeV
-	double velocity; // fragment velocity in cm/ns
-	double pcTot;    // total momentum*c of fragment
-	double v[3];     // velocity vector of fragment
-	double pc[3];    // momentum*c vector of fragment MeV
-	double theta;    // polar angle of fragment in radians
-	double phi;      // azimuthal angle of fragment in radians
-	double x;
-	double y;
+	double energy {NAN};   // fragment energy in MeV
+	double velocity {NAN}; // fragment velocity in cm/ns
+	double pcTot {NAN};    // total momentum*c of fragment
+	double v[3];           // velocity vector of fragment
+	double pc[3];          // momentum*c vector of fragment MeV
+	double theta {NAN};    // polar angle of fragment in radians
+	double phi {NAN};      // azimuthal angle of fragment in radians
+	double x {NAN};
+	double y {NAN};
 };
 
 /**

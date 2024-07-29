@@ -208,10 +208,16 @@ int main(int argc, char *argv[]) {
         Nstuck++;
     }
 
-    if (nhit != Nfrag) continue;
+    if (nhit != Nfrag) {
+			output.Fill();
+			continue;
+		}
 
     //TODO: taken out but not tested, please check
-    if (frag[0]->recon->GetEnergy() < 2.5) continue;
+    if (frag[0]->recon->GetEnergy() < 2.5) {
+			output.Fill();
+			continue;
+		}
 
     // if seperation energy is small, make sure they hit different silicon strips
     int stripx[Nfrag];
@@ -235,7 +241,10 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    if (doublehit) continue;
+    if (doublehit) {
+			output.Fill();
+			continue;
+		}
     
     // We have a detection
 		output.SetIsFragDet(true);
@@ -276,7 +285,6 @@ int main(int argc, char *argv[]) {
 		output.SetFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y);
 
 		output.Fill();
-		
   }
 
   cout << endl;

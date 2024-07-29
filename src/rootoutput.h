@@ -7,7 +7,6 @@
 #define _rootoutput
 
 #include <math.h>
-#include <optional>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -26,22 +25,22 @@ using namespace std;
  * or the secondary reconstructed distributions.
  */
 struct PFragS {
-	double vel { NAN };
-	double velx { NAN };
-	double vely { NAN };
-	double velz { NAN };
-	double phi { -1 };
-	double theta { -1 };
-	double Erel { -1 };
+	double vel{NAN};
+	double velx{NAN};
+	double vely{NAN};
+	double velz{NAN};
+	double phi{NAN};
+	double theta{NAN};
+	double Erel{NAN};
 
 	void clear() {
 		vel = NAN;
 		velx = NAN;
 		vely = NAN;
 		velz = NAN;
-		phi = -1;
-		theta = -1;
-		Erel = -1;
+		phi = NAN;
+		theta = NAN;
+		Erel = NAN;
 	};
 };
 
@@ -50,16 +49,16 @@ struct PFragS {
  * This is either alpha or proton in my case.
  */
 struct CFragS {
-	double DE { -1 };
-	double E { -1 };
-	double reconEnergy { -1 };
-	double x { NAN };
-	double y { NAN };
+	double DE{NAN};
+	double E{NAN};
+	double reconEnergy{NAN};
+	double x{NAN};
+	double y{NAN};
 
 	void clear() {
-		DE = -1;
-		E = -1;
-		reconEnergy = -1;
+		DE = NAN;
+		E = NAN;
+		reconEnergy = NAN;
 		x = NAN;
 		y = NAN;
 	};
@@ -123,14 +122,14 @@ class RootOutput {
 		PFragS parentSecondary {};
 		CFragS* chargedFragments;
 		int nFrags;
-		double thetaNeut { -1 };
-		double thetaElastS { -1 };
-		double ErelP { -1 };
-		double ErelS { -1 };
-		double Ex { -1 };
-		double cosThetaH { NAN };
-		int isElasticHit { -1 };
-		bool isFragDet { 0 };
+		double thetaNeut {NAN};
+		double thetaElastS {NAN};
+		double ErelP {NAN};
+		double ErelS {NAN};
+		double Ex {NAN};
+		double cosThetaH {NAN};
+		int isElasticHit {0};
+		bool isFragDet {false};
 
 		SampledValues sampler {};
 		

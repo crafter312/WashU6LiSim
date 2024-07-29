@@ -1,11 +1,11 @@
 #ifndef _correlations
 #define _correlations
 
-#include <cmath>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <exception>
+#include <fstream>
+#include <iostream>
+#include <math.h>
+#include <sstream>
 
 #include "constants.h"
 #include "random.h"
@@ -25,18 +25,18 @@ class SampledValues {
 		double GetThetaElasticRad();
 		double GetThetaLabRad();
 
-		double phi;          // azimuthal angle sampled from uniform distribution in degrees
+		double phi {NAN};          // azimuthal angle sampled from uniform distribution in degrees
 
 		// Elastic values
-		double thetaElastic; // sampled elastic polar angle in lab frame in degrees
+		double thetaElastic {NAN}; // sampled elastic polar angle in lab frame in degrees
 
 		// Inelastic values
-		double Ext;          // target excitation energy
-		double thetaLab;     // lab angle of outgoing projectile in degrees
-		double Vpplab;       // total lab velocity of outgoing projectile
-		double VppX;         // lab velocity x component
-		double VppY;         // lab velocity y component
-		double VppZ;         // lab velocity z component
+		double Ext {NAN};          // target excitation energy
+		double thetaLab {NAN};     // lab angle of outgoing projectile in degrees
+		double Vpplab {NAN};       // total lab velocity of outgoing projectile
+		double VppX {NAN};         // lab velocity x component
+		double VppY {NAN};         // lab velocity y component
+		double VppZ {NAN};         // lab velocity z component
 };
 
 class Correlations {

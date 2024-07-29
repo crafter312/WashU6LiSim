@@ -148,7 +148,7 @@ namespace ROOT {
       ::PFragS *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::PFragS));
       static ::ROOT::TGenericClassInfo 
-         instance("PFragS", "src/rootoutput.h", 28,
+         instance("PFragS", "src/rootoutput.h", 27,
                   typeid(::PFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &PFragS_Dictionary, isa_proxy, 4,
                   sizeof(::PFragS) );
@@ -193,7 +193,7 @@ namespace ROOT {
       ::CFragS *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CFragS));
       static ::ROOT::TGenericClassInfo 
-         instance("CFragS", "src/rootoutput.h", 52,
+         instance("CFragS", "src/rootoutput.h", 51,
                   typeid(::CFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &CFragS_Dictionary, isa_proxy, 4,
                   sizeof(::CFragS) );

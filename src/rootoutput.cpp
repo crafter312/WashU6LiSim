@@ -8,6 +8,9 @@
 // Input:
 //	nFrags -- number of decay fragments
 RootOutput::RootOutput(string suffix, int n) {
+	chargedFragments = new CFragS[nFrags];
+	for (int i=0; i<nFrags; i++)
+		chargedFragments[i] = CFragS();
 	nFrags = n;
 
 	// Define output file
@@ -19,6 +22,7 @@ RootOutput::RootOutput(string suffix, int n) {
 
 	t = new TTree("t", "t");
   t->Branch("parentSecondary", &parentSecondary);
+	t->Branch("chargedFragments", &chargedFragments);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
 	t->Branch("ErelS", &ErelS);
@@ -26,12 +30,6 @@ RootOutput::RootOutput(string suffix, int n) {
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
-
-	// Decay fragments
-	chargedFragments = new CFragS[nFrags];
-	for (int i=0; i<nFrags; i++)
-		chargedFragments[i] = CFragS();
-	t->Branch("chargedFragments", &chargedFragments);
 
 	// Reworked simulation branches
 	t->Branch("sampler", &sampler);
@@ -97,13 +95,13 @@ void RootOutput::Clear() {
 	parentSecondary.clear();
 	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i].clear();
-	thetaNeut = -1;
-	thetaElastS = -1;
-	ErelP = -1;
-	ErelS = -1;
-	Ex = -1;
+	thetaNeut = NAN;
+	thetaElastS = NAN;
+	ErelP = NAN;
+	ErelS = NAN;
+	Ex = NAN;
 	cosThetaH = NAN;
-	isElasticHit = -1;
+	isElasticHit = 0;
 	isFragDet = false;
 
 	sampler.Clear();
