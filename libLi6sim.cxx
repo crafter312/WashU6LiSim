@@ -134,51 +134,6 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
-   static TClass *PFragS_Dictionary();
-   static void PFragS_TClassManip(TClass*);
-   static void *new_PFragS(void *p = nullptr);
-   static void *newArray_PFragS(Long_t size, void *p);
-   static void delete_PFragS(void *p);
-   static void deleteArray_PFragS(void *p);
-   static void destruct_PFragS(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::PFragS*)
-   {
-      ::PFragS *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::PFragS));
-      static ::ROOT::TGenericClassInfo 
-         instance("PFragS", "src/rootoutput.h", 27,
-                  typeid(::PFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &PFragS_Dictionary, isa_proxy, 4,
-                  sizeof(::PFragS) );
-      instance.SetNew(&new_PFragS);
-      instance.SetNewArray(&newArray_PFragS);
-      instance.SetDelete(&delete_PFragS);
-      instance.SetDeleteArray(&deleteArray_PFragS);
-      instance.SetDestructor(&destruct_PFragS);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::PFragS*)
-   {
-      return GenerateInitInstanceLocal((::PFragS*)nullptr);
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::PFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
-
-   // Dictionary for non-ClassDef classes
-   static TClass *PFragS_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::PFragS*)nullptr)->GetClass();
-      PFragS_TClassManip(theClass);
-   return theClass;
-   }
-
-   static void PFragS_TClassManip(TClass* ){
-   }
-
-} // end of namespace ROOT
-
-namespace ROOT {
    static TClass *CFragS_Dictionary();
    static void CFragS_TClassManip(TClass*);
    static void *new_CFragS(void *p = nullptr);
@@ -193,7 +148,7 @@ namespace ROOT {
       ::CFragS *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::CFragS));
       static ::ROOT::TGenericClassInfo 
-         instance("CFragS", "src/rootoutput.h", 51,
+         instance("CFragS", "src/rootoutput.h", 26,
                   typeid(::CFragS), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &CFragS_Dictionary, isa_proxy, 4,
                   sizeof(::CFragS) );
@@ -267,27 +222,6 @@ namespace ROOT {
 
 namespace ROOT {
    // Wrappers around operator new
-   static void *new_PFragS(void *p) {
-      return  p ? new(p) ::PFragS : new ::PFragS;
-   }
-   static void *newArray_PFragS(Long_t nElements, void *p) {
-      return p ? new(p) ::PFragS[nElements] : new ::PFragS[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_PFragS(void *p) {
-      delete ((::PFragS*)p);
-   }
-   static void deleteArray_PFragS(void *p) {
-      delete [] ((::PFragS*)p);
-   }
-   static void destruct_PFragS(void *p) {
-      typedef ::PFragS current_t;
-      ((current_t*)p)->~current_t();
-   }
-} // end of namespace ROOT for class ::PFragS
-
-namespace ROOT {
-   // Wrappers around operator new
    static void *new_CFragS(void *p) {
       return  p ? new(p) ::CFragS : new ::CFragS;
    }
@@ -327,7 +261,6 @@ nullptr
 extern int __Cling_AutoLoading_Map;
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  KinematicValues;
-struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  PFragS;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
@@ -344,7 +277,6 @@ struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
     static const char* classesHeaders[] = {
 "CFragS", payloadCode, "@",
 "KinematicValues", payloadCode, "@",
-"PFragS", payloadCode, "@",
 "SampledValues", payloadCode, "@",
 nullptr
 };

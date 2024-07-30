@@ -20,31 +20,6 @@
 using namespace std;
 
 /**
- * Lab velocity, angles, etc. of the parent fragment.
- * This can either be the primary distributions after sampling
- * or the secondary reconstructed distributions.
- */
-struct PFragS {
-	double vel{NAN};
-	double velx{NAN};
-	double vely{NAN};
-	double velz{NAN};
-	double phi{NAN};
-	double theta{NAN};
-	double Erel{NAN};
-
-	void clear() {
-		vel = NAN;
-		velx = NAN;
-		vely = NAN;
-		velz = NAN;
-		phi = NAN;
-		theta = NAN;
-		Erel = NAN;
-	};
-};
-
-/**
  * Energy, position, etc. of charged fragment.
  * This is either alpha or proton in my case.
  */
@@ -86,7 +61,6 @@ class RootOutput {
 		void Fill();
 		void Clear();
 
-		void SetSecondary(double, double, double);
 		void SetFragment(int, double, double, double, double, double);
 		void SetThetaNeut(double);
 		void SetThetaElastS(double);
@@ -119,7 +93,6 @@ class RootOutput {
   	TH1I* hist_Ex;
   	TH1F* cos_thetaH;
 
-		PFragS parentSecondary {};
 		CFragS* chargedFragments;
 		int nFrags;
 		double thetaNeut {NAN};

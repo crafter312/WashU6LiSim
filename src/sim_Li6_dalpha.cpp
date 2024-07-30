@@ -259,6 +259,7 @@ int main(int argc, char *argv[]) {
     float Ex_S = Erel_S + Q;
 
 		decay.plfRecon->SetEnergy(Erel_S);
+		decay.plfRecon->RadToDeg();
 		output.SetEx(Ex_S);
 		output.SetCosThetaH(decay.cos_thetaH);
     output.hist_Erel_thetaH->Fill(Erel_S, decay.cos_thetaH);
@@ -268,7 +269,6 @@ int main(int argc, char *argv[]) {
     if (fabs(decay.cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
 
     output.hist_Ex_DE->Fill(Ex_S, frag[1]->FrontEnergy);
-		output.SetSecondary(decay.plfRecon->GetVelocity(), decay.plfRecon->GetPhi(), decay.plfRecon->GetTheta());
 		output.SetReconValues(decay.plfRecon->GetKinematicValues());
 
 		float x = frag[0]->recon->GetX()/10.;

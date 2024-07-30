@@ -88,6 +88,12 @@ void KinematicValues::AddPCVec(double* vec) {
 	pc[2] += vec[2];
 }
 
+// Converts angles from radians to degrees
+void KinematicValues::RadToDeg() {
+	theta *= rad_to_deg;
+	phi *= rad_to_deg;
+}
+
 // Returns V squared
 double KinematicValues::GetV2() {
 	return velocity * velocity;
@@ -319,6 +325,10 @@ void CFrame::CalcCartV() {
 
 void CFrame::Sph2CartV() {
 	kinematicValues.Sph2CartV();
+}
+
+void CFrame::RadToDeg() {
+	kinematicValues.RadToDeg();
 }
 
 double CFrame::GetV2() {

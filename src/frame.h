@@ -27,6 +27,7 @@ public:
 	void CalcCartPC();       // calculates PC components from total V, total PC, and V components
 	void AddVVec(double*);   // adds supplied vector to V vector
 	void AddPCVec(double*);  // adds supplied vector to PC vector
+	void RadToDeg();         // converts angles from radians to degrees
 	double GetV2();          // returns V squared
 	double GetPC2();         // returns PC squared
 	double GetVDot(double*); // returns dot product of V vector with supplied vector
@@ -77,6 +78,7 @@ public:
 	void Cart2Sph();
 	void CalcCartV();
 	void Sph2CartV();
+	void RadToDeg();
 	double GetV2();
 
 	// Setters and Getters

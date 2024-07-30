@@ -21,7 +21,6 @@ RootOutput::RootOutput(string suffix, int n) {
 	/**** Initialize tree ****/
 
 	t = new TTree("t", "t");
-  t->Branch("parentSecondary", &parentSecondary);
 	t->Branch("chargedFragments", &chargedFragments);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
@@ -81,6 +80,13 @@ RootOutput::RootOutput(string suffix, int n) {
 }
 
 RootOutput::~RootOutput() {
+	// Fill histograms from tree
+	t->Draw("recon.energy>>Erel","!std::isnan(recon.energy)","goff");
+	t->Draw("recon.velocity>>vel_S","!std::isnan(recon.velocity)","goff");
+	t->Draw("recon.theta>>theta_S","!std::isnan(recon.theta)","goff");
+	t->Draw("recon.phi>>phi_S","!std::isnan(recon.phi)","goff");
+
+	// Cleanup
 	file->Write();
 	file->Close();
 		
@@ -92,7 +98,6 @@ void RootOutput::Fill() {
 }
 
 void RootOutput::Clear() {
-	parentSecondary.clear();
 	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i].clear();
 	thetaNeut = NAN;
@@ -105,35 +110,6 @@ void RootOutput::Clear() {
 
 	sampler.Clear();
 	recon.Clear();
-}
-
-// Input:
-//	v -- total velocity
-//	vx -- x velocity
-//	vy -- y velocity
-//	vz -- z velocity
-// 	p -- phi (azimuthal angle) in degrees
-//	th -- theta (polar angle) in degrees
-// The first six inputs are for the case of inelastic scattering,
-// with this instance being for the "primary" distribution (prior to
-// detection, reconstruction, etc.)
-
-// Input: SEE PREVIOUS FUNCTION
-// These parameters are the same as the previous function, except that
-// they are for the "secondary" distribution (after detection,
-// reconstruction, etc.).
-// Also note that both "p" and "th" should be in radians here!
-void RootOutput::SetSecondary(double v, double p, double th) {
-	parentSecondary.vel   = v;
-	parentSecondary.velx  = v*sin(th)*cos(p);
-	parentSecondary.vely  = v*sin(th)*sin(p);
-	parentSecondary.velz  = v*cos(th);
-	parentSecondary.phi   = p*rad_to_deg;
-	parentSecondary.theta = th*rad_to_deg;
-
-	hist_vel_S->Fill(parentSecondary.vel);
-  hist_theta_S->Fill(parentSecondary.theta);
-  hist_phi_S->Fill(parentSecondary.phi);
 }
 
 // Input:
