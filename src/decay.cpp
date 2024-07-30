@@ -203,7 +203,6 @@ float CDecay::getErelRel(CFrame **part){
 
 	//emission angle of core - which should be last in the list
 	//note that the velocity is calculated by the "transfomVelocity" function call
-	//TODO: fix ordering of fragments in list
 	tempFrag = partCM[Nfrag - 1];
 	cos_thetaH = tempFrag->GetVComp(2) / tempFrag->GetVelocity();
 

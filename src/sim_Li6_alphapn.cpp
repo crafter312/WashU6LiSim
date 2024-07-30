@@ -163,11 +163,7 @@ int main(int argc, char *argv[])
     fragBeam->real->SetTheta(thetaElastic);
     fragBeam->real->SetPhi(phi);
     fragBeam->real->SetEnergy(Ebeam); //~5MeV/u Li-7
-    fragBeam->real->SetVelocityComps(
-			sin(thetaElastic) * cos(phi),
-			sin(thetaElastic) * sin(phi),
-			cos(thetaElastic)
-		);
+    fragBeam->real->getVelocity(&einstein); //calculates v, pc & components from energy and angles
 
     // determine if the beam hits the detector
     fragBeam->targetInteraction(dthick,thickness);
