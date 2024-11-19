@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 		string(XSECPATH) + "7li12c_e35_xsec_5.out"
 	};
 	string elasXsecfile = string(XSECPATH) + "7li12c_e35_xsec_1.out";
-	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits);
+	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C);
 
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;
@@ -138,7 +138,9 @@ int main(int argc, char *argv[])
 		output.Clear();
 
     // distance in target that produced has to pass to get out
-    double dthick = thickness*decay.ran.Rndm();
+    double rand     = decay.ran.Rndm();
+		double inthick  = thickness * rand;
+    double outthick = thickness * (1. - rand);
 
     // beam spot at target
     double rTarget = sqrt(decay.ran.Rndm())*targetSize/2.;
@@ -147,7 +149,7 @@ int main(int argc, char *argv[])
     float yTarget = rTarget*sin(theta);
 
     // need to re-randomize the angles for each passthrough
-    sampler->randomAngles();
+    sampler->randomAngles(inthick);
 		output.SetSampledValues(&sampler->sampledValues); // save info on beam primary distributions
 
     //add kinematics to beam
@@ -166,7 +168,7 @@ int main(int argc, char *argv[])
     fragBeam->real->getVelocity(&einstein); //calculates v, pc & components from energy and angles
 
     // determine if the beam hits the detector
-    fragBeam->targetInteraction(dthick,thickness);
+    fragBeam->targetInteraction(outthick,thickness);
     fragBeam->SiliconInteraction();
     int beamhit = fragBeam->hit(xTarget,yTarget);
 		output.SetIsElasticHit(beamhit);
@@ -194,7 +196,7 @@ int main(int argc, char *argv[])
 		// Calculates energy loss in target, change in scatter angle, and
     // wheter fragment is stopped within target
     for (int i = 0; i < Nfrag - 1; i++) {
-      frag[i]->targetInteraction(dthick, thickness);
+      frag[i]->targetInteraction(outthick, thickness);
       frag[i]->SiliconInteraction();
     }
 

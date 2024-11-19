@@ -89,8 +89,6 @@ RootOutput::~RootOutput() {
 	// Cleanup
 	file->Write();
 	file->Close();
-		
-	delete[] chargedFragments;
 }
 
 void RootOutput::Fill() {

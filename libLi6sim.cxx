@@ -10,7 +10,7 @@
 #include <string.h>
 #include <assert.h>
 #define G__DICTIONARY
-#include "RConfig.h"
+#include "ROOT/RConfig.hxx"
 #include "TClass.h"
 #include "TDictAttributeMap.h"
 #include "TInterpreter.h"
@@ -58,7 +58,7 @@ namespace ROOT {
       ::SampledValues *ptr = nullptr;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::SampledValues));
       static ::ROOT::TGenericClassInfo 
-         instance("SampledValues", "src/correlations.h", 15,
+         instance("SampledValues", "src/correlations.h", 17,
                   typeid(::SampledValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &SampledValues_Dictionary, isa_proxy, 4,
                   sizeof(::SampledValues) );
@@ -71,14 +71,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::SampledValues*)
    {
-      return GenerateInitInstanceLocal((::SampledValues*)nullptr);
+      return GenerateInitInstanceLocal(static_cast<::SampledValues*>(nullptr));
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::SampledValues*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 
    // Dictionary for non-ClassDef classes
    static TClass *SampledValues_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::SampledValues*)nullptr)->GetClass();
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr))->GetClass();
       SampledValues_TClassManip(theClass);
    return theClass;
    }
@@ -116,14 +116,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::KinematicValues*)
    {
-      return GenerateInitInstanceLocal((::KinematicValues*)nullptr);
+      return GenerateInitInstanceLocal(static_cast<::KinematicValues*>(nullptr));
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::KinematicValues*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::KinematicValues*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 
    // Dictionary for non-ClassDef classes
    static TClass *KinematicValues_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::KinematicValues*)nullptr)->GetClass();
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::KinematicValues*>(nullptr))->GetClass();
       KinematicValues_TClassManip(theClass);
    return theClass;
    }
@@ -161,14 +161,14 @@ namespace ROOT {
    }
    TGenericClassInfo *GenerateInitInstance(const ::CFragS*)
    {
-      return GenerateInitInstanceLocal((::CFragS*)nullptr);
+      return GenerateInitInstanceLocal(static_cast<::CFragS*>(nullptr));
    }
    // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::CFragS*)nullptr); R__UseDummy(_R__UNIQUE_DICT_(Init));
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::CFragS*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
 
    // Dictionary for non-ClassDef classes
    static TClass *CFragS_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::CFragS*)nullptr)->GetClass();
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::CFragS*>(nullptr))->GetClass();
       CFragS_TClassManip(theClass);
    return theClass;
    }
@@ -188,14 +188,14 @@ namespace ROOT {
    }
    // Wrapper around operator delete
    static void delete_SampledValues(void *p) {
-      delete ((::SampledValues*)p);
+      delete (static_cast<::SampledValues*>(p));
    }
    static void deleteArray_SampledValues(void *p) {
-      delete [] ((::SampledValues*)p);
+      delete [] (static_cast<::SampledValues*>(p));
    }
    static void destruct_SampledValues(void *p) {
       typedef ::SampledValues current_t;
-      ((current_t*)p)->~current_t();
+      (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::SampledValues
 
@@ -209,14 +209,14 @@ namespace ROOT {
    }
    // Wrapper around operator delete
    static void delete_KinematicValues(void *p) {
-      delete ((::KinematicValues*)p);
+      delete (static_cast<::KinematicValues*>(p));
    }
    static void deleteArray_KinematicValues(void *p) {
-      delete [] ((::KinematicValues*)p);
+      delete [] (static_cast<::KinematicValues*>(p));
    }
    static void destruct_KinematicValues(void *p) {
       typedef ::KinematicValues current_t;
-      ((current_t*)p)->~current_t();
+      (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::KinematicValues
 
@@ -230,14 +230,14 @@ namespace ROOT {
    }
    // Wrapper around operator delete
    static void delete_CFragS(void *p) {
-      delete ((::CFragS*)p);
+      delete (static_cast<::CFragS*>(p));
    }
    static void deleteArray_CFragS(void *p) {
-      delete [] ((::CFragS*)p);
+      delete [] (static_cast<::CFragS*>(p));
    }
    static void destruct_CFragS(void *p) {
       typedef ::CFragS current_t;
-      ((current_t*)p)->~current_t();
+      (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::CFragS
 

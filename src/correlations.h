@@ -6,8 +6,10 @@
 #include <iostream>
 #include <math.h>
 #include <sstream>
+#include <string>
 
 #include "constants.h"
+#include "loss.h"
 #include "random.h"
 
 using namespace std;
@@ -41,7 +43,7 @@ class SampledValues {
 
 class Correlations {
   public:
-    Correlations(string*, string, double, double, double*, double*, size_t);
+    Correlations(string*, string, double, double, double*, double*, size_t, string);
     ~Correlations();
 
     CRandom ran;
@@ -58,7 +60,7 @@ class Correlations {
 
 		// Inelastic exit channel input
 		string *filenames;  // inelastic input file names
-		int *lengths;       // number of data points for each input file
+		int *lengths;       // number of data points for #include "loss.h"each input file
 		double **th_file;   // angular array for each input file
     double **Xsec_file; // differential cross section array for each input file
     
@@ -72,27 +74,30 @@ class Correlations {
 		double *Xsecs; // total exit channel cross sections
 		double *Exts;  // target excitation for each exit channel
 
-    void randomAngles();             // samples elastic and inelastic scattering angles from input distributions
+    void randomAngles(double);       // samples elastic and inelastic scattering angles from input distributions
 		void readelastic();              // reads elastic differential cross section Fresco file
     void readinelastic(string, int); // reads inelastic differential cross section Fresco file for given exit channel
 
 	// Define constants used for calculations here
 	private:
-		double Mp;       // mass of projectile
-		double Mt;       // mass of target
-		double Mpp;      // mass of outgoing projectile (exit channel)
-		double Mtt;      // mass of outgoing target (exit channel)
-		double Mred;     // reduced mass
-		double EnergyPA; // energy per nucleon
-		double Vbeam;    // beam velocity
-		double VCM;      // CM velocity
-		double VpCM;     // velocity of projectile in CM frame
-		double VtCM;     // velocity of target in CM frame
-		double ECMin;    // kinetic energy of incoming target and projectile in CM frame
-		double Qrxn;     // Q value of projectile decay
+		double Mp;             // mass of projectile
+		double Mt;             // mass of target
+		double Mpp;            // mass of outgoing projectile (exit channel)
+		double Mtt;            // mass of outgoing target (exit channel)
+		double Mred;           // reduced mass
+		double EnergyPostLoss; // beam energy after energy loss in target
+		double EnergyPA;       // energy per nucleon
+		double Vbeam;          // beam velocity
+		double VCM;            // CM velocity
+		double VpCM;           // velocity of projectile in CM frame
+		double VtCM;           // velocity of target in CM frame
+		double ECMin;          // kinetic energy of incoming target and projectile in CM frame
+		double Qrxn;           // Q value of projectile decay
 
-		void setConstants();       // calculates angle-independent kinematic values
-		void calculateLabAngles(); // calculates lab frame velocities and angles for each sampled inelastic angle in CM frame
+		CLoss* ploss_C;         // loss file for incoming projectile in C target
+
+		void setConstants();             // calculates angle-independent kinematic values
+		void calculateLabAngles(double); // calculates lab frame velocities and angles for each sampled inelastic angle in CM frame
 		
 };
 

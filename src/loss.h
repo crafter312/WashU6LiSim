@@ -1,3 +1,6 @@
+#ifndef _loss
+#define _loss
+
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -23,3 +26,5 @@ class CLoss
   float getEin(float,float);
   float getDedx(float);
 };
+
+#endif

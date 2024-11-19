@@ -41,7 +41,7 @@ double SampledValues::GetThetaLabRad() {
 
 /**********************************************************************************************/
 
-Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n) {
+Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n, string lossfile_C) {
 	CRandom ran;
 	filenames = filenamein;
 	fileelastic = fileelasticin;
@@ -70,15 +70,15 @@ Correlations::Correlations(string* filenamein, string fileelasticin, double E0, 
 	// Some constants and calculations are same for all sampled angles
 	setConstants();
 
+	// Initialize loss object from file, must be done after setConstants
+	ploss_C = new CLoss(lossfile_C, Mp);
+
 	// Read the Fresco fort.201 file containing unscaled elastic cross section data in the center of mass
 	readelastic();
 
 	// Read all the supplied Fresco fort.202, fort.203, etc. files containing inelastic cross section data in the center of mass
 	for (int i = 0; i < nexits; i++)
 		readinelastic(filenames[i], i);
-
-	// Randomize theta and phi angles in Center of Mass
-	randomAngles();
 }
 
 Correlations::~Correlations() {
@@ -88,7 +88,7 @@ Correlations::~Correlations() {
   delete []Xsec_elastic;
 }
 
-void Correlations::randomAngles() {
+void Correlations::randomAngles(double thick) {
 	sampledValues.phi = 2. * pi * ran.Rndm();
 
 	/**** INELASTIC ****/
@@ -129,7 +129,7 @@ void Correlations::randomAngles() {
 	}
 	sampledValues.thetaElastic = (ii + 1 == length) ? th_elastic[lenElastic - 1] : th_elastic[ii] + (th_elastic[ii + 1] - th_elastic[ii]) * ran.Rndm();
 	
-	calculateLabAngles();
+	calculateLabAngles(thick);
 }
 
 void Correlations::setConstants() {
@@ -139,7 +139,16 @@ void Correlations::setConstants() {
 	Mtt = Mass_13C / m0;            // mass of outgoing target C13
 	Mred = Mpp * Mtt / (Mpp + Mtt); // reduced mass of outgoing projectiles
 
-	EnergyPA = E / 7.0;                 // energy per nucleon
+	Qrxn = mass_7Li + mass_12C - mass_6Li - mass_13C; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
+	cout << "n-transfer Q-value: " << Qrxn << endl;
+}
+
+void Correlations::calculateLabAngles(double thick) {
+	// Account for energy loss in target before transforming to CM frame
+	EnergyPostLoss = ploss_C->getEout(E, thick);
+	
+	// Then transform to CM frame
+	EnergyPA = EnergyPostLoss / 7.0;                 // energy per nucleon
 	Vbeam = sqrt(2 * EnergyPA) * vfact; // beam velocity
 	VCM = Vbeam * Mp / (Mp + Mt);       // CM velocity
 	VpCM = Vbeam - VCM;                 // velocity of projectile in CM frame
@@ -147,11 +156,6 @@ void Correlations::setConstants() {
 
 	ECMin = (Mp * ((VpCM * VpCM) / (vfact * vfact)) + Mt * ((VtCM * VtCM) / (vfact * vfact))) * 0.5; // kinetic energy of incoming target and projectile in CM frame
 
-	Qrxn = mass_7Li + mass_12C - mass_6Li - mass_13C; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
-	cout << "n-transfer Q-value: " << Qrxn << endl;
-}
-
-void Correlations::calculateLabAngles() {
 	// Energy of projectile and target in exit channel
 	// Note that the target nucleus excitation energy 
 	// changes depending on the exit channel chosen

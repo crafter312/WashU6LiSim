@@ -11,7 +11,9 @@ LIB = /home/Li6Webb/simlib/simlib.a
 CC = c++
 LINKOPTION = $(shell root-config --libs --cflags)
 INCLUDE = -I$(shell root-config --incdir) -I/home/Li6Webb/simlib
-CFLAGS = -c -w -std=c++14 $(INCLUDE)
+CFLAGS = -c -w -std=c++17 $(INCLUDE)
+
+all: sim sim_3+
 
 sim : $(BIN)/sim_Li6_alphapn.o $(OBJECT) libLi6sim.cxx
 	@echo "Linking..."
