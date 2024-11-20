@@ -1,9 +1,11 @@
 // Addition added to sim.cpp to incorparate differential cross section into the
 // selection of angle theta
 // Author: Nicolas Dronchi, 07/23/2020
-// Modified: Henry Webb, 05/15/2024 07/22/2024
+// Modified: Henry Webb, 05/15/2024 07/22/2024 11/19/2024
 
 #include "correlations.h"
+
+#include <iostream>
 
 using namespace std;
 
@@ -86,6 +88,11 @@ Correlations::~Correlations() {
 	delete []Xsec_file;
 	delete []th_elastic;
   delete []Xsec_elastic;
+
+	delete framep;
+	delete framet;
+	delete framepp;
+	delete framett;
 }
 
 void Correlations::randomAngles(double thick) {
@@ -133,33 +140,61 @@ void Correlations::randomAngles(double thick) {
 }
 
 void Correlations::setConstants() {
-	Mp = Mass_7Li / m0;             // mass of projectile Li7
-	Mt = Mass_12C / m0;             // mass of target C12
-	Mpp = Mass_6Li / m0;            // mass of outgoing projectile Li6
-	Mtt = Mass_13C / m0;            // mass of outgoing target C13
-	Mred = Mpp * Mtt / (Mpp + Mtt); // reduced mass of outgoing projectiles
+	Mp     = Mass_7Li / m0;           // mass of projectile Li7
+	Mt     = Mass_12C / m0;           // mass of target C12
+	Mpp    = Mass_6Li / m0;           // mass of outgoing projectile Li6
+	Mtt    = Mass_13C / m0;           // mass of outgoing target C13
+	Mred   = Mpp * Mtt / (Mpp + Mtt); // reduced mass of outgoing projectiles
+
+	// Incoming beam frame
+	framep = new CFrame(Mp);
+	framep->SetTheta(0.);
+	framep->SetPhi(0.);
+
+	// Incoming target frame
+	framet = new CFrame(Mt);
+	framet->SetTheta(0.);
+	framet->SetPhi(0.);
+	framet->SetEnergy(0.);
+	framet->getVelocityRel();
+
+	// CM frame of incoming projectiles
+	frameCMout = new CFrame(Mred);
+	framet->SetTheta(0.);
+	framet->SetPhi(0.);
+
+	// outgoing parent frame
+	framepp = new CFrame(Mpp);       
 
 	Qrxn = mass_7Li + mass_12C - mass_6Li - mass_13C; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
 	cout << "n-transfer Q-value: " << Qrxn << endl;
 }
 
 void Correlations::calculateLabAngles(double thick) {
-	// Account for energy loss in target before transforming to CM frame
+	// Account for energy loss in target
 	EnergyPostLoss = ploss_C->getEout(E, thick);
+	framep->SetEnergy(EnergyPostLoss);
+	framep->getVelocityRel();
+
+	// Calculate CM velocity
+	VCM = framep->GetPC() * c / (framep->totEnergy + framet->totEnergy);
+	VCMvec[2] = -VCM;
 	
 	// Then transform to CM frame
-	EnergyPA = EnergyPostLoss / 7.0;                 // energy per nucleon
-	Vbeam = sqrt(2 * EnergyPA) * vfact; // beam velocity
-	VCM = Vbeam * Mp / (Mp + Mt);       // CM velocity
-	VpCM = Vbeam - VCM;                 // velocity of projectile in CM frame
-	VtCM = VCM;                         // velocity of target in CM frame is CM velocity
+	framet->transformVelocityRel(VCMvec);
+	framep->transformVelocityRel(VCMvec);
 
-	ECMin = (Mp * ((VpCM * VpCM) / (vfact * vfact)) + Mt * ((VtCM * VtCM) / (vfact * vfact))) * 0.5; // kinetic energy of incoming target and projectile in CM frame
+	ECMin = framet->GetEnergy() + framep->GetEnergy(); // kinetic energy of incoming target and projectile in CM frame
+	//if (sampledValues.Ext == 0.) cout << Vbeam << endl;
 
 	// Energy of projectile and target in exit channel
 	// Note that the target nucleus excitation energy 
 	// changes depending on the exit channel chosen
 	double ECMout = ECMin - Qrxn - Exp - sampledValues.Ext;
+
+	// Set up outgoing CM frame
+	frameCMout->SetEnergy(ECMout);
+	double VCMout = frameCMout->getVelocityRel();
 
 	double Vrel = sqrt(ECMout * 2 / Mred) * vfact; // relative velocity between projectile and target in exit channel
 	double Vpp = Vrel * Mtt / (Mtt + Mpp);         // center of mass velocity of projectile fragment in exit channel

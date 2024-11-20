@@ -84,17 +84,24 @@ class Correlations {
 		double Mt;             // mass of target
 		double Mpp;            // mass of outgoing projectile (exit channel)
 		double Mtt;            // mass of outgoing target (exit channel)
-		double Mred;           // reduced mass
+		double Mred;           // reduced mass of outgoing projectile/target
 		double EnergyPostLoss; // beam energy after energy loss in target
 		double EnergyPA;       // energy per nucleon
+		double gammaVbeam;     // relativistic beam momentum divided by mass
 		double Vbeam;          // beam velocity
 		double VCM;            // CM velocity
+		double VCMvec[3] = { 0., 0., 0. };
 		double VpCM;           // velocity of projectile in CM frame
 		double VtCM;           // velocity of target in CM frame
 		double ECMin;          // kinetic energy of incoming target and projectile in CM frame
 		double Qrxn;           // Q value of projectile decay
 
-		CLoss* ploss_C;         // loss file for incoming projectile in C target
+		CLoss* ploss_C;        // loss file for incoming projectile in C target
+		CFrame* framep;        // incoming beam frame
+		CFrame* framet;        // incoming target frame
+		CFrame* framepp;       // outgoing parent frame
+		CFrame* framett;       // outgoing target frame
+		CFrame* frameCMout;    // outgoing CM frame
 
 		void setConstants();             // calculates angle-independent kinematic values
 		void calculateLabAngles(double); // calculates lab frame velocities and angles for each sampled inelastic angle in CM frame
