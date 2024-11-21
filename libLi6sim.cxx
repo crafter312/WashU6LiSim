@@ -44,51 +44,6 @@
 namespace std {} using namespace std;
 
 namespace ROOT {
-   static TClass *SampledValues_Dictionary();
-   static void SampledValues_TClassManip(TClass*);
-   static void *new_SampledValues(void *p = nullptr);
-   static void *newArray_SampledValues(Long_t size, void *p);
-   static void delete_SampledValues(void *p);
-   static void deleteArray_SampledValues(void *p);
-   static void destruct_SampledValues(void *p);
-
-   // Function generating the singleton type initializer
-   static TGenericClassInfo *GenerateInitInstanceLocal(const ::SampledValues*)
-   {
-      ::SampledValues *ptr = nullptr;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::SampledValues));
-      static ::ROOT::TGenericClassInfo 
-         instance("SampledValues", "src/correlations.h", 17,
-                  typeid(::SampledValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &SampledValues_Dictionary, isa_proxy, 4,
-                  sizeof(::SampledValues) );
-      instance.SetNew(&new_SampledValues);
-      instance.SetNewArray(&newArray_SampledValues);
-      instance.SetDelete(&delete_SampledValues);
-      instance.SetDeleteArray(&deleteArray_SampledValues);
-      instance.SetDestructor(&destruct_SampledValues);
-      return &instance;
-   }
-   TGenericClassInfo *GenerateInitInstance(const ::SampledValues*)
-   {
-      return GenerateInitInstanceLocal(static_cast<::SampledValues*>(nullptr));
-   }
-   // Static variable to force the class initialization
-   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
-
-   // Dictionary for non-ClassDef classes
-   static TClass *SampledValues_Dictionary() {
-      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr))->GetClass();
-      SampledValues_TClassManip(theClass);
-   return theClass;
-   }
-
-   static void SampledValues_TClassManip(TClass* ){
-   }
-
-} // end of namespace ROOT
-
-namespace ROOT {
    static TClass *KinematicValues_Dictionary();
    static void KinematicValues_TClassManip(TClass*);
    static void *new_KinematicValues(void *p = nullptr);
@@ -129,6 +84,51 @@ namespace ROOT {
    }
 
    static void KinematicValues_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   static TClass *SampledValues_Dictionary();
+   static void SampledValues_TClassManip(TClass*);
+   static void *new_SampledValues(void *p = nullptr);
+   static void *newArray_SampledValues(Long_t size, void *p);
+   static void delete_SampledValues(void *p);
+   static void deleteArray_SampledValues(void *p);
+   static void destruct_SampledValues(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::SampledValues*)
+   {
+      ::SampledValues *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::SampledValues));
+      static ::ROOT::TGenericClassInfo 
+         instance("SampledValues", "src/correlations.h", 18,
+                  typeid(::SampledValues), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &SampledValues_Dictionary, isa_proxy, 4,
+                  sizeof(::SampledValues) );
+      instance.SetNew(&new_SampledValues);
+      instance.SetNewArray(&newArray_SampledValues);
+      instance.SetDelete(&delete_SampledValues);
+      instance.SetDeleteArray(&deleteArray_SampledValues);
+      instance.SetDestructor(&destruct_SampledValues);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::SampledValues*)
+   {
+      return GenerateInitInstanceLocal(static_cast<::SampledValues*>(nullptr));
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *SampledValues_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const ::SampledValues*>(nullptr))->GetClass();
+      SampledValues_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void SampledValues_TClassManip(TClass* ){
    }
 
 } // end of namespace ROOT
@@ -180,27 +180,6 @@ namespace ROOT {
 
 namespace ROOT {
    // Wrappers around operator new
-   static void *new_SampledValues(void *p) {
-      return  p ? new(p) ::SampledValues : new ::SampledValues;
-   }
-   static void *newArray_SampledValues(Long_t nElements, void *p) {
-      return p ? new(p) ::SampledValues[nElements] : new ::SampledValues[nElements];
-   }
-   // Wrapper around operator delete
-   static void delete_SampledValues(void *p) {
-      delete (static_cast<::SampledValues*>(p));
-   }
-   static void deleteArray_SampledValues(void *p) {
-      delete [] (static_cast<::SampledValues*>(p));
-   }
-   static void destruct_SampledValues(void *p) {
-      typedef ::SampledValues current_t;
-      (static_cast<current_t*>(p))->~current_t();
-   }
-} // end of namespace ROOT for class ::SampledValues
-
-namespace ROOT {
-   // Wrappers around operator new
    static void *new_KinematicValues(void *p) {
       return  p ? new(p) ::KinematicValues : new ::KinematicValues;
    }
@@ -219,6 +198,27 @@ namespace ROOT {
       (static_cast<current_t*>(p))->~current_t();
    }
 } // end of namespace ROOT for class ::KinematicValues
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_SampledValues(void *p) {
+      return  p ? new(p) ::SampledValues : new ::SampledValues;
+   }
+   static void *newArray_SampledValues(Long_t nElements, void *p) {
+      return p ? new(p) ::SampledValues[nElements] : new ::SampledValues[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_SampledValues(void *p) {
+      delete (static_cast<::SampledValues*>(p));
+   }
+   static void deleteArray_SampledValues(void *p) {
+      delete [] (static_cast<::SampledValues*>(p));
+   }
+   static void destruct_SampledValues(void *p) {
+      typedef ::SampledValues current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class ::SampledValues
 
 namespace ROOT {
    // Wrappers around operator new
@@ -259,8 +259,8 @@ nullptr
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
-class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  KinematicValues;
+class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
 struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(

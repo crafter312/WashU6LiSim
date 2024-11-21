@@ -85,6 +85,7 @@ public:
 	void SetEnergy(double);
 	void SetVelocity(double);
 	void SetVelocityComps(double, double, double);
+	void SetPC(double);
 	void SetMomComps(double, double, double);
 	void SetTheta(double);
 	void SetPhi(double);

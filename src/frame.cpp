@@ -349,6 +349,10 @@ void CFrame::SetVelocityComps(double vx, double vy, double vz) {
 	kinematicValues.v[2] = vz;
 }
 
+void CFrame::SetPC(double pc) {
+	kinematicValues.pcTot = pc;
+}
+
 void CFrame::SetMomComps(double pcx, double pcy, double pcz) {
 	kinematicValues.pc[0] = pcx;
 	kinematicValues.pc[1] = pcy;

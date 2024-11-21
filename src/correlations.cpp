@@ -140,37 +140,33 @@ void Correlations::randomAngles(double thick) {
 }
 
 void Correlations::setConstants() {
-	Mp     = Mass_7Li / m0;           // mass of projectile Li7
-	Mt     = Mass_12C / m0;           // mass of target C12
-	Mpp    = Mass_6Li / m0;           // mass of outgoing projectile Li6
-	Mtt    = Mass_13C / m0;           // mass of outgoing target C13
-	Mred   = Mpp * Mtt / (Mpp + Mtt); // reduced mass of outgoing projectiles
+	Mp     = Mass_7Li / m0;           // mass of projectile Li7 (amu)
+	Mt     = Mass_12C / m0;           // mass of target C12 (amu)
+	Mpp    = Mass_6Li / m0;           // mass of outgoing projectile Li6 (amu)
+	Mtt    = Mass_13C / m0;           // mass of outgoing target C13 (amu)
+	mpp    = Mass_6Li;                // mass of outgoing projectile Li6 (MeV / c^2)
+	mtt    = Mass_13C;                // mass of outgoing target C13 (MeV / c^2)
+	mpptt  = mpp + mtt;               // total mass of outgoing projectile and target (exit channel) (MeV / c^2)
 
-	// Incoming beam frame
-	framep = new CFrame(Mp);
-	framep->SetTheta(0.);
-	framep->SetPhi(0.);
-
-	// Incoming target frame
-	framet = new CFrame(Mt);
-	framet->SetTheta(0.);
-	framet->SetPhi(0.);
-	framet->SetEnergy(0.);
-	framet->getVelocityRel();
-
-	// CM frame of incoming projectiles
-	frameCMout = new CFrame(Mred);
-	framet->SetTheta(0.);
-	framet->SetPhi(0.);
-
-	// outgoing parent frame
-	framepp = new CFrame(Mpp);       
+	
+	framep = new CFrame(Mp); // Incoming beam frame
+	framet = new CFrame(Mt); // Incoming target frame
+	framepp = new CFrame(Mpp); // Outgoing parent frame
+	framett = new CFrame(Mtt); // Outgoing target frame
 
 	Qrxn = mass_7Li + mass_12C - mass_6Li - mass_13C; // Q value for 7Li + 12C -> 6Li + 13C, ~ -2.30478473 MeV
 	cout << "n-transfer Q-value: " << Qrxn << endl;
 }
 
 void Correlations::calculateLabAngles(double thick) {
+	// Reset frame variables
+	framep->SetTheta(0.);
+	framep->SetPhi(0.);
+	framet->SetTheta(0.);
+	framet->SetPhi(0.);
+	framet->SetEnergy(0.);
+	framet->getVelocityRel();
+
 	// Account for energy loss in target
 	EnergyPostLoss = ploss_C->getEout(E, thick);
 	framep->SetEnergy(EnergyPostLoss);
@@ -185,48 +181,48 @@ void Correlations::calculateLabAngles(double thick) {
 	framep->transformVelocityRel(VCMvec);
 
 	ECMin = framet->GetEnergy() + framep->GetEnergy(); // kinetic energy of incoming target and projectile in CM frame
-	//if (sampledValues.Ext == 0.) cout << Vbeam << endl;
 
 	// Energy of projectile and target in exit channel
 	// Note that the target nucleus excitation energy 
 	// changes depending on the exit channel chosen
 	double ECMout = ECMin - Qrxn - Exp - sampledValues.Ext;
+	double ECMout2 = ECMout*ECMout;
 
-	// Set up outgoing CM frame
-	frameCMout->SetEnergy(ECMout);
-	double VCMout = frameCMout->getVelocityRel();
+	// Resulting momentum of both fragments in exit channel
+	// This comes from setting up a standard relativistic
+	// equation for total kinetic energy and solving for pc
+	// using Wolfram Alpha
+	double PCCMout = 0.5 * sqrt((2. * mpp * ECMout) + ECMout2) * sqrt(((2. * mtt) + ECMout) * ((2. * mpptt) + ECMout)) / (mpptt + ECMout);
 
-	double Vrel = sqrt(ECMout * 2 / Mred) * vfact; // relative velocity between projectile and target in exit channel
-	double Vpp = Vrel * Mtt / (Mtt + Mpp);         // center of mass velocity of projectile fragment in exit channel
-	double Vtt = Vrel - Vpp;                       // CM velocity of target fragment in exit channel
+	// Set values of parent fragment in CM frame
+	framepp->SetTheta(thetaCM);
+	framepp->SetPhi(sampledValues.phi);
+	framepp->totEnergy = sqrt((mpp*mpp) + (PCCMout*PCCMout));
+	framepp->SetVelocity(PCCMout * c / framepp->totEnergy);
+	framepp->Sph2CartV();
 
-	// projections of projectile out on x and z in CM frame
-	double Vxpp = Vpp * sin(thetaCM);
-	double Vzpp = Vpp * cos(thetaCM);
-
-	// projections of projectile out on x and z in Lab frame
-	double Vxpplab = Vxpp;
-	double Vzpplab = Vzpp + VCM ;
+	// Transform outgoing parent fragment to lab frame
+	VCMvec[2] *= -1; // change sign of velocity to boost instead of "unboost"
+	framepp->transformVelocityRel(VCMvec);
 
 	/**** lab velocity and angle of the projectile ****/
-	sampledValues.Vpplab = sqrt((Vxpplab * Vxpplab) + (Vzpplab * Vzpplab));
-	sampledValues.thetaLab = acos(Vzpplab / sampledValues.Vpplab);
+	sampledValues.Vpplab = framepp->GetVelocity();
+	sampledValues.thetaLab = framepp->GetTheta();
 	sampledValues.CalculateCartesian();
 
-	// target is always 180 deg away in center of mass frame
-	double NangCM = pi - thetaCM;
+	// Set values of outgoing target in CM frame (180 deg from frag)
+	framett->SetTheta(pi - thetaCM);
+	framett->SetPhi(sampledValues.phi - (pi * (1 - (2 * (sampledValues.phi < pi))))); // -pi for phi>=pi, +pi for phi<pi
+	framett->totEnergy = sqrt((mtt*mtt) + (PCCMout*PCCMout));
+	framett->SetVelocity(PCCMout * c / framett->totEnergy);
+	framett->Sph2CartV();
 
-	// projections of target out on x and z in CM frame
-	double Vxtt = Vtt * sin(NangCM);
-	double Vztt = Vtt * cos(NangCM);
-
-	// projections of target out on x and z in Lab frame
-	double Vxttlab = Vxtt;
-	double Vzttlab = Vztt + VCM;
+	// Transform outgoing parent fragment to lab frame
+	framepp->transformVelocityRel(VCMvec);
 
 	/**** lab velocity and angle of the target ****/
-	Vttlab = sqrt((Vxttlab * Vxttlab) + (Vzttlab * Vzttlab));
-	thetaTarg = acos(Vzttlab / Vttlab);
+	Vttlab = framett->GetVelocity();
+	thetaTarg = framett->GetTheta();
 
 	// Convert angles to degrees
 	sampledValues.phi *= rad_to_deg;

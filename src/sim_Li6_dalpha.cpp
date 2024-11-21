@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
     decay.Mode2Body(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
 
-    // transfrom decay vectors to lab frame by adding initial velocity of parent Li7 to all fragments
+    // transfrom decay vectors to lab frame by adding initial velocity of parent Li6 to all fragments
 		double VVparent[3];
     VVparent[0] = sampler->sampledValues.VppX; // x
     VVparent[1] = sampler->sampledValues.VppY; // y

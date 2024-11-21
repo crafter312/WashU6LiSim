@@ -10,6 +10,7 @@ const double c2 = c * c;
 const double vfact = c/sqrt(m0);  //velocity (cm/ns) = vfact *sqrt(2.*E(MeV)/A(amu))
 const double vfact2 = vfact * vfact;
 const double pi = acos(-1.);
+const double twopi = 2. * pi;
 const double deg_to_rad = pi/180;
 const double rad_to_deg = 180/pi;
 //masses excesses from AME2016 compilation

@@ -9,6 +9,7 @@
 #include <string>
 
 #include "constants.h"
+#include "frame.h"
 #include "loss.h"
 #include "random.h"
 
@@ -80,11 +81,13 @@ class Correlations {
 
 	// Define constants used for calculations here
 	private:
-		double Mp;             // mass of projectile
-		double Mt;             // mass of target
-		double Mpp;            // mass of outgoing projectile (exit channel)
-		double Mtt;            // mass of outgoing target (exit channel)
-		double Mred;           // reduced mass of outgoing projectile/target
+		double Mp;             // mass of projectile (amu)
+		double Mt;             // mass of target (amu)
+		double Mpp;            // mass of outgoing projectile (exit channel) (amu)
+		double Mtt;            // mass of outgoing target (exit channel) (amu)
+		double mpp;            // mass of outgoing projectile (exit channel) (MeV / c^2)
+		double mtt;            // mass of outgoing target (exit channel) (MeV / c^2)
+		double mpptt;          // total mass of outgoing projectile and target (exit channel) (MeV / c^2)
 		double EnergyPostLoss; // beam energy after energy loss in target
 		double EnergyPA;       // energy per nucleon
 		double gammaVbeam;     // relativistic beam momentum divided by mass
@@ -101,7 +104,6 @@ class Correlations {
 		CFrame* framet;        // incoming target frame
 		CFrame* framepp;       // outgoing parent frame
 		CFrame* framett;       // outgoing target frame
-		CFrame* frameCMout;    // outgoing CM frame
 
 		void setConstants();             // calculates angle-independent kinematic values
 		void calculateLabAngles(double); // calculates lab frame velocities and angles for each sampled inelastic angle in CM frame
