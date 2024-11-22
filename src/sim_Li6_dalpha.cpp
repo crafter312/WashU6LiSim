@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 	string suffix = "";      // output file suffix
 
 	// Total incoming beam energy in MeV
-  Ebeam = 42.82; //Brho=0.8331 TM (was 42.7 MeV before I revisited the experiment notebooks)
+  Ebeam = 42.82126; //Brho=0.8331 TM (was 42.7 MeV before I revisited the experiment notebooks)
 
   // Check for command line arguments, set default values if none are given
 	// Default values are for 6Li(3+) -> d + alpha

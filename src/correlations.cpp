@@ -185,7 +185,7 @@ void Correlations::calculateLabAngles(double thick) {
 	// Energy of projectile and target in exit channel
 	// Note that the target nucleus excitation energy 
 	// changes depending on the exit channel chosen
-	double ECMout = ECMin - Qrxn - Exp - sampledValues.Ext;
+	double ECMout = ECMin + Qrxn - Exp - sampledValues.Ext;
 	double ECMout2 = ECMout*ECMout;
 
 	// Resulting momentum of both fragments in exit channel
