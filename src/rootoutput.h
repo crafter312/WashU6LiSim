@@ -62,6 +62,7 @@ class RootOutput {
 		void Clear();
 
 		void SetFragment(int, double, double, double, double, double);
+		void SetENeut(double);
 		void SetThetaNeut(double);
 		void SetThetaElastS(double);
 		void SetErelP(double);
@@ -93,8 +94,9 @@ class RootOutput {
   	TH1I* hist_Ex;
   	TH1F* cos_thetaH;
 
-		CFragS* chargedFragments;
+		std::vector<CFragS> chargedFragments;
 		int nFrags;
+		double ENeut {NAN};
 		double thetaNeut {NAN};
 		double thetaElastS {NAN};
 		double ErelP {NAN};

@@ -241,6 +241,71 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::CFragS
 
+namespace ROOT {
+   static TClass *vectorlECFragSgR_Dictionary();
+   static void vectorlECFragSgR_TClassManip(TClass*);
+   static void *new_vectorlECFragSgR(void *p = nullptr);
+   static void *newArray_vectorlECFragSgR(Long_t size, void *p);
+   static void delete_vectorlECFragSgR(void *p);
+   static void deleteArray_vectorlECFragSgR(void *p);
+   static void destruct_vectorlECFragSgR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const vector<CFragS>*)
+   {
+      vector<CFragS> *ptr = nullptr;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<CFragS>));
+      static ::ROOT::TGenericClassInfo 
+         instance("vector<CFragS>", -2, "vector", 339,
+                  typeid(vector<CFragS>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &vectorlECFragSgR_Dictionary, isa_proxy, 4,
+                  sizeof(vector<CFragS>) );
+      instance.SetNew(&new_vectorlECFragSgR);
+      instance.SetNewArray(&newArray_vectorlECFragSgR);
+      instance.SetDelete(&delete_vectorlECFragSgR);
+      instance.SetDeleteArray(&deleteArray_vectorlECFragSgR);
+      instance.SetDestructor(&destruct_vectorlECFragSgR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::Pushback< vector<CFragS> >()));
+
+      instance.AdoptAlternate(::ROOT::AddClassAlternate("vector<CFragS>","std::vector<CFragS, std::allocator<CFragS> >"));
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal(static_cast<const vector<CFragS>*>(nullptr)); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *vectorlECFragSgR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal(static_cast<const vector<CFragS>*>(nullptr))->GetClass();
+      vectorlECFragSgR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void vectorlECFragSgR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_vectorlECFragSgR(void *p) {
+      return  p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<CFragS> : new vector<CFragS>;
+   }
+   static void *newArray_vectorlECFragSgR(Long_t nElements, void *p) {
+      return p ? ::new(static_cast<::ROOT::Internal::TOperatorNewHelper*>(p)) vector<CFragS>[nElements] : new vector<CFragS>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_vectorlECFragSgR(void *p) {
+      delete (static_cast<vector<CFragS>*>(p));
+   }
+   static void deleteArray_vectorlECFragSgR(void *p) {
+      delete [] (static_cast<vector<CFragS>*>(p));
+   }
+   static void destruct_vectorlECFragSgR(void *p) {
+      typedef vector<CFragS> current_t;
+      (static_cast<current_t*>(p))->~current_t();
+   }
+} // end of namespace ROOT for class vector<CFragS>
+
 namespace {
   void TriggerDictionaryInitialization_libLi6sim_Impl() {
     static const char* headers[] = {
@@ -259,9 +324,11 @@ nullptr
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
+struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
+namespace std{template <typename _Tp> class __attribute__((annotate("$clingAutoload$bits/allocator.h")))  __attribute__((annotate("$clingAutoload$string")))  allocator;
+}
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  KinematicValues;
 class __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  SampledValues;
-struct __attribute__((annotate("$clingAutoload$src/rootoutput.h")))  CFragS;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libLi6sim dictionary payload"

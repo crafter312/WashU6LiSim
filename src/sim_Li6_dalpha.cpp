@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
 	size_t nexits        = 4;                                     // number of exit channels
-	double Xsecs[nexits] = { 1.2186, 0.0341, 0.005103, 0.4077 };  // total cross section for each exit channel
+	double Xsecs[nexits] = { 3.3351, 0.31004, 0.04235, 2.1736 };  // total cross section for each exit channel
 	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 	frag[0] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // deuteron
 	frag[1] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
 
-  CFrag *fragBeam = new CFrag(2., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
+  CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
 
 	// Initialize decay class
   CDecay decay(Nfrag, frag, einstein);
@@ -99,12 +99,12 @@ int main(int argc, char *argv[]) {
   // Initiallizing the Correlations class reads in the CM cross section from a file
   // and uses that to select a randomized value for phi and theta
 	string Xsecfiles[nexits] = {
-		string(XSECPATH) + "7li12c_e35_3+_xsec_2.out",
-		string(XSECPATH) + "7li12c_e35_3+_xsec_3.out",
-		string(XSECPATH) + "7li12c_e35_3+_xsec_4.out",
-		string(XSECPATH) + "7li12c_e35_3+_xsec_5.out"
+		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_2.out",
+		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_3.out",
+		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_4.out",
+		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_5.out"
 	};
-	string elasXsecfile = string(XSECPATH) + "7li12c_e35_3+_xsec_1.out";
+	string elasXsecfile = string(XSECPATH) + "7li12c_e42-82126_3+_xsec_1.out";
 	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C);
 
 	// Beam momentum and 1.2% MARS acceptance
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
 	/**** OUTPUT FILE AND HISTOGRAMS ****/
 
-  RootOutput output(suffix, nexits);
+  RootOutput output(suffix, Nfrag);
 
 	/**** MAIN EVENT LOOP ****/
 
@@ -300,11 +300,13 @@ int main(int argc, char *argv[]) {
   //double sigma = fit->GetParameter(2);
   //cout << "mean " << mean << " sigma " << sigma << endl;
 
+	//clean up, clean up
   delete[] frag;
-  //clean up, clean up
+  //everybody everywhere
   delete sampler;
-  //everybody do your share
+  //clean up, clean up
 	delete fragBeam;
+	//everybody do your share
 
   //beep at me when finished (sadly doesn't work anymore)
   //cout << "\a";

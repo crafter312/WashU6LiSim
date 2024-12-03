@@ -2,6 +2,8 @@
 
 #include "frame.h"
 
+#include <iostream>
+
 KinematicValues::KinematicValues() {
 	v[0] = 0; // Set initial velocity to 0 (used by Cfragneut but not needed if mode2body is used before)
   v[1] = 0;

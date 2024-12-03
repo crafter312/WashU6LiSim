@@ -190,7 +190,7 @@ float CDecay::getErelRel(CFrame **part){
 	//cout << "acos(-plfRecon->v[2]/plfRecon->velocity) = acos( " << plfRecon->v[2] << " / " << plfRecon->velocity << " ) " << endl;
 	plfRecon->Cart2Sph();
 	//cout << "theta " << plfRecon->theta*180/acos(-1.0) << endl;
-
+	
 	//transfer real/recon velocities to Center of Mass CFrame
 	//(plfRecon->v) provides reference frame velocity vectors
 	ErelRecon = 0.;
@@ -198,6 +198,7 @@ float CDecay::getErelRel(CFrame **part){
 		tempFrag = part[j];
 		partCM[j]->SetVelocityComps(tempFrag->GetVComp(0), tempFrag->GetVComp(1), tempFrag->GetVComp(2));
 		partCM[j]->transformVelocity(dv, &einstein);
+		
 		ErelRecon += partCM[j]->GetEnergy();
 	}
 
@@ -256,7 +257,7 @@ float CDecay::getErel_at(CFrame *part1, CFrame *part2) {
 	//emission angle of core - which should be last in the list
 	//note that the velocity is calculated by the "transfomVelocity" function call
 	cos_thetaH = partCM[Nfrag - 1]->GetVComp(2) / partCM[Nfrag - 1]->GetVelocity();
-
+	std::cout << "HELLO" << std::endl;
 	return ErelRecon;
 }
 

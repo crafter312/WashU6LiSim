@@ -115,6 +115,7 @@ float CFrag::Eloss(float thick){
 float CFrag::Egain(float thick) {
 	if (thick > 0.)
 		recon->SetEnergy(loss_C->getEin(recon->GetEnergy(), thick / cos(recon->GetTheta())));
+
 	recon->getVelocity(&einstein);
 	return recon->GetEnergy();
 }

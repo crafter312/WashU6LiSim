@@ -7,11 +7,10 @@
 
 // Input:
 //	nFrags -- number of decay fragments
-RootOutput::RootOutput(string suffix, int n) {
-	chargedFragments = new CFragS[nFrags];
-	for (int i = 0; i < nFrags; i++)
-		chargedFragments[i] = CFragS();
-	nFrags = n;
+RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
+	chargedFragments.resize(nFrags);
+	//for (int i = 0; i < nFrags; i++)
+	//	chargedFragments[i] = CFragS();
 
 	// Define output file
   string fileout = "sim" + suffix + ".root";
@@ -22,6 +21,7 @@ RootOutput::RootOutput(string suffix, int n) {
 
 	t = new TTree("t", "t");
 	t->Branch("chargedFragments", &chargedFragments);
+	t->Branch("ENeut", &ENeut);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
 	t->Branch("Ex", &Ex);
@@ -98,6 +98,7 @@ void RootOutput::Fill() {
 void RootOutput::Clear() {
 	for (int i = 0; i < nFrags; i++)
 		chargedFragments[i].clear();
+	ENeut = NAN;
 	thetaNeut = NAN;
 	thetaElastS = NAN;
 	ErelP = NAN;
@@ -123,6 +124,11 @@ void RootOutput::SetFragment(int n, double de, double e, double recE, double _x,
 	chargedFragments[n].reconEnergy = recE;
 	chargedFragments[n].x           = _x;
 	chargedFragments[n].y           = _y;
+}
+
+// Energy of neutron fragment
+void RootOutput::SetENeut(double E) {
+	ENeut = E;
 }
 
 // Polar angle of neutron fragment
