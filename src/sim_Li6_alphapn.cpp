@@ -184,10 +184,10 @@ int main(int argc, char *argv[]) {
 		output.SetErelP(decay.ET);
 
 		// For testing the decay energy after the above function call
-		//double testE = 0;
-		//for (int i = 0; i < Nfrag; i++)
-		//	testE += frag[i]->real->GetEnergy();
-		//cout << decay.ET - testE << endl;
+		double testE = 0;
+		for (int i = 0; i < Nfrag; i++)
+			testE += frag[i]->real->GetEnergy();
+		double testEx = testE + Q;
 
 		// transfrom decay vectors to lab frame by adding initial velocity of parent Li7 to all fragments
 		double VVparent[3];
@@ -199,7 +199,7 @@ int main(int argc, char *argv[]) {
 		// Get Erel and Ex immediately post-decay for testing and comparison
 		double Erel_S_TEST = decay.getErelReal();
 		double Ex_S_TEST = Erel_S_TEST + Q;
-		output.SetTestValues(Ex_S_TEST, Erel_S_TEST);
+		output.SetTestValues(Ex_S_TEST, Erel_S_TEST, testEx, testE);
 
 		// SKIP NEUTRON INTERACTION AND DETECTION FOR NOW
 
