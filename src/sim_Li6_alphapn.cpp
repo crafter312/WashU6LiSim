@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
 	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
-	int Nevents	 = 10000;	// events to simulation
-	bool einstein = 1;			// switch for newtonian(0) or relativistic(1) kinematics
-	float scale	 = 1.38;	 // scales the magnitude of small angle scattering
-	bool useRealP = false;	// true means use real angle and energies of fragment
-													// for event reconstruction, to check effect of
-													// detector resolution
+	int Nevents	 = 10000; // events to simulation
+	bool einstein = 1;    // switch for newtonian(0) or relativistic(1) kinematics
+	float scale	 = 1.38;  // scales the magnitude of small angle scattering
+	bool useRealP = true;	// true means use real angle and energies of fragment
+	                      // for event reconstruction, to check effect of
+	                      // detector resolution
 
 	float useRealP_f = (float) useRealP;
 
@@ -183,12 +183,23 @@ int main(int argc, char *argv[]) {
 		decay.ModeMicroCanonical(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
 
+		// For testing the decay energy after the above function call
+		//double testE = 0;
+		//for (int i = 0; i < Nfrag; i++)
+		//	testE += frag[i]->real->GetEnergy();
+		//cout << decay.ET - testE << endl;
+
 		// transfrom decay vectors to lab frame by adding initial velocity of parent Li7 to all fragments
 		double VVparent[3];
 		VVparent[0] = sampler->sampledValues.VppX; // x
 		VVparent[1] = sampler->sampledValues.VppY; // y
 		VVparent[2] = sampler->sampledValues.VppZ; // z
 		for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
+
+		// Get Erel and Ex immediately post-decay for testing and comparison
+		double Erel_S_TEST = decay.getErelReal();
+		double Ex_S_TEST = Erel_S_TEST + Q;
+		output.SetTestValues(Ex_S_TEST, Erel_S_TEST);
 
 		// SKIP NEUTRON INTERACTION AND DETECTION FOR NOW
 

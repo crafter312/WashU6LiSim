@@ -28,6 +28,8 @@ RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
+	t->Branch("Ex_TEST", &Ex_TEST);
+	t->Branch("Erel_TEST", &Erel_TEST);
 
 	// Reworked simulation branches
 	t->Branch("sampler", &sampler);
@@ -106,6 +108,9 @@ void RootOutput::Clear() {
 	cosThetaH = NAN;
 	isElasticHit = 0;
 	isFragDet = false;
+
+	Ex_TEST = NAN;
+	Erel_TEST = NAN;
 
 	sampler.Clear();
 	recon.Clear();
@@ -192,6 +197,12 @@ void RootOutput::SetReconValues(KinematicValues* r) {
 	recon = *r;
 }
 
+// Set test values in output tree. This function should
+// be modified to include any desired test output values.
+void RootOutput::SetTestValues(double Ex, double Erel) {
+	Ex_TEST = Ex;
+	Erel_TEST = Erel;
+}
 
 
 

@@ -198,7 +198,6 @@ float CDecay::getErelRel(CFrame **part){
 		tempFrag = part[j];
 		partCM[j]->SetVelocityComps(tempFrag->GetVComp(0), tempFrag->GetVComp(1), tempFrag->GetVComp(2));
 		partCM[j]->transformVelocity(dv, &einstein);
-		
 		ErelRecon += partCM[j]->GetEnergy();
 	}
 
@@ -434,6 +433,7 @@ void CDecay::ModeMicroCanonical(double Ex, double gamma, double Q) {
 		tempFrag = real[i];
 		tempFrag->SetVelocity(tempFrag->GetVelocity() * ratio);
 		tempFrag->ScaleVVec(ratio);
+		tempFrag->getEnergyRel();
 	}
 }
 
