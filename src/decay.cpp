@@ -18,20 +18,20 @@ CDecay::CDecay(int Nfrag0, CFrag ** frag0, bool einstein0){
 	frag = frag0;
 	
 	//transfer info on decay fragments. real/recon are CFrame objects
-	for (int i=0;i<Nfrag;i++){
+	for (int i = 0; i < Nfrag; i++) {
 		real[i] = frag[i]->real;
 		recon[i] = frag[i]->recon;
 	}
 
 	sumA = 0.;
-	for (int i=0;i<2;i++) sumA += real[i]->A;
+	for (int i = 0; i < Nfrag; i++) sumA += real[i]->A;
 	mass1 = real[0]->A;
 	mass2 = real[1]->A;
 
 	plfRecon = new CFrame(sumA);
 
 
-	for (int i=0;i<Nfrag;i++){
+	for (int i = 0; i < Nfrag; i++) {
 		partCM[i] = new CFrame(real[i]->A);
 	}
 }
