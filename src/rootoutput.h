@@ -71,8 +71,6 @@ class RootOutput {
 		void SetIsElasticHit(int);
 		void SetIsFragDet(bool);
 
-		void SetTestValues(double, double, double, double);
-
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
 
@@ -106,12 +104,6 @@ class RootOutput {
 		double cosThetaH {NAN};
 		int isElasticHit {0};
 		bool isFragDet {false};
-
-		// Test outputs
-		double Ex_TEST {NAN};
-		double Erel_TEST {NAN};
-		double Ex_TEST_CM {NAN};
-		double Erel_TEST_CM {NAN};
 
 		SampledValues sampler {};
 		KinematicValues recon {};

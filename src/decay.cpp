@@ -433,7 +433,6 @@ void CDecay::ModeMicroCanonical(double Ex, double gamma, double Q) {
 		tempFrag = real[i];
 		tempFrag->SetVelocity(tempFrag->GetVelocity() * ratio);
 		tempFrag->ScaleVVec(ratio);
-		tempFrag->getEnergyRel();
 	}
 }
 

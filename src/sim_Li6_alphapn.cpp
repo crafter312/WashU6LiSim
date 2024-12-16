@@ -183,23 +183,12 @@ int main(int argc, char *argv[]) {
 		decay.ModeMicroCanonical(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
 
-		// For testing the decay energy after the above function call
-		double testE = 0;
-		for (int i = 0; i < Nfrag; i++)
-			testE += frag[i]->real->GetEnergy();
-		double testEx = testE + Q;
-
 		// transfrom decay vectors to lab frame by adding initial velocity of parent Li7 to all fragments
 		double VVparent[3];
 		VVparent[0] = sampler->sampledValues.VppX; // x
 		VVparent[1] = sampler->sampledValues.VppY; // y
 		VVparent[2] = sampler->sampledValues.VppZ; // z
 		for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
-
-		// Get Erel and Ex immediately post-decay for testing and comparison
-		double Erel_S_TEST = decay.getErelReal();
-		double Ex_S_TEST = Erel_S_TEST + Q;
-		output.SetTestValues(Ex_S_TEST, Erel_S_TEST, testEx, testE);
 
 		// SKIP NEUTRON INTERACTION AND DETECTION FOR NOW
 
@@ -306,8 +295,8 @@ int main(int argc, char *argv[]) {
 	cout << endl;
 	cout << endl;
 
-	cout << "(alpha + p) coincidence efficiency = " << (float)Ndet/(float)Nevents << endl;
-	cout << "(alpha + p) was stuck in target = " << Nstuck << ", fraction = " << (float)Nstuck/(float)Nevents << endl;
+	cout << "(alpha + p + n) coincidence efficiency = " << (float)Ndet/(float)Nevents << endl;
+	cout << "(alpha + p + n) was stuck in target = " << Nstuck << ", fraction = " << (float)Nstuck/(float)Nevents << endl;
 	cout << "7Li beam elastic scatter det = " << (float)Nbeamscat/(float)Nevents << endl;
 	
 	//make fit to measure resolution of Invarient mass peak
