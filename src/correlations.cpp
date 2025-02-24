@@ -313,7 +313,8 @@ void Correlations::readelastic(float thickness) {
 		count++;
 	}
 
-	cout << "Elastic cross section (mb): " << Xsec_elastic[lenElastic - 2] * ((double) lenElastic) / 180.0 << endl; // TODO: double check this line
+	// Total elastic cross section for thetaLab > 3 degrees using left Reimann sum
+	cout << "Elastic cross section (mb): " << Xsec_elastic[lenElastic - 2] * (double)(lenElastic - 1) / 180.0 << endl;
 
 	// scale probability distribution to have range (0, 1)
 	double norm = Xsec_elastic[lenElastic - 1];
