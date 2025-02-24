@@ -43,7 +43,7 @@ double SampledValues::GetThetaLabRad() {
 
 /**********************************************************************************************/
 
-Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n, string lossfile_C) {
+Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n, string lossfile_C, float thickness) {
 	CRandom ran;
 	filenames = filenamein;
 	fileelastic = fileelasticin;
@@ -76,7 +76,7 @@ Correlations::Correlations(string* filenamein, string fileelasticin, double E0, 
 	ploss_C = new CLoss(lossfile_C, Mp);
 
 	// Read the Fresco fort.201 file containing unscaled elastic cross section data in the center of mass
-	readelastic();
+	readelastic(thickness);
 
 	// Read all the supplied Fresco fort.202, fort.203, etc. files containing inelastic cross section data in the center of mass
 	for (int i = 0; i < nexits; i++)
@@ -231,7 +231,7 @@ void Correlations::calculateLabAngles(double thick) {
 }
 
 // Elastic scattering angles are converted to the lab frame when reading the file
-void Correlations::readelastic() {
+void Correlations::readelastic(float thickness) {
 	// Open file
 	fstream file;
 	cout << "Elastic Differential Cross Section filename " << fileelastic << endl;
@@ -250,15 +250,42 @@ void Correlations::readelastic() {
 	th_elastic = new double[lenElastic];
 	Xsec_elastic = new double[lenElastic];
 
-	// Calculate constant values
-	double MredE = Mp * Mt / (Mp + Mt);             // reduced mass
-	double ECMout = ECMin;                          // energy out = energy in (elastic scattering)
-	double Vrel = sqrt(ECMout * 2 / MredE) * vfact; // relative velocity between projectile and target in elastic scattering exit channel
-	double Vp = Vrel * Mt / (Mt + Mp);						  // center of mass velocity of projectile fragment in exit channel
+	// Reset frame variables
+	framep->SetTheta(0.);
+	framep->SetPhi(0.);
+	framet->SetTheta(0.);
+	framet->SetPhi(0.);
+	framet->SetEnergy(0.);
+	framet->getVelocityRel();
+
+	// Account for energy loss in target
+	EnergyPostLoss = ploss_C->getEout(E, thickness*0.5);
+	framep->SetEnergy(EnergyPostLoss);
+	framep->getVelocityRel();
+
+	// Calculate CM velocity
+	VCM = framep->GetPC() * c / (framep->totEnergy + framet->totEnergy);
+	VCMvec[2] = -VCM;
+	
+	// Then transform to CM frame
+	framet->transformVelocityRel(VCMvec);
+	framep->transformVelocityRel(VCMvec);
+
+	ECMin = framet->GetEnergy() + framep->GetEnergy(); // kinetic energy of incoming target and projectile in CM frame
+	double ECMout = ECMin;                             // energy out = energy in (elastic scattering)
+	double ECMout2 = ECMout*ECMout;
+
+	// Resulting momentum of both fragments in exit channel
+	// This comes from setting up a standard relativistic
+	// equation for total kinetic energy and solving for pc
+	// using Wolfram Alpha
+	double PCCMout = 0.5 * sqrt((2. * mpp * ECMout) + ECMout2) * sqrt(((2. * mtt) + ECMout) * ((2. * mpptt) + ECMout)) / (mpptt + ECMout);
+
+	VCMvec[2] *= -1; // change sign of velocity to boost instead of "unboost"
 
 	// Get data from file
 	int count = 0;
-	double theta_i, theta_rad, Vrplab, Vzplab, Vplab, thetaLab;
+	double theta_i, theta_rad, thetaLab;
 	while (getline(file, line)) {
 		if ((line.compare(0,1,"#") == 0) || (line.compare(0,1,"@") == 0) || (line.find("END") != string::npos))
 			continue;
@@ -268,19 +295,21 @@ void Correlations::readelastic() {
 
 		/**** TRANSFORM ANGLE TO LAB FRAME ****/
 
-		// Projections of projectile out on x and z in Lab frame
+		// Set values of parent fragment in CM frame
 		theta_rad = theta_i * deg_to_rad;
-		Vrplab    = Vp * sin(theta_rad);
-		Vzplab    = Vp * cos(theta_rad) + VCM;
+		framepp->SetTheta(theta_rad);
+		framepp->SetPhi(0.);
+		framepp->totEnergy = sqrt((mpp*mpp) + (PCCMout*PCCMout));
+		framepp->SetVelocity(PCCMout * c / framepp->totEnergy);
+		framepp->Sph2CartV();
 
-		// Lab velocity and angle of the projectile
-		Vplab = sqrt((Vrplab * Vrplab) + (Vzplab * Vzplab));
-		thetaLab = acos(Vzplab / Vplab);
-
+		// Transform outgoing parent fragment to lab frame
+		framepp->transformVelocityRel(VCMvec);
+		thetaLab = framepp->GetTheta();
 		th_elastic[count] = thetaLab;
 
-		// integrate differential cross section for theta > 3 deg.
-		Xsec_elastic[count] = (thetaLab > 3. * deg_to_rad) ? Xsec_elastic[count] + Xsec_elastic[count - 1] : 0;
+		// Integrate differential cross section for theta > 3 deg.
+		Xsec_elastic[count] = (thetaLab > (3. * deg_to_rad)) ? Xsec_elastic[count] + Xsec_elastic[count - 1] : 0;
 		count++;
 	}
 

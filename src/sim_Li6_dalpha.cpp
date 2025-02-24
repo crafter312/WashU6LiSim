@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_5.out"
 	};
 	string elasXsecfile = string(XSECPATH) + "7li12c_e42-82126_3+_xsec_1.out";
-	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C);
+	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;

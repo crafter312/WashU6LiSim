@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 	cout << "Q " << -1 * Q << endl;
 
 	// Physical experiment parameters
-	double distanceFromTarget = 190;     // distance of the detector from the target in mm
+	double distanceFromTarget = 196;     // distance of the detector from the target in mm
 	float thickness           = 3.026;   // target thickness in mg/cm^2 (copied from Nic's experiment)
 	float CsiRes              = 0.00888; // resolution of Csi not needed for Si-Si;
 	float const targetSize    = 1.0;     // diameter of beam spot size in mm
@@ -64,11 +64,11 @@ int main(int argc, char *argv[]) {
 
 	// Simulation parameters
 	int Nevents	 = 10000; // events to simulation
-	bool einstein = 1;    // switch for newtonian(0) or relativistic(1) kinematics
-	float scale	 = 1.38;  // scales the magnitude of small angle scattering
-	bool useRealP = true;	// true means use real angle and energies of fragment
-	                      // for event reconstruction, to check effect of
-	                      // detector resolution
+	bool einstein = 1;      // switch for newtonian(0) or relativistic(1) kinematics
+	float scale	 = 1.38;    // scales the magnitude of small angle scattering
+	bool useRealP = true;	  // true means use real angle and energies of fragment
+	                        // for event reconstruction, to check effect of
+	                        // detector resolution
 
 	float useRealP_f = (float) useRealP;
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 		string(XSECPATH) + "7li12c_e35_xsec_5.out"
 	};
 	string elasXsecfile = string(XSECPATH) + "7li12c_e35_xsec_1.out";
-	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C);
+	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;

@@ -44,7 +44,7 @@ class SampledValues {
 
 class Correlations {
   public:
-    Correlations(string*, string, double, double, double*, double*, size_t, string);
+    Correlations(string*, string, double, double, double*, double*, size_t, string, float);
     ~Correlations();
 
     CRandom ran;
@@ -76,7 +76,7 @@ class Correlations {
 		double *Exts;  // target excitation for each exit channel
 
     void randomAngles(double);       // samples elastic and inelastic scattering angles from input distributions
-		void readelastic();              // reads elastic differential cross section Fresco file
+		void readelastic(float);         // reads elastic differential cross section Fresco file
     void readinelastic(string, int); // reads inelastic differential cross section Fresco file for given exit channel
 
 	// Define constants used for calculations here
