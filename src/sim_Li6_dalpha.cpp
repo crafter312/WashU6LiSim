@@ -55,7 +55,12 @@ int main(int argc, char *argv[]) {
 	double distanceFromTarget = 235;     // distance of the detector from the target in mm
   float thickness           = 3.026;   // target thickness in mg/cm^2
   float CsiRes              = 0.00888; // resolution of Csi not needed for Si-Si;
+	float b                   = 8.;      // mm beam axis to Gobbi frame dimension,
+	float RadiusCollimator    = 38.1/2.; // mm Gobbi collimator outer radius
   float const targetSize    = 1.0;     // diameter of beam spot size in mm
+
+	// Initialize Gobbi array
+	Gobbiarray* gobbi = new Gobbiarray(distanceFromTarget, b, RadiusCollimator);
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
 	size_t nexits        = 4;                                     // number of exit channels
@@ -88,10 +93,10 @@ int main(int argc, char *argv[]) {
 	// Initialize fragment objects
 	const int Nfrag = 2; // number of decay fragments
   CFrag** frag = new CFrag*[Nfrag];
-	frag[0] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // deuteron
-	frag[1] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
+	frag[0] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);       // deuteron
+	frag[1] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP); // alpha
 
-  CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
+  CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);
 
 	// Initialize decay class
   CDecay decay(Nfrag, frag, einstein);
@@ -115,7 +120,7 @@ int main(int argc, char *argv[]) {
 	/**** OUTPUT FILE AND HISTOGRAMS ****/
 
   RootOutput output(suffix, Nfrag);
-
+	
 	/**** MAIN EVENT LOOP ****/
 
 	int Nstuck = 0;
@@ -158,20 +163,27 @@ int main(int argc, char *argv[]) {
     fragBeam->real->getVelocity(&einstein); //calculates v, pc & components from energy and angles
 
     // determine if the beam hits the detector
-    fragBeam->targetInteraction(outthick, thickness);
-    fragBeam->SiliconInteraction();
-    int beamhit = fragBeam->hit(xTarget, yTarget);
-		output.SetIsElasticHit(beamhit);
-    if (beamhit) {
-			output.SetThetaElastS(fragBeam->recon->GetTheta() * rad_to_deg);
-      Nbeamscat++;
-    }
+		fragBeam->targetInteraction(outthick,thickness);
+		fragBeam->SiliconInteraction();
+		int beamhit = fragBeam->hit(xTarget,yTarget);
+		double x, y;
+		if (beamhit) {
+			x = fragBeam->recon->GetX() / 10.;
+			y = fragBeam->recon->GetY() / 10.;
+			fragBeam->Egain(thickness * 0.5);
+			output.SetElastic(fragBeam->FrontEnergy, fragBeam->DeltaEnergy, fragBeam->recon->GetEnergy(), x, y, fragBeam->recon->GetTheta()*rad_to_deg);
+			output.SetIsElasticHit(true);
+			Nbeamscat++;
+		}
 
 		/**** PARENT FRAGMENT PHYSICS ****/
 
     // decay parent fragment, add sets velocity vectors of fragments to the seperation
     decay.Mode2Body(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
+
+		output.SetRealFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), 0., 0., frag[0]->recon->GetTheta()*rad_to_deg);
+		output.SetRealFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), 0., 0., frag[1]->recon->GetTheta()*rad_to_deg);
 
     // transfrom decay vectors to lab frame by adding initial velocity of parent Li6 to all fragments
 		double VVparent[3];
@@ -197,8 +209,11 @@ int main(int argc, char *argv[]) {
     // detect fragments, and skip if not all fragments detected
     int nhit = 0;
     int ishit = 0;
+		int stripx[Nfrag];
+    int stripy[Nfrag];
     for (int i = 0; i < Nfrag; i++) {
       ishit = frag[i]->hit(xTarget, yTarget);
+			frag[i]->getStripHit(stripx, stripy, i);
       nhit += ishit;
       if (ishit)
         output.DEE->Fill(frag[i]->DeltaEnergy, frag[i]->FrontEnergy);
@@ -212,18 +227,13 @@ int main(int argc, char *argv[]) {
 		}
 
     //TODO: taken out but not tested, please check
-    if (frag[0]->recon->GetEnergy() < 2.5) {
+    if (frag[0]->recon->GetEnergy() < 0.5) {
 			output.Fill();
 			continue;
 		}
 
     // if seperation energy is small, make sure they hit different silicon strips
-    int stripx[Nfrag];
-    int stripy[Nfrag];
     // collect what strips are hit
-    for (int i = 0; i < Nfrag; i++)
-      frag[i]->getStripHit(stripx, stripy, i);
-    
     // loop through all pairs of strips
 		bool doublehit = false;
     for (int i = 0; i < Nfrag; i++) {
@@ -243,13 +253,13 @@ int main(int argc, char *argv[]) {
 			output.Fill();
 			continue;
 		}
-    
+
     // We have a detection
 		output.SetIsFragDet(true);
     Ndet++;
 
     for (int i = 0; i < Nfrag; i++)
-      frag[i]->Egain(thickness / 2.);
+      frag[i]->Egain(thickness * 0.5);
 
 		output.alphaenergy->Fill(frag[1]->recon->GetEnergy());
     output.protonenergy->Fill(frag[0]->recon->GetEnergy());
@@ -273,15 +283,15 @@ int main(int argc, char *argv[]) {
     output.hist_Ex_DE->Fill(Ex_S, frag[1]->FrontEnergy);
 		output.SetReconValues(decay.plfRecon->GetKinematicValues());
 
-		float x = frag[0]->recon->GetX()/10.;
-    float y = frag[0]->recon->GetY()/10.;
+		x = frag[0]->recon->GetX()/10.;
+    y = frag[0]->recon->GetY()/10.;
     output.protonXY_S->Fill(x,y);
-		output.SetFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), x, y);
+		output.SetReconFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), x, y, frag[0]->recon->GetTheta()*rad_to_deg);
 
     x = frag[1]->recon->GetX()/10.;
     y = frag[1]->recon->GetY()/10.;
     output.coreXY_S->Fill(x,y);
-		output.SetFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y);
+		output.SetReconFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y, frag[1]->recon->GetTheta()*rad_to_deg);
 
 		output.Fill();
   }
@@ -307,6 +317,7 @@ int main(int argc, char *argv[]) {
   //clean up, clean up
 	delete fragBeam;
 	//everybody do your share
+	delete gobbi;
 
   //beep at me when finished (sadly doesn't work anymore)
   //cout << "\a";

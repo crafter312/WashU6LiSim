@@ -30,15 +30,15 @@ void SampledValues::CalculateCartesian() {
 }
 
 double SampledValues::GetPhiRad() {
-	return phi * rad_to_deg;
+	return phi * deg_to_rad;
 }
 
 double SampledValues::GetThetaElasticRad() {
-	return thetaElastic * rad_to_deg;
+	return thetaElastic * deg_to_rad;
 }
 
 double SampledValues::GetThetaLabRad() {
-	return thetaLab * rad_to_deg;
+	return thetaLab * deg_to_rad;
 }
 
 /**********************************************************************************************/

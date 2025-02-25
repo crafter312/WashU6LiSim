@@ -11,7 +11,7 @@ class Gobbiarray
 {
  public:
   tele *Tele[4];
-  Gobbiarray(float);
+  Gobbiarray(float, float, float);
   ~Gobbiarray();
   static CRandom ran;
 

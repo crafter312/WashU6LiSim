@@ -25,10 +25,10 @@ class CFrag
   float mass;
   float CsI_res;   
 
-	//(float Z0, float mass0, string lossfile_CD2, string lossfile_Si, float CsI_res0, float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool einstein0, bool useRealP0)
-  CFrag(float,float,string,string,float,float,double,float=1.,bool=false,bool=false);
+	//(float Z0, float mass0, string lossfile_CD2, string lossfile_Si, float CsI_res0, float thickness, Gobbiarray* array0, float scaleSmallAngle0, bool einstein0, bool useRealP0)
+  CFrag(float,float,string,string,float,float,Gobbiarray*,float=1.,bool=false,bool=false);
   ~CFrag();
-  Gobbiarray * Array;
+  Gobbiarray* Array;
 
   int hit(float,float);
   void getStripHit(int*, int*, int);
@@ -43,8 +43,8 @@ class CFrag
   bool targetInteraction(float,float);
   bool SiliconInteraction();
   bool stopped;
-  float FrontEnergy;
-  float DeltaEnergy;
+  double FrontEnergy;
+  double DeltaEnergy;
 
   CLoss *loss_C;
   CLoss *loss_Si;

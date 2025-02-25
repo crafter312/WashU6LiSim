@@ -29,6 +29,7 @@ struct CFragS {
 	double reconEnergy{NAN};
 	double x{NAN};
 	double y{NAN};
+	double thetaLab{NAN};
 
 	void clear() {
 		DE = NAN;
@@ -36,6 +37,7 @@ struct CFragS {
 		reconEnergy = NAN;
 		x = NAN;
 		y = NAN;
+		thetaLab = NAN;
 	};
 };
 
@@ -61,14 +63,15 @@ class RootOutput {
 		void Fill();
 		void Clear();
 
-		void SetFragment(int, double, double, double, double, double);
+		void SetRealFragment(int, double, double, double, double, double, double);
+		void SetReconFragment(int, double, double, double, double, double, double);
+		void SetElastic(double, double, double, double, double, double);
 		void SetENeut(double);
 		void SetThetaNeut(double);
-		void SetThetaElastS(double);
 		void SetErelP(double);
 		void SetEx(double);
 		void SetCosThetaH(double);
-		void SetIsElasticHit(int);
+		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
 
 		void SetSampledValues(SampledValues*);
@@ -94,15 +97,16 @@ class RootOutput {
   	TH1I* hist_Ex;
   	TH1F* cos_thetaH;
 
-		std::vector<CFragS> chargedFragments;
+		std::vector<CFragS> realFragments;
+		std::vector<CFragS> reconFragments;
+		CFragS elastic;
 		int nFrags;
 		double ENeut {NAN};
 		double thetaNeut {NAN};
-		double thetaElastS {NAN};
 		double ErelP {NAN};
 		double Ex {NAN};
 		double cosThetaH {NAN};
-		int isElasticHit {0};
+		bool isElasticHit {false};
 		bool isFragDet {false};
 
 		SampledValues sampler {};

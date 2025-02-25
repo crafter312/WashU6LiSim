@@ -18,12 +18,17 @@ int tele::hit(float x, float y, float dE, float E)
 {
   int ihit =0;
 
-  if (fabs(x - xCenter) > Dactive/2.0) return ihit;
-  if (fabs(y - yCenter) > Dactive/2.0) return ihit;
+  if (fabs(x - xCenter) > Dactive/2.0) {
+		return ihit;
+	}
+  if (fabs(y - yCenter) > Dactive/2.0) {
+		return ihit;
+	}
 
   //check energy thresholds to determine if it hits
-  if (dE < dE_thresh || E < E_thresh) return ihit;
-
+  if (dE < dE_thresh || E < E_thresh) {
+		return ihit;
+	}
 
   ihit = 1;
 

@@ -8,7 +8,8 @@
 // Input:
 //	nFrags -- number of decay fragments
 RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
-	chargedFragments.resize(nFrags);
+	realFragments.resize(nFrags);
+	reconFragments.resize(nFrags);
 	//for (int i = 0; i < nFrags; i++)
 	//	chargedFragments[i] = CFragS();
 
@@ -20,7 +21,9 @@ RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
 	/**** Initialize tree ****/
 
 	t = new TTree("t", "t");
-	t->Branch("chargedFragments", &chargedFragments);
+	t->Branch("realFragments", &realFragments);
+	t->Branch("reconFragments", &reconFragments);
+	t->Branch("reconElastic", &elastic);
 	t->Branch("ENeut", &ENeut);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
@@ -96,11 +99,13 @@ void RootOutput::Fill() {
 }
 
 void RootOutput::Clear() {
-	for (int i = 0; i < nFrags; i++)
-		chargedFragments[i].clear();
+	for (int i = 0; i < nFrags; i++) {
+		realFragments[i].clear();
+		reconFragments[i].clear();
+	}
+	elastic.clear();
 	ENeut = NAN;
 	thetaNeut = NAN;
-	thetaElastS = NAN;
 	ErelP = NAN;
 	Ex = NAN;
 	cosThetaH = NAN;
@@ -112,18 +117,53 @@ void RootOutput::Clear() {
 }
 
 // Input:
-//	n -- the number of charged fragments (not including neutrons)
+//	n -- the fragment index (not including neutron)
 //	de -- the energy lost in the thin front Si detector
 //	e -- the remaining energy lost in the thick back Si detector
 //	recE -- reconstructed fragment energy after detection
 //	_x -- x position of fragment in detector
 //	_y -- y position of fragment in detector
-void RootOutput::SetFragment(int n, double de, double e, double recE, double _x, double _y) {
-	chargedFragments[n].DE          = de;
-	chargedFragments[n].E           = e;
-	chargedFragments[n].reconEnergy = recE;
-	chargedFragments[n].x           = _x;
-	chargedFragments[n].y           = _y;
+void RootOutput::SetRealFragment(int n, double de, double e, double recE, double _x, double _y, double _theta) {
+	realFragments[n].DE          = de;
+	realFragments[n].E           = e;
+	realFragments[n].reconEnergy = recE;
+	realFragments[n].x           = _x;
+	realFragments[n].y           = _y;
+	realFragments[n].thetaLab    = _theta;
+}
+
+// Input:
+//	n -- the fragment index (not including neutron)
+//	de -- the energy lost in the thin front Si detector
+//	e -- the remaining energy lost in the thick back Si detector
+//	recE -- reconstructed fragment energy after detection
+//	_x -- x position of fragment in detector
+//	_y -- y position of fragment in detector
+void RootOutput::SetReconFragment(int n, double de, double e, double recE, double _x, double _y, double _theta) {
+	reconFragments[n].DE          = de;
+	reconFragments[n].E           = e;
+	reconFragments[n].reconEnergy = recE;
+	reconFragments[n].x           = _x;
+	reconFragments[n].y           = _y;
+	reconFragments[n].thetaLab    = _theta;
+}
+
+// Input:
+//	de -- the energy lost in the thin front Si detector
+//	e -- the remaining energy lost in the thick back Si detector
+//	recE -- reconstructed fragment energy after detection
+//	_x -- x position of fragment in detector
+//	_y -- y position of fragment in detector
+void RootOutput::SetElastic(double de, double e, double recE, double _x, double _y, double _theta) {
+	elastic.DE          = de;
+	elastic.E           = e;
+	elastic.reconEnergy = recE;
+	elastic.x           = _x;
+	elastic.y           = _y;
+	elastic.thetaLab    = _theta;
+
+	hist_theta_beam_S_sharp->Fill(sampler.thetaElastic);
+  hist_theta_beam_S_recon->Fill(_theta);
 }
 
 // Energy of neutron fragment
@@ -135,14 +175,6 @@ void RootOutput::SetENeut(double E) {
 void RootOutput::SetThetaNeut(double nth) {
 	thetaNeut = nth;
 	hist_neut_theta->Fill(nth);
-}
-
-// Secondary elastic scattering polar angle
-// Assumes primary elastic scattering polar angle has already been set
-void RootOutput::SetThetaElastS(double thEl) {
-	thetaElastS = thEl;
-	hist_theta_beam_S_sharp->Fill(sampler.thetaElastic);
-  hist_theta_beam_S_recon->Fill(thEl);
 }
 
 // Primary relative energy (decay energy)
@@ -166,7 +198,7 @@ void RootOutput::SetCosThetaH(double c) {
 
 // Denotes if the beam fragment hit a detector or not
 // Boolean values, so 1 is a hit and 0 is not
-void RootOutput::SetIsElasticHit(int h) {
+void RootOutput::SetIsElasticHit(bool h) {
 	isElasticHit = h;
 }
 

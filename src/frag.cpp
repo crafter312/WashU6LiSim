@@ -17,7 +17,7 @@ CRandom CFrag::ran;
 */
 
 CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float CsI_res0,
-			 float thickness, double distanceFromTarget0, float scaleSmallAngle0, bool einstein0, bool useRealP0) {			 
+			 float thickness, Gobbiarray* array0, float scaleSmallAngle0, bool einstein0, bool useRealP0) {			 
 	cout << "Fragment of Z = " << Z0 << ", mass = " << mass0 << endl;	
 	Z = Z0;
 	mass = mass0;
@@ -34,8 +34,7 @@ CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float
 	
 	pScat = new polyScat(Z, thickness);
 
-	double distanceFromTarget = distanceFromTarget0; //mm
-	Array = new Gobbiarray(distanceFromTarget);
+	Array = array0;
 
 	real = new CFrame(mass);
 	recon = new CFrame(mass);
@@ -52,7 +51,6 @@ CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float
 *Destructor
 */
 CFrag::~CFrag() {
-	delete Array;
 	if (recon != real) delete recon;
 	delete real;
 }

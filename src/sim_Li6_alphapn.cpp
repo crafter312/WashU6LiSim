@@ -52,10 +52,15 @@ int main(int argc, char *argv[]) {
 	cout << "Q " << -1 * Q << endl;
 
 	// Physical experiment parameters
-	double distanceFromTarget = 196;     // distance of the detector from the target in mm
+	double distanceFromTarget = 57;      // distance of the detector from the target in mm
 	float thickness           = 3.026;   // target thickness in mg/cm^2 (copied from Nic's experiment)
 	float CsiRes              = 0.00888; // resolution of Csi not needed for Si-Si;
+	float b                   = 7.5;     // mm beam axis to Gobbi frame dimension,
+	float RadiusCollimator    = 0.;      // mm Gobbi collimator outer radius
 	float const targetSize    = 1.0;     // diameter of beam spot size in mm
+
+	// Initialize Gobbi array
+	Gobbiarray* gobbi = new Gobbiarray(distanceFromTarget, b, RadiusCollimator);
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
 	size_t nexits        = 4;                                     // number of exit channels
@@ -93,15 +98,15 @@ int main(int argc, char *argv[]) {
 
 	// It's important here that the heavy fragment (alpha) is the last fragment, and
 	// also that the neutron is the first fragment so that I can skip it.
-	frag[0] = new CFrag(0., Mass_n/m0, Loss_n_in_C, Loss_n_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // neutron
-	frag[1] = new CFrag(1., Mass_p/m0, Loss_p_in_C, Loss_p_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);       // proton
-	frag[2] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP); // alpha
+	frag[0] = new CFrag(0., Mass_n/m0, Loss_n_in_C, Loss_n_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);       // neutron
+	frag[1] = new CFrag(1., Mass_p/m0, Loss_p_in_C, Loss_p_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);       // proton
+	frag[2] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP); // alpha
 
 	// Temporary fix for neutron not being reconstructed
 	delete frag[0]->recon;
 	frag[0]->recon = frag[0]->real;
 
-	CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, distanceFromTarget, scale, einstein, useRealP);
+	CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);
 
 	// Initialize decay class
 	CDecay decay(Nfrag, frag, einstein);
@@ -127,6 +132,11 @@ int main(int argc, char *argv[]) {
 	RootOutput output(suffix, Nfrag-1); // -1 because neutron output handled separately
 
 	/**** MAIN EVENT LOOP ****/
+
+	int Npunch  = 0;
+	int Nmiss   = 0;
+	int Nthresh = 0;
+	int N2Hit   = 0;
 
 	int Nstuck = 0;
 	int Ndet = 0;
@@ -158,7 +168,7 @@ int main(int argc, char *argv[]) {
 		double Ebeam = sqrt(pow(pc,2) + pow(Mass_7Li,2)) - Mass_7Li;
 
 		/**** BEAM FRAGMENT PHYSICS ****/
-
+		//cout << "BEAM FRAGMENT" << endl;
 		// set angular properties of beam fragment for elastic scattering case
 		double thetaElastic = sampler->sampledValues.GetThetaElasticRad();
 		double phi = sampler->sampledValues.GetPhiRad();
@@ -171,14 +181,18 @@ int main(int argc, char *argv[]) {
 		fragBeam->targetInteraction(outthick,thickness);
 		fragBeam->SiliconInteraction();
 		int beamhit = fragBeam->hit(xTarget,yTarget);
-		output.SetIsElasticHit(beamhit);
+		double x, y;
 		if (beamhit) {
-			output.SetThetaElastS(fragBeam->recon->GetTheta() * rad_to_deg);
+			x = fragBeam->recon->GetX() / 10.;
+			y = fragBeam->recon->GetY() / 10.;
+			fragBeam->Egain(thickness * 0.5);
+			output.SetElastic(fragBeam->FrontEnergy, fragBeam->DeltaEnergy, fragBeam->recon->GetEnergy(), x, y, fragBeam->recon->GetTheta()*rad_to_deg);
+			output.SetIsElasticHit(true);
 			Nbeamscat++;
 		}
 
 		/**** PARENT FRAGMENT PHYSICS ****/
-
+		//cout << "PARENT FRAGMENT" << endl;
 		// decay parent fragment, add sets velocity vectors of fragments to the seperation
 		decay.ModeMicroCanonical(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
@@ -190,6 +204,9 @@ int main(int argc, char *argv[]) {
 		VVparent[2] = sampler->sampledValues.VppZ; // z
 		for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
 
+		output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
+		output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
+
 		// SKIP NEUTRON INTERACTION AND DETECTION FOR NOW
 
 		// Interaction of fragements in target and silicon detector materials
@@ -198,20 +215,25 @@ int main(int argc, char *argv[]) {
 		for (int i = 1; i < Nfrag; i++) {
 			frag[i]->targetInteraction(outthick, thickness);
 			frag[i]->SiliconInteraction();
+			//cout << frag[i]->DeltaEnergy << " " << frag[i]->FrontEnergy << endl;
 		}
 
 		// check for and skip protons that punch through back Si layer
 		// 15.5 value is from Lise++ with proton and 1.5 mm of Si
 		if (frag[1]->FrontEnergy > 15.5) {
 			output.Fill();
+			Npunch++;
 			continue;
 		}
 
 		// detect fragments, and skip if not all fragments detected
 		int nhit = 0;
 		int ishit = 0;
+		int stripx[Nfrag - 1];
+		int stripy[Nfrag - 1];
 		for (int i = 1; i < Nfrag; i++) {
 			ishit = frag[i]->hit(xTarget, yTarget);
+			frag[i]->getStripHit(stripx, stripy, i);
 			nhit += ishit;
 			if (ishit)
 				output.DEE->Fill(frag[i]->DeltaEnergy, frag[i]->FrontEnergy);
@@ -219,18 +241,23 @@ int main(int argc, char *argv[]) {
 				Nstuck++;
 		}
 
-		if (nhit != Nfrag - 1) continue;
+		if (nhit != Nfrag - 1) {
+			output.Fill();
+			Nmiss++;
+			//cout << "FAIL" << endl;
+			continue;
+		}
+		//cout << "SUCCESS" << endl;
 
 		// taken out but not tested, please check
-		if (frag[1]->recon->GetEnergy() < 2.5) continue;
+		if (frag[1]->recon->GetEnergy() < 0.5) {
+			output.Fill();
+			Nthresh++;
+			continue;
+		}
 
 		// if seperation energy is small, make sure they hit different silicon strips
-		int stripx[Nfrag - 1];
-		int stripy[Nfrag - 1];
 		// collect what strips are hit
-		for (int i = 1; i < Nfrag; i++)
-			frag[i]->getStripHit(stripx, stripy, i);
-		
 		// loop through all pairs of strips
 		bool doublehit = false;
 		for (int i = 1; i < Nfrag; i++) {
@@ -246,14 +273,18 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
-		if (doublehit) continue;
+		if (doublehit) {
+			output.Fill();
+			N2Hit++;
+			continue;
+		}
 		
 		// We have a detection
 		output.SetIsFragDet(true);
 		Ndet++;
 
 		for (int i = 1; i < Nfrag; i++)
-			frag[i]->Egain(thickness / 2.);
+			frag[i]->Egain(thickness * 0.5);
 
 		output.protonenergy->Fill(frag[1]->recon->GetEnergy());
 		output.alphaenergy->Fill(frag[2]->recon->GetEnergy());
@@ -277,15 +308,15 @@ int main(int argc, char *argv[]) {
 		output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
 		output.SetReconValues(decay.plfRecon->GetKinematicValues());
 
-		float x = frag[1]->recon->GetX() / 10.;
-		float y = frag[1]->recon->GetY() / 10.;
+		x = frag[1]->recon->GetX() / 10.;
+		y = frag[1]->recon->GetY() / 10.;
 		output.protonXY_S->Fill(x,y);
-		output.SetFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y);
+		output.SetReconFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y, frag[1]->recon->GetTheta()*rad_to_deg);
 
 		x = frag[2]->recon->GetX() / 10.;
 		y = frag[2]->recon->GetY() / 10.;
 		output.coreXY_S->Fill(x,y);
-		output.SetFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->recon->GetEnergy(), x, y);
+		output.SetReconFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->recon->GetEnergy(), x, y, frag[2]->recon->GetTheta()*rad_to_deg);
 		
 		output.SetENeut(frag[0]->recon->GetEnergy());
 		output.SetThetaNeut(frag[0]->recon->GetTheta()*rad_to_deg);
@@ -293,6 +324,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	cout << endl;
+	cout << endl;
+
+	cout << "Skipped event counts:" << endl;
+	cout << "p punch throughs = " << (float)Npunch/(float)Nevents << endl;
+	cout << "geometry cuts = " << (float)Nmiss/(float)Nevents << endl;
+	cout << "threshold cuts = " << (float)Nthresh/(float)Nevents << endl;
+	cout << "double hits = " << (float)N2Hit/(float)Nevents << endl;
+
 	cout << endl;
 
 	cout << "(alpha + p + n) coincidence efficiency = " << (float)Ndet/(float)Nevents << endl;
@@ -313,6 +352,7 @@ int main(int argc, char *argv[]) {
   //clean up, clean up
 	delete fragBeam;
 	//everybody do your share
+	delete gobbi;
 
 	//beep at me when finished (sadly doesn't work anymore)
 	//cout << "\a";

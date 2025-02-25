@@ -1,13 +1,14 @@
+#include "constants.h"
 #include "Gobbiarray.h"
 #include <cmath>
 
 using namespace std;
 
-Gobbiarray::Gobbiarray(float dist0)
+Gobbiarray::Gobbiarray(float dist0, float b0, float radColl)
 {
   dist = dist0;
   //dist = 138.; // mm target to plane of E detector distance
-  b = 8.;// mm beam axis to frame dimension,
+  b = b0;// mm beam axis to frame dimension,
   length = 72.37; // length of Si frame
   Dactive = 64.2; // active dimension of Si
 
@@ -17,8 +18,8 @@ Gobbiarray::Gobbiarray(float dist0)
   Tele[2] = new tele(-b - length/2.,-length/2.+b,Dactive, 0.2, 0.5);
   Tele[3] = new tele(-length/2.+b,b+length/2.,Dactive,    0.2, 0.5);
 
-  float RadiusCollimator = 38.1/2.; //31.71/2; //mm
-  thetaCollimator = atan(RadiusCollimator/(dist-7.));
+  thetaCollimator = atan(radColl/(dist-7.));
+	cout << "Collimator outer angle (degrees): " << thetaCollimator*rad_to_deg << endl;
 }
 //*********************************************************
 Gobbiarray::~Gobbiarray()
