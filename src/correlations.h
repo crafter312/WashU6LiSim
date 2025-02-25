@@ -75,9 +75,9 @@ class Correlations {
 		double *Xsecs; // total exit channel cross sections
 		double *Exts;  // target excitation for each exit channel
 
-    void randomAngles(double);       // samples elastic and inelastic scattering angles from input distributions
-		void readelastic(float);         // reads elastic differential cross section Fresco file
-    void readinelastic(string, int); // reads inelastic differential cross section Fresco file for given exit channel
+    void randomAngles(double);         // samples elastic and inelastic scattering angles from input distributions
+		void readelastic(float);           // reads elastic differential cross section Fresco file
+    double readinelastic(string, int); // reads inelastic differential cross section Fresco file for given exit channel, returns integrated cross section
 
 	// Define constants used for calculations here
 	private:

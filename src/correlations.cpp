@@ -79,8 +79,10 @@ Correlations::Correlations(string* filenamein, string fileelasticin, double E0, 
 	readelastic(thickness);
 
 	// Read all the supplied Fresco fort.202, fort.203, etc. files containing inelastic cross section data in the center of mass
+	double xsecTotInelastic = 0.;
 	for (int i = 0; i < nexits; i++)
-		readinelastic(filenames[i], i);
+		xsecTotInelastic += readinelastic(filenames[i], i);
+	cout << "Total inelastic scattering cross section (mb): " << xsecTotInelastic << endl;
 }
 
 Correlations::~Correlations() {
@@ -292,11 +294,12 @@ void Correlations::readelastic(float thickness) {
 
 		stringstream sstr(line);
 		sstr >> theta_i >> Xsec_elastic[count]; // extracts angle and cross section values from a particular input file line
+		theta_rad = theta_i * deg_to_rad;
+		Xsec_elastic[count] *= sin(theta_rad);
 
 		/**** TRANSFORM ANGLE TO LAB FRAME ****/
 
 		// Set values of parent fragment in CM frame
-		theta_rad = theta_i * deg_to_rad;
 		framepp->SetTheta(theta_rad);
 		framepp->SetPhi(0.);
 		framepp->totEnergy = sqrt((mpp*mpp) + (PCCMout*PCCMout));
@@ -314,7 +317,7 @@ void Correlations::readelastic(float thickness) {
 	}
 
 	// Total elastic cross section for thetaLab > 3 degrees using left Reimann sum
-	cout << "Elastic cross section (mb): " << Xsec_elastic[lenElastic - 2] * (double)(lenElastic - 1) / 180.0 << endl;
+	cout << "Elastic cross section (mb): " << twopi * Xsec_elastic[lenElastic - 2] * 180. / (double)(lenElastic - 1) * deg_to_rad << endl;
 
 	// scale probability distribution to have range (0, 1)
 	double norm = Xsec_elastic[lenElastic - 1];
@@ -324,7 +327,7 @@ void Correlations::readelastic(float thickness) {
 	file.close();
 }
 
-void Correlations::readinelastic(string filename, int ind) {
+double Correlations::readinelastic(string filename, int ind) {
 	fstream file;
 	cout << "Inelastic Differential Cross Section file: " << filename << endl;
 	file.open(filename, ios::in);
@@ -347,8 +350,7 @@ void Correlations::readinelastic(string filename, int ind) {
 	// go through file and take out cross section data
 	int count = 0;
 	double theta_i;
-	while (getline(file, line))
-	{
+	while (getline(file, line)) {
 		if ((line.compare(0,1,"#") == 0) || (line.compare(0,1,"@") == 0) || (line.find("END") != string::npos))
 			continue;
 
@@ -356,10 +358,10 @@ void Correlations::readinelastic(string filename, int ind) {
 		stringstream sstr(line);
 		sstr >> theta_i >> Xsec[count];
 		th[count] = theta_i*deg_to_rad;
+		Xsec[count] *= sin(th[count]);
 
 		// integrate differential cross section
-		if (count == 0)
-		{
+		if (count == 0) {
 			count++;
 			continue;
 		}
@@ -368,13 +370,18 @@ void Correlations::readinelastic(string filename, int ind) {
 		count++;
 	}
 
+	// Total inelastic cross section using left Reimann sum
+	// The first bin is slightly narrower, so this is not totally correct
+	double xsecTot = twopi * Xsec[lengths[ind] - 2] * 180. / (double)(lengths[ind] - 1) * deg_to_rad;
+	cout << "Inelastic cross section (mb): " << xsecTot << endl;
+
 	//scale probability distribution to have range (0,1)
-	for (int i=0;i<lengths[ind];i++)
-	{
+	for (int i=0;i<lengths[ind];i++) {
 		Xsec[i] /= Xsec[lengths[ind]-1];
 	}
 
 	file.close();
+	return xsecTot;
 }
 
 
