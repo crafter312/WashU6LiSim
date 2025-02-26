@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
-  int Nevents   = 10000;  // events to simulation
+  int Nevents   = 100000; // events to simulation
 	bool einstein = 1;      // switch for newtonian(0) or relativistic(1) kinematics
   float scale   = 1.38;   // scales the magnitude of small angle scattering
   bool useRealP = false;  // true means use real angle and energies of fragment

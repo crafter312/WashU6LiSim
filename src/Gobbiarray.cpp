@@ -14,7 +14,7 @@ Gobbiarray::Gobbiarray(float dist0, float b0, float radColl)
 
                     //xCenter, yCenter, Dactive,       dE-threshold, E-threshold
   Tele[0] = new tele(b+length/2.,length/2.-b,Dactive,     0.2, 0.5);
-  Tele[1] = new tele(length/2.-b,-b-length/2.,Dactive,    0.2, 2.0);
+  Tele[1] = new tele(length/2.-b,-b-length/2.,Dactive,    0.2, 0.5);
   Tele[2] = new tele(-b - length/2.,-length/2.+b,Dactive, 0.2, 0.5);
   Tele[3] = new tele(-length/2.+b,b+length/2.,Dactive,    0.2, 0.5);
 
