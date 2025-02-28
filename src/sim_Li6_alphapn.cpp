@@ -19,32 +19,49 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	
 	/**** INPUT ARGUMENTS ****/
-	
-	double Ebeam, Ex, gamma; // input beam energy, excitation energy and width of parent fragment state
-	string suffix = "";      // output file suffix
 
 	// Total incoming beam energy in MeV, also used for the Fresco simulation.
 	// If this changes, make sure to redo the Fresco simulations!
-	Ebeam = 70;
+	double Ebeam = 70;
+
+	// Default physical experiment parameters
+	double distanceFromTarget = 111;        // distance of Gobbi from the target in mm
+	string suffix             = "_alphapn"; // output file suffix
 
 	// Check for command line arguments, set default values if none are given
-	string delimiter = "_";
+	//	- arg. 1 = beam energy in MeV
+	//	- arg. 2 = Gobbi distance from target in mm
 	if (argc > 1) {
-		suffix = argv[1];
-		string Extoken = suffix.substr(0, suffix.find(delimiter));
-		string gammatoken = suffix.substr(suffix.find(delimiter)+delimiter.length(), 3);
-		Ex = stod(Extoken) / 1000.;
-		gamma = stod(gammatoken) / 1000.;
-	}
-	else {
-		suffix = "_alphapn";	 // output file suffix
-		Ex = 5.366;		// excitation energy of parent fragment in MeV
-		gamma = 0.541; // width of excited state of parent fragment in MeV
+		Ebeam = stod(argv[1]);
+		distanceFromTarget = stod(argv[2]);
 	}
 
-	cout << "suffix = " << suffix << " | Ex = " << Ex << " | gamma = " << gamma << endl;
+	// Add simulation parameters to output file suffix, making sure to remove trailing
+	// zeros and decimal points.
+	string strE = to_string(Ebeam);
+	strE.erase(strE.find_last_not_of('0') + 1, string::npos);
+	strE.erase(strE.find_last_not_of('.') + 1, string::npos);
+	suffix += "_" + strE + "MeV";
+	string strDist = to_string(distanceFromTarget);
+	strDist.erase(strDist.find_last_not_of('0') + 1, string::npos);
+	strDist.erase(strDist.find_last_not_of('.') + 1, string::npos);
+	suffix += "_" + strDist + "mm";
 
 	/**** SETUP AND INITIALIZATION ****/
+
+	// These arguments used to be command line settable, but I decided they don't need to be
+	// for my case. If they do need to be changed, just make a new copy of this main simulation
+	// file or something.
+	double Ex     = 5.366; // excitation energy of parent fragment in MeV
+	double gamma  = 0.541; // width of excited state of parent fragment in MeV
+
+	bool useRealP = true; // true means use real angle and energies of fragment
+	                      // for event reconstruction, to check effect of
+	                      // detector resolution
+
+	if (useRealP) suffix += "_real";
+
+	cout << "suffix = " << suffix << " | Ex = " << Ex << " | gamma = " << gamma << endl;
 
 	// Q value here is calculated opposite from how it should to be (according to 
 	// Lee's lecture notes), so I added a negative sign to the console output
@@ -52,10 +69,9 @@ int main(int argc, char *argv[]) {
 	cout << "Q " << -1 * Q << endl;
 
 	// Physical experiment parameters
-	double distanceFromTarget = 111;     // distance of the detector from the target in mm
 	float thickness           = 3.026;   // target thickness in mg/cm^2 (copied from Nic's experiment)
-	float neutTRes            = 1.;      // neutron timing resolution (sigma) in ns
-	float GobbiRes            = 0.00888; // resolution of Csi not needed for Si-Si;
+	float neutTRes            = 0.5;     // neutron timing resolution (sigma) in ns
+	float GobbiRes            = 0.02;    // Si-Si resolution;
 	float b                   = 8.0;     // mm beam axis to Gobbi frame dimension,
 	float RadiusCollimator    = 0.;      // mm Gobbi collimator outer radius
 	float const targetSize    = 1.0;     // diameter of beam spot size in mm
@@ -72,9 +88,6 @@ int main(int argc, char *argv[]) {
 	int Nevents	 = 100000;  // events to simulation
 	bool einstein = 1;      // switch for newtonian(0) or relativistic(1) kinematics
 	float scale	 = 1.38;    // scales the magnitude of small angle scattering
-	bool useRealP = true;	  // true means use real angle and energies of fragment
-	                        // for event reconstruction, to check effect of
-	                        // detector resolution
 
 	float useRealP_f = (float) useRealP;
 
@@ -110,9 +123,6 @@ int main(int argc, char *argv[]) {
 
 	// Initiallizing the Correlations class reads in the CM cross section from a file
 	// and uses that to select a randomized value for phi and theta
-	string strE = to_string(Ebeam);
-	strE.erase(strE.find_last_not_of('0') + 1, string::npos);
-	strE.erase(strE.find_last_not_of('.') + 1, string::npos);
 	string prefix = "7li12c_e" + strE;
 	string Xsecfiles[nexits] = {
 		string(XSECPATH) + prefix + "_xsec_2.out",
@@ -126,7 +136,8 @@ int main(int argc, char *argv[]) {
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;
 	double pc0 = sqrt((massE*massE) - (Mass_7Li*Mass_7Li));
-	double P_acceptance = .012;
+	//double P_acceptance = .012;
+	double P_acceptance = 0.; // use this if not MARS acceptance not relevant
 
 	/**** OUTPUT FILE AND HISTOGRAMS ****/
 
@@ -216,7 +227,8 @@ int main(int argc, char *argv[]) {
 		// Fold in 1ns timing resolution
 		double neutV = frag[0]->real->GetVelocity(); // cm/ns
 		double neutT = neutDist / neutV; // ns
-		neutT += decay.ran.Gaus(0., neutTRes);
+		if (!useRealP) neutT += decay.ran.Gaus(0., neutTRes);
+		output.SetTNeut(neutT);
 		frag[0]->recon->SetVelocity(neutDist / neutT);
 
 		// Assume other values are exact

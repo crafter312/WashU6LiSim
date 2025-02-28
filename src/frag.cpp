@@ -204,8 +204,6 @@ bool CFrag::SiliconInteraction() {
 	FrontEnergy = loss_Si->getEout(real->GetEnergy(), dE_thick);
 	DeltaEnergy = real->GetEnergy() - FrontEnergy;
 
-	if (ran.Rndm() < 0.3) FrontEnergy = FrontEnergy + 0.08;
-
 	//check if particle was stopped in the dE detector, won't have PID
 	if (FrontEnergy <= 0.) {
 		DeltaEnergy = -1;

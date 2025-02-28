@@ -24,6 +24,7 @@ RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
 	t->Branch("realFragments", &realFragments);
 	t->Branch("reconFragments", &reconFragments);
 	t->Branch("reconElastic", &elastic);
+	t->Branch("tNeut", &tNeut);
 	t->Branch("ENeut", &ENeut);
   t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelP", &ErelP);
@@ -104,6 +105,7 @@ void RootOutput::Clear() {
 		reconFragments[i].clear();
 	}
 	elastic.clear();
+	tNeut = NAN;
 	ENeut = NAN;
 	thetaNeut = NAN;
 	ErelP = NAN;
@@ -164,6 +166,11 @@ void RootOutput::SetElastic(double de, double e, double recE, double _x, double 
 
 	hist_theta_beam_S_sharp->Fill(sampler.thetaElastic);
   hist_theta_beam_S_recon->Fill(_theta);
+}
+
+// Time of neutron fragment
+void RootOutput::SetTNeut(double t) {
+	tNeut = t;
 }
 
 // Energy of neutron fragment

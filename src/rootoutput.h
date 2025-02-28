@@ -66,6 +66,7 @@ class RootOutput {
 		void SetRealFragment(int, double, double, double, double, double, double);
 		void SetReconFragment(int, double, double, double, double, double, double);
 		void SetElastic(double, double, double, double, double, double);
+		void SetTNeut(double);
 		void SetENeut(double);
 		void SetThetaNeut(double);
 		void SetErelP(double);
@@ -101,6 +102,7 @@ class RootOutput {
 		std::vector<CFragS> reconFragments;
 		CFragS elastic;
 		int nFrags;
+		double tNeut {NAN};
 		double ENeut {NAN};
 		double thetaNeut {NAN};
 		double ErelP {NAN};
