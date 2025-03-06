@@ -1,6 +1,6 @@
 {
 	gStyle->SetPalette(kBird);
-	std::unique_ptr<TFile> myFile(TFile::Open("sort.root", "UPDATE"));
+	//std::unique_ptr<TFile> myFile(TFile::Open("sort.root", "UPDATE"));
 	TBrowser b;
 
 	gPad->SetTickx();

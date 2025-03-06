@@ -1,4 +1,4 @@
-#if !defined(MYLIB_CONSTANTS_H)
+#ifndef MYLIB_CONSTANTS_H
 #define MYLIB_CONSTANTS_H 1
 
 #include <cmath>

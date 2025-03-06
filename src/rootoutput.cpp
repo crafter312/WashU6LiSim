@@ -27,7 +27,8 @@ RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
 	t->Branch("tNeut", &tNeut);
 	t->Branch("ENeut", &ENeut);
   t->Branch("thetaNeut", &thetaNeut);
-	t->Branch("ErelP", &ErelP);
+	t->Branch("ErelPSampled", &ErelP);
+	t->Branch("ErelPReal", &ErelPRecon);
 	t->Branch("Ex", &Ex);
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
@@ -109,6 +110,7 @@ void RootOutput::Clear() {
 	ENeut = NAN;
 	thetaNeut = NAN;
 	ErelP = NAN;
+	ErelPRecon = NAN;
 	Ex = NAN;
 	cosThetaH = NAN;
 	isElasticHit = 0;
@@ -188,6 +190,11 @@ void RootOutput::SetThetaNeut(double nth) {
 void RootOutput::SetErelP(double e) {
 	ErelP = e;	
 	hist_Erel_P->Fill(e);
+}
+
+// Primary relative energy reconstructed from real fragments
+void RootOutput::SetErelPRecon(double e) {
+	ErelPRecon = e;
 }
 
 // Excitation energy of fragment

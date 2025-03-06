@@ -24,6 +24,9 @@ int main(int argc, char *argv[]) {
 	// If this changes, make sure to redo the Fresco simulations!
 	double Ebeam = 70;
 
+	double Ex     = 5.366; // excitation energy of parent fragment in MeV
+	double gamma  = 0.541; // width of excited state of parent fragment in MeV
+
 	// Default physical experiment parameters
 	double distanceFromTarget = 111;        // distance of Gobbi from the target in mm
 	string suffix             = "_alphapn"; // output file suffix
@@ -31,10 +34,19 @@ int main(int argc, char *argv[]) {
 	// Check for command line arguments, set default values if none are given
 	//	- arg. 1 = beam energy in MeV
 	//	- arg. 2 = Gobbi distance from target in mm
-	if (argc > 1) {
+	//	- arg. 3 = intrinsic state width in MeV
+	if (argc >= 3) {
 		Ebeam = stod(argv[1]);
 		distanceFromTarget = stod(argv[2]);
 	}
+	else {
+		cout << "WARNING: DEFAULT INPUT PARAMETERS BEING USED" << endl;
+	}
+
+	// Optional third argument, can supply the first two without this one
+	// if desired.
+	if (arc == 4)
+		gamma = stod(argv[3]);
 
 	// Add simulation parameters to output file suffix, making sure to remove trailing
 	// zeros and decimal points.
@@ -52,14 +64,15 @@ int main(int argc, char *argv[]) {
 	// These arguments used to be command line settable, but I decided they don't need to be
 	// for my case. If they do need to be changed, just make a new copy of this main simulation
 	// file or something.
-	double Ex     = 5.366; // excitation energy of parent fragment in MeV
-	double gamma  = 0.541; // width of excited state of parent fragment in MeV
+	
 
-	bool useRealP = true; // true means use real angle and energies of fragment
-	                      // for event reconstruction, to check effect of
-	                      // detector resolution
+	bool useRealP = false; // true means use real angle and energies of fragment
+	                       // for event reconstruction, to check effect of
+	                       // detector resolution
 
 	if (useRealP) suffix += "_real";
+	if (gamma == 0.) suffix += "_zeroWidth";
+	//suffix += "_perfTarg_noResolution2";
 
 	cout << "suffix = " << suffix << " | Ex = " << Ex << " | gamma = " << gamma << endl;
 
@@ -215,6 +228,9 @@ int main(int argc, char *argv[]) {
 		VVparent[2] = sampler->sampledValues.VppZ; // z
 		for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
 
+		// Save real Erel post lab frame boost, as sanity check
+		output.SetErelPRecon(decay.getErelReal());
+
 		// Save real charged fragment information
 		output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
 		output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
@@ -303,8 +319,9 @@ int main(int argc, char *argv[]) {
 		output.SetIsFragDet(true);
 		Ndet++;
 
-		for (int i = 1; i < Nfrag; i++)
+		for (int i = 1; i < Nfrag; i++) {
 			frag[i]->Egain(thickness * 0.5);
+		}
 
 		output.protonenergy->Fill(frag[1]->recon->GetEnergy());
 		output.alphaenergy->Fill(frag[2]->recon->GetEnergy());

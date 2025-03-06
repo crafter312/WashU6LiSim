@@ -70,6 +70,7 @@ class RootOutput {
 		void SetENeut(double);
 		void SetThetaNeut(double);
 		void SetErelP(double);
+		void SetErelPRecon(double);
 		void SetEx(double);
 		void SetCosThetaH(double);
 		void SetIsElasticHit(bool);
@@ -105,7 +106,8 @@ class RootOutput {
 		double tNeut {NAN};
 		double ENeut {NAN};
 		double thetaNeut {NAN};
-		double ErelP {NAN};
+		double ErelP {NAN};      // this is the sampled Breit-Wigner distribution directly from the decay class
+		double ErelPRecon {NAN}; // this is the decay energy calculated from the real fragments immediately after the decay
 		double Ex {NAN};
 		double cosThetaH {NAN};
 		bool isElasticHit {false};

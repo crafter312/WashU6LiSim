@@ -145,54 +145,32 @@ float CDecay::getErelNewton(CFrame** part) {
 	return ErelRecon;
 }
 
-//**********************************************************
-	/** 
-	 * find the relative kinetic energy of the fragments in their
-	 * center-of-mass frame. Relativistic version
-	 \param part is a pointer to the fragments velocity vectors (real or reconstructed)
-	 */
+//****************************************************************
+// Find the relative kinetic energy of the fragments in their
+// center-of-mass frame, relativistic version. "part" is a pointer
+// to the fragments' CFrame objects (real or reconstructed).
+//****************************************************************
 float CDecay::getErelRel(CFrame **part){
-	//part is either real/recon, both are CFrame objects. plfRecon is also a CFrame
-	//add up all the x,y,z momentums of each fragment. The momentum from the
-	//decay into fragments will cancle out and give momentum of a particle-like-fragment
+
+	// Add up the momenta of the fragments, which will cancel out and
+	// give the momentum of a particle-like-fragment.
 	plfRecon->SetMomComps(0, 0, 0);
 	plfRecon->totEnergy = 0;
 	CFrame* tempFrag;
 	for (int j = 0; j < Nfrag; j++){
 		tempFrag = part[j];
 		plfRecon->AddPCVec(tempFrag->GetPCComp(0), tempFrag->GetPCComp(1), tempFrag->GetPCComp(2));
-		plfRecon->totEnergy += tempFrag->totEnergy; // add up totEnergy of each fragment
 	}
-	
-	//start bob changes////////////////////////////////////////////////////
-	plfRecon->CalcPCMag();
-	plfRecon->SetVelocity(plfRecon->GetPC() / plfRecon->totEnergy * c);
-	double momVel = plfRecon->GetVelocity() / plfRecon->GetPC();
-	plfRecon->SetVelocityComps(
-		plfRecon->GetPCComp(0) * momVel,
-		plfRecon->GetPCComp(1) * momVel,
-		plfRecon->GetPCComp(2) * momVel
-	);
+
+	// Calculate the CM velocity of the fragments
+	plfRecon->getVelocityFromMom(&einstein);
 	double dv[3] = {
 		-plfRecon->GetVComp(0),
 		-plfRecon->GetVComp(1),
 		-plfRecon->GetVComp(2)
 	};
-	//end bob changes//////////////////////////////////////////////////////
-	
-	/* ? had issue with this from Bob changes
-	plfRecon->getVelocityFromMom();
 
-	plfRecon->velocity = sqrt(pow(plfRecon->v[0],2)+pow(plfRecon->v[1],2)
-				+pow(plfRecon->v[2],2));
-
-	*/
-	//cout << "acos(-plfRecon->v[2]/plfRecon->velocity) = acos( " << plfRecon->v[2] << " / " << plfRecon->velocity << " ) " << endl;
-	plfRecon->Cart2Sph();
-	//cout << "theta " << plfRecon->theta*180/acos(-1.0) << endl;
-	
-	//transfer real/recon velocities to Center of Mass CFrame
-	//(plfRecon->v) provides reference frame velocity vectors
+	// Transform fragments to CM frame
 	ErelRecon = 0.;
 	for (int j = 0; j < Nfrag; j++) {
 		tempFrag = part[j];
@@ -201,8 +179,8 @@ float CDecay::getErelRel(CFrame **part){
 		ErelRecon += partCM[j]->GetEnergy();
 	}
 
-	//emission angle of core - which should be last in the list
-	//note that the velocity is calculated by the "transfomVelocity" function call
+	// Emission angle of core - which should be last in the list. Note
+	// that the velocity is calculated by the "transfomVelocity" function
 	tempFrag = partCM[Nfrag - 1];
 	cos_thetaH = tempFrag->GetVComp(2) / tempFrag->GetVelocity();
 
@@ -324,7 +302,7 @@ void CDecay::Mode2Body(double Ex, double gamma, double Q) {
 //
 //*************************************************************
 void CDecay::ModeLineShapes() {
-	//find decay energy, use Breit Wigner difytribution is gamma>0
+	// Find decay energy, use Breit Wigner distribution if gamma > 0
 
 	for (;;) {
 		ET = prof->rand_2branches(ran.Rndm(), ran.Rndm());
@@ -393,39 +371,49 @@ void CDecay::ModeMicroCanonical(double Ex, double gamma, double Q) {
 	//ET;
 	//ET = ET0;
 
-	// Find decay energy, use Breit Wigner distribution if gamma>0
+	// Find decay energy, use Breit Wigner distribution if gamma > 0
 	if (gamma <= 0.) ET = ET0;
 	else {
-		for (;;) {
+		do {
 			ET = ran.BreitWigner(ET0, gamma);
 			//ET = ET0 + gamma*2*(ran.Rndm()-0.5);
-			if (ET > 0.0001 && ET < 10.) break;
 		}
+		while ((ET <= 0.0001) || (ET >= 10.));
 	}
 
 	// Sample fragment velocities from Gaussian distribution
 	double massn;
-	valarray<float> vcm(3); // initializes elements to 0
+	CFrame* tempFrag;
 	for (int i = 0; i < Nfrag; i++) {
-		massn = real[i]->A;
-		real[i]->SetVelocityComps(
+		tempFrag = real[i];
+		massn = tempFrag->A;
+		tempFrag->SetVelocityComps(
 			ran.Gaus(0., 1.) / massn,
 			ran.Gaus(0., 1.) / massn,
 			ran.Gaus(0., 1.) / massn
 		);
-		vcm[0] += real[i]->GetVComp(0) * massn;
-		vcm[1] += real[i]->GetVComp(1) * massn;
+		tempFrag->getMomFromVelocity();
 	}
-	vcm /= sumA;
 
-	// Scale velocities to match total energy with desired decay energy
-	CFrame* tempFrag;
+	// Calculate CM velocity (borrowed from CDecay::getErelRel())
+	plfRecon->SetMomComps(0, 0, 0);
+	plfRecon->totEnergy = 0;
+	for (int j = 0; j < Nfrag; j++) {
+		tempFrag = real[j];
+		plfRecon->AddPCVec(tempFrag->GetPCComp(0), tempFrag->GetPCComp(1), tempFrag->GetPCComp(2));
+	}
+	plfRecon->getVelocityFromMom(&einstein);
+	double vcm[3] = {
+		-plfRecon->GetVComp(0),
+		-plfRecon->GetVComp(1),
+		-plfRecon->GetVComp(2)
+	};
+
+	// Scale velocities to match sampled decay energy
 	double testTotal = 0.;
 	for (int i = 0; i < Nfrag; i++) {
 		tempFrag = real[i];
-		tempFrag->AddVVec(-vcm[0], -vcm[1], -vcm[2]);
-		tempFrag->CalcVMag();
-		tempFrag->SetEnergy(tempFrag->A / 2. * tempFrag->GetV2() / vfact2);
+		tempFrag->transformVelocity(vcm, &einstein);
 		testTotal += tempFrag->GetEnergy();
 	}
 	double ratio = sqrt(ET / testTotal);
@@ -433,55 +421,9 @@ void CDecay::ModeMicroCanonical(double Ex, double gamma, double Q) {
 		tempFrag = real[i];
 		tempFrag->SetVelocity(tempFrag->GetVelocity() * ratio);
 		tempFrag->ScaleVVec(ratio);
+		tempFrag->getEnergy(&einstein);
 	}
 }
 
-//*****************************************
-// TODO: Could delete this function?
-// Same as case for Mode2Body if gamma <= 0
-//*****************************************
-void CDecay::Mode2BodyExact(double Ex, double gamma, double Q) {
-	double ET0 = Ex - Q;
-	//use next two lines if simulating background
-	ET;
-	ET = ET0;
 
-	double mu = mass1 * mass2 / (mass1 + mass2);
-	double Vrel = sqrt(2. * ET / mu) * vfact;
-	double v1	= mass2 / (mass1 + mass2) * Vrel;
-	double v2	= Vrel - v1;
-	double gamma1 = 1. / sqrt(1. - (v1 * v1 / c2));
-	float pc = gamma1 * v1 * mass1 * m0 / c;
 
-	double denom1, denom2, E1, E2, y, dE1, dE2, dy, dpc;
-	for (;;) {
-		denom1 = sqrt((pc * pc) + (mass1 * mass1 * m02));
-		denom2 = sqrt((pc * pc) + (mass2 * mass2 * m02));
-		E1 = denom1 - mass1 * m0;
-		E2 = denom2 - mass2 * m0;
-		y = E1 + E2 - ET;
-		dE1 = pc / denom1;
-		dE2 = pc / denom2;
-		dy = dE1 + dE2;
-		dpc = -y / dy;
-		
-		//break if derivative is ~0
-		if (fabs(dpc) < .0001) break;
-		
-		pc += dpc;
-	}
-	
-	v1 = pc / sqrt((pc * pc) + (mass1 * mass1 * m02)) * c;
-	v2 = pc / sqrt((pc * pc) + (mass2 * mass2 * m02)) * c;
-	double theta = acos(2.*ran.Rndm()-1.);
-	double phi = 2.*acos(-1.)*ran.Rndm();
-
-	real[0]->SetVelocity(v1);
-	real[1]->SetVelocity(-v2);
-	real[0]->SetTheta(theta);
-	real[1]->SetTheta(theta);
-	real[0]->SetPhi(phi);
-	real[1]->SetPhi(phi);
-	real[0]->Sph2CartV();
-	real[1]->Sph2CartV();
-}

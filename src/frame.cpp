@@ -64,16 +64,18 @@ void KinematicValues::CalcPCMag() {
 
 // Calculates V components from total PC, total V, and PC components
 void KinematicValues::CalcCartV() {
-	v[0] = pc[0] / pcTot * velocity;
-	v[1] = pc[1] / pcTot * velocity;
-	v[2] = pc[2] / pcTot * velocity;
+	double velMom = velocity / pcTot;
+	v[0] = pc[0] * velMom;
+	v[1] = pc[1] * velMom;
+	v[2] = pc[2] * velMom;
 }
 
 // Calculates PC components from total V, total PC, and V components 
 void KinematicValues::CalcCartPC() {
-	pc[0] = v[0] / velocity * pcTot;
-	pc[1] = v[1] / velocity * pcTot;
-	pc[2] = v[2] / velocity * pcTot;
+	double momVel = pcTot / velocity;
+	pc[0] = v[0] * momVel;
+	pc[1] = v[1] * momVel;
+	pc[2] = v[2] * momVel;
 }
 
 // Adds supplied vector to V vector
@@ -278,9 +280,9 @@ void CFrame::getVelocityFromMomRel() {
 }
 //******************************************
 void CFrame::getVelocityFromMomNewton() {
-	kinematicValues.v[0] = -kinematicValues.pc[0] / mass * c; //TODO: double check extra minus sign here
-	kinematicValues.v[1] = -kinematicValues.pc[1] / mass * c;
-	kinematicValues.v[2] = -kinematicValues.pc[2] / mass * c;
+	kinematicValues.v[0] = kinematicValues.pc[0] / mass * c;
+	kinematicValues.v[1] = kinematicValues.pc[1] / mass * c;
+	kinematicValues.v[2] = kinematicValues.pc[2] / mass * c;
   kinematicValues.CalcVMag();
   kinematicValues.Cart2Sph();
 }
@@ -292,6 +294,8 @@ void CFrame::getMomFromVelocity() {
 	kinematicValues.CalcCartPC();
   totEnergy = gamma * mass;
 }
+
+/*************** PASSTHROUGH FUNCTIONS ***************/
 
 void CFrame::AddVVec(double v1x, double v1y, double v1z) {
 	double v1[3] = { v1x, v1y, v1z };
