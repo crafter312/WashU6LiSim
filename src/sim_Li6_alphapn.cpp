@@ -22,13 +22,13 @@ int main(int argc, char *argv[]) {
 
 	// Total incoming beam energy in MeV, also used for the Fresco simulation.
 	// If this changes, make sure to redo the Fresco simulations!
-	double Ebeam = 70;
+	double Ebeam = 63;
 
 	double Ex     = 5.366; // excitation energy of parent fragment in MeV
 	double gamma  = 0.541; // width of excited state of parent fragment in MeV
 
 	// Default physical experiment parameters
-	double distanceFromTarget = 111;        // distance of Gobbi from the target in mm
+	double distanceFromTarget = 150;        // distance of Gobbi from the target in mm
 	string suffix             = "_alphapn"; // output file suffix
 
 	// Check for command line arguments, set default values if none are given
@@ -43,9 +43,9 @@ int main(int argc, char *argv[]) {
 		cout << "WARNING: DEFAULT INPUT PARAMETERS BEING USED" << endl;
 	}
 
-	// Optional third argument, can supply the first two without this one
-	// if desired.
-	if (arc == 4)
+	// Optional third argument for state width, can supply the first two
+	// without this one if desired.
+	if (argc == 4)
 		gamma = stod(argv[3]);
 
 	// Add simulation parameters to output file suffix, making sure to remove trailing
@@ -60,11 +60,6 @@ int main(int argc, char *argv[]) {
 	suffix += "_" + strDist + "mm";
 
 	/**** SETUP AND INITIALIZATION ****/
-
-	// These arguments used to be command line settable, but I decided they don't need to be
-	// for my case. If they do need to be changed, just make a new copy of this main simulation
-	// file or something.
-	
 
 	bool useRealP = false; // true means use real angle and energies of fragment
 	                       // for event reconstruction, to check effect of
