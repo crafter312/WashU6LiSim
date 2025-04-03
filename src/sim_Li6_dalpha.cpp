@@ -20,31 +20,61 @@ int main(int argc, char *argv[]) {
 	
 	/**** INPUT ARGUMENTS ****/
   
-  double Ebeam, Ex, gamma; // input beam energy, excitation energy and width of parent fragment state
 	string suffix = "";      // output file suffix
 
-	// Total incoming beam energy in MeV
-  Ebeam = 42.82126; //Brho=0.8331 TM (was 42.7 MeV before I revisited the experiment notebooks)
+	// Total incoming beam energy in MeV, also used for the Fresco simulation.
+	// If this changes, make sure to redo the Fresco simulations!
+	double Ebeam = 42.82126; // Brho=0.8331 TM (was 42.7 MeV before I revisited Nic's experiment notebooks)
+
+	double Ex     = 2.186; // excitation energy of parent fragment in MeV
+	double gamma  = 0.024; // width of excited state of parent fragment in MeV
+
+	// Default physical experiment parameters
+	double distanceFromTarget = 235;          // distance of Gobbi from the target in mm
+	string suffix             = "_dalpha_3+"; // output file suffix
 
   // Check for command line arguments, set default values if none are given
-	// Default values are for 6Li(3+) -> d + alpha
-	string delimiter = "_";
-  if (argc > 1) {
-    suffix = argv[1];
-    string Extoken = suffix.substr(0, suffix.find(delimiter));
-    string gammatoken = suffix.substr(suffix.find(delimiter)+delimiter.length(), 3);
-    Ex = stod(Extoken)/1000.;
-    gamma = stod(gammatoken)/1000.;
-  }
-  else {
-    suffix = "_dalpha_3+";   // output file suffix
-    Ex = 2.186;    // excitation energy of parent fragment in MeV
-    gamma = 0.024; // width of excited state of parent fragment in MeV
-  }
+	//	- arg. 1 = beam energy in MeV
+	//	- arg. 2 = Gobbi distance from target in mm
+	//	- arg. 3 = intrinsic state width in MeV
+	if (argc >= 3) {
+		Ebeam = stod(argv[1]);
+		distanceFromTarget = stod(argv[2]);
+	}
+	else {
+		cout << "WARNING: DEFAULT INPUT PARAMETERS BEING USED" << endl;
+	}
 
-  cout << "suffix = " << suffix << " | Ex = " << Ex << " | gamma = " << gamma << endl;
+	// Optional third argument for state width, can supply the first two
+	// without this one if desired.
+	if (argc == 4)
+		gamma = stod(argv[3]);
+
+	// Add simulation parameters to output file suffix, making sure to remove trailing
+	// zeros and decimal points.
+	string strE = to_string(Ebeam);
+	strE.erase(strE.find_last_not_of('0') + 1, string::npos);
+	strE.erase(strE.find_last_not_of('.') + 1, string::npos);
+	suffix += "_" + strE + "MeV";
+	string strDist = to_string(distanceFromTarget);
+	strDist.erase(strDist.find_last_not_of('0') + 1, string::npos);
+	strDist.erase(strDist.find_last_not_of('.') + 1, string::npos);
+	suffix += "_" + strDist + "mm";
+
+	// In case of decimal beam energy, replace '.' with '-' for file prefix purposes
+	replace(strE.begin(), strE.end(), '.', '-');
 
 	/**** SETUP AND INITIALIZATION ****/
+
+	bool useRealP = false;  // true means use real angle and energies of fragment
+                          // for event reconstruction, to check effect of
+                          // detector resolution
+
+	if (useRealP) suffix += "_real";
+	if (gamma == 0.) suffix += "_zeroWidth";
+	//suffix += "_perfTarg_noResolution2";
+
+	cout << "suffix = " << suffix << " | Ex = " << Ex << " | gamma = " << gamma << endl;
 
 	// Q value here is calculated opposite from how it should to be (according to 
 	// Lee's lecture notes), so I added a negative sign to the console output
@@ -52,11 +82,10 @@ int main(int argc, char *argv[]) {
   cout << "Q " << -1 * Q << endl;
 
 	// Physical experiment parameters
-	double distanceFromTarget = 235;     // distance of the detector from the target in mm
   float thickness           = 3.026;   // target thickness in mg/cm^2
-  float CsiRes              = 0.00888; // resolution of Csi not needed for Si-Si;
+  float CsiRes              = 0.02;    // resolution of Csi not needed for Si-Si (was 0.00888)
 	float b                   = 8.;      // mm beam axis to Gobbi frame dimension,
-	float RadiusCollimator    = 38.1/2.; // mm Gobbi collimator outer radius
+	float RadiusCollimator    = 0.;      // mm Gobbi collimator outer radius (was 38.1/2.)
   float const targetSize    = 1.0;     // diameter of beam spot size in mm
 
 	// Initialize Gobbi array
@@ -70,9 +99,6 @@ int main(int argc, char *argv[]) {
   int Nevents   = 100000; // events to simulation
 	bool einstein = 1;      // switch for newtonian(0) or relativistic(1) kinematics
   float scale   = 1.38;   // scales the magnitude of small angle scattering
-  bool useRealP = false;  // true means use real angle and energies of fragment
-                          // for event reconstruction, to check effect of
-                          // detector resolution
 
 	float useRealP_f = (float) useRealP;
 
@@ -102,19 +128,21 @@ int main(int argc, char *argv[]) {
 
   // Initiallizing the Correlations class reads in the CM cross section from a file
   // and uses that to select a randomized value for phi and theta
+	string prefix = "7li12c_e" + strE;
 	string Xsecfiles[nexits] = {
-		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_2.out",
-		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_3.out",
-		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_4.out",
-		string(XSECPATH) + "7li12c_e42-82126_3+_xsec_5.out"
+		string(XSECPATH) + prefix + "_xsec_2.out",
+		string(XSECPATH) + prefix + "_xsec_3.out",
+		string(XSECPATH) + prefix + "_xsec_4.out",
+		string(XSECPATH) + prefix + "_xsec_5.out"
 	};
-	string elasXsecfile = string(XSECPATH) + "7li12c_e42-82126_3+_xsec_1.out";
+	string elasXsecfile = string(XSECPATH) + prefix + "_xsec_1.out";
 	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;
   double pc0 = sqrt((massE*massE) - (Mass_7Li*Mass_7Li));
-  double P_acceptance = .012;
+  //double P_acceptance = .012;
+	double P_acceptance = 0.; // use this if not MARS acceptance not relevant
 
 	/**** OUTPUT FILE AND HISTOGRAMS ****/
 
@@ -158,7 +186,7 @@ int main(int argc, char *argv[]) {
 		double phi = sampler->sampledValues.GetPhiRad();
     fragBeam->real->SetTheta(thetaElastic);
     fragBeam->real->SetPhi(phi);
-    fragBeam->real->SetEnergy(Ebeam); //~6.1MeV/u Li-7
+    fragBeam->real->SetEnergy(Ebeam);
     fragBeam->real->getVelocity(&einstein); //calculates v, pc & components from energy and angles
 
     // determine if the beam hits the detector
@@ -181,9 +209,6 @@ int main(int argc, char *argv[]) {
     decay.Mode2Body(Ex, gamma, Q);
 		output.SetErelP(decay.ET);
 
-		output.SetRealFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->recon->GetEnergy(), 0., 0., frag[0]->recon->GetTheta()*rad_to_deg);
-		output.SetRealFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), 0., 0., frag[1]->recon->GetTheta()*rad_to_deg);
-
     // transfrom decay vectors to lab frame by adding initial velocity of parent Li6 to all fragments
 		double VVparent[3];
     VVparent[0] = sampler->sampledValues.VppX; // x
@@ -191,8 +216,16 @@ int main(int argc, char *argv[]) {
     VVparent[2] = sampler->sampledValues.VppZ; // z
     for (int i = 0; i < Nfrag; i++) frag[i]->AddVelocity(VVparent);
 
-    // interaction of fragements in target material. Calcs energy loss in target, change in scatter angle,
-    // and wheter fragment is stopped within target
+		// Save real Erel post lab frame boost, as sanity check
+		output.SetErelPRecon(decay.getErelReal());
+
+		// Save real charged fragment information
+		output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
+		output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
+
+    // Interaction of fragements in target and silicon detector materials
+		// Calculates energy loss in target, change in scatter angle, and
+		// wheter fragment is stopped within target
     for (int i = 0; i < Nfrag; i++) {
       frag[i]->targetInteraction(outthick, thickness);
       frag[i]->SiliconInteraction();
@@ -221,12 +254,6 @@ int main(int argc, char *argv[]) {
     }
 
     if (nhit != Nfrag) {
-			output.Fill();
-			continue;
-		}
-
-    //TODO: taken out but not tested, please check
-    if (frag[0]->recon->GetEnergy() < 0.5) {
 			output.Fill();
 			continue;
 		}

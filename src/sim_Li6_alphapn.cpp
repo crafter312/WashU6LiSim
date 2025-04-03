@@ -59,6 +59,9 @@ int main(int argc, char *argv[]) {
 	strDist.erase(strDist.find_last_not_of('.') + 1, string::npos);
 	suffix += "_" + strDist + "mm";
 
+	// In case of decimal beam energy, replace '.' with '-' for file prefix purposes
+	replace(strE.begin(), strE.end(), '.', '-');
+
 	/**** SETUP AND INITIALIZATION ****/
 
 	bool useRealP = false; // true means use real angle and energies of fragment
@@ -92,9 +95,9 @@ int main(int argc, char *argv[]) {
 	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
-	int Nevents	 = 100000;  // events to simulation
+	int Nevents	  = 100000;  // events to simulation
 	bool einstein = 1;      // switch for newtonian(0) or relativistic(1) kinematics
-	float scale	 = 1.38;    // scales the magnitude of small angle scattering
+	float scale	  = 1.38;    // scales the magnitude of small angle scattering
 
 	float useRealP_f = (float) useRealP;
 
@@ -192,7 +195,7 @@ int main(int argc, char *argv[]) {
 		double phi = sampler->sampledValues.GetPhiRad();
 		fragBeam->real->SetTheta(thetaElastic);
 		fragBeam->real->SetPhi(phi);
-		fragBeam->real->SetEnergy(Ebeam); //~5MeV/u Li-7
+		fragBeam->real->SetEnergy(Ebeam);
 		fragBeam->real->getVelocity(&einstein); //calculates v, pc & components from energy and angles
 
 		// determine if the beam hits the detector
