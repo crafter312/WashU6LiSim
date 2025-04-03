@@ -218,8 +218,8 @@ int main(int argc, char *argv[]) {
 		output.SetErelPRecon(decay.getErelReal());
 
 		// Save real charged fragment information
-		output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
-		output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
+		output.SetRealFragment(0, frag[0]->FrontEnergy, frag[0]->DeltaEnergy, frag[0]->real->GetEnergy(), 0., 0., frag[0]->real->GetTheta()*rad_to_deg);
+		output.SetRealFragment(1, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
 
     // Interaction of fragements in target and silicon detector materials
 		// Calculates energy loss in target, change in scatter angle, and
