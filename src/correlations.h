@@ -44,7 +44,7 @@ class SampledValues {
 
 class Correlations {
   public:
-    Correlations(string*, string, double, double, double*, double*, size_t, string, float);
+    Correlations(string*, string, double, double, double*, size_t, string, float);
     ~Correlations();
 
     CRandom ran;

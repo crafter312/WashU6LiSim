@@ -43,7 +43,7 @@ double SampledValues::GetThetaLabRad() {
 
 /**********************************************************************************************/
 
-Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, double* _Xsecs, size_t n, string lossfile_C, float thickness) {
+Correlations::Correlations(string* filenamein, string fileelasticin, double E0, double Ex0, double* Ext0s, size_t n, string lossfile_C, float thickness) {
 	CRandom ran;
 	filenames = filenamein;
 	fileelastic = fileelasticin;
@@ -53,16 +53,6 @@ Correlations::Correlations(string* filenamein, string fileelasticin, double E0, 
 	E    = E0;	  // MeV
 	Exp  = Ex0;   // MeV
 	Exts = Ext0s; // MeV
-
-	// Probability distribution to pick an exit channel using the same logic
-	// that's used to create a probability distribution from the differential cross sections
-	// NOTE THAT THE LENGTH OF filenamein AND _Xsecs INPUT ARRAYS MUST MATCH nexits!
-	Xsecs = new double[nexits];
-	Xsecs[0] = _Xsecs[0];
-	for (int i = 1; i < nexits; i++) 
-		Xsecs[i] = Xsecs[i - 1] + _Xsecs[i];
-	for (int i = 0; i < nexits; i++)
-		Xsecs[i] /= Xsecs[nexits - 1];
 
 	// Declare arrays for inelastic input
 	lengths   = new int[nexits];
@@ -75,14 +65,29 @@ Correlations::Correlations(string* filenamein, string fileelasticin, double E0, 
 	// Initialize loss object from file, must be done after setConstants
 	ploss_C = new CLoss(lossfile_C, Mp);
 
-	// Read the Fresco fort.201 file containing unscaled elastic cross section data in the center of mass
+	// Read the Fresco fort.201 file containing unscaled elastic cross 
+	// section data in the center of mass
 	readelastic(thickness);
 
-	// Read all the supplied Fresco fort.202, fort.203, etc. files containing inelastic cross section data in the center of mass
-	double xsecTotInelastic = 0.;
+	// Read all the supplied Fresco fort.202, fort.203, etc. files containing
+	// inelastic cross section data in the center of mass. Also record
+	// total integrated cross sections for sampling.
+	Xsecs = new double[nexits];
+	for (int i = 0; i < nexits; i++) {
+		Xsecs[i] = readinelastic(filenames[i], i);
+		if (i == 0) continue;
+		Xsecs[i] += Xsecs[i - 1];
+	}
+	cout << "Total inelastic scattering cross section (mb): " << Xsecs[nexits - 1] << endl;
+
+	// Probability distribution to pick an exit channel using the same logic
+	// that's used to create a probability distribution from the differential cross 
+	// sections. This is created using integrated total cross sections from
+	// the input differential cross section files. The number and position of
+	// these differential cross section files in the input must match the input
+	// excitation energies!
 	for (int i = 0; i < nexits; i++)
-		xsecTotInelastic += readinelastic(filenames[i], i);
-	cout << "Total inelastic scattering cross section (mb): " << xsecTotInelastic << endl;
+		Xsecs[i] /= Xsecs[nexits - 1];
 }
 
 Correlations::~Correlations() {

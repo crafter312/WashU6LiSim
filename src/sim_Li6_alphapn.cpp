@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
 	size_t nexits        = 4;                                     // number of exit channels
-	double Xsecs[nexits] = { 1.2186, 0.0341, 0.005103, 0.4077 };  // total cross section for each exit channel
 	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
@@ -139,7 +138,7 @@ int main(int argc, char *argv[]) {
 		string(XSECPATH) + prefix + "_xsec_5.out"
 	};
 	string elasXsecfile = string(XSECPATH) + prefix + "_xsec_1.out";
-	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, Xsecs, nexits, Loss_Li_in_C, thickness);
+	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
 	double massE = Ebeam + Mass_7Li;
