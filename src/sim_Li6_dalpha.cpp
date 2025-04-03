@@ -19,8 +19,6 @@ using namespace std;
 int main(int argc, char *argv[]) {
 	
 	/**** INPUT ARGUMENTS ****/
-  
-	string suffix = "";      // output file suffix
 
 	// Total incoming beam energy in MeV, also used for the Fresco simulation.
 	// If this changes, make sure to redo the Fresco simulations!
