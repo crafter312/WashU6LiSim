@@ -2,3 +2,12 @@
 *.root
 *.zip
 /bin/*.o
+
+# Remove cmake generated files
+CMakeCache.txt
+CMakeFiles/*
+cmake_install.cmake
+libLi6sim.cxx
+libsim.rootmap
+libsim_rdict.pcm
+module.modulemap
