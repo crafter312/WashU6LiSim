@@ -20,6 +20,10 @@ list(TRANSFORM LIBHEADERS PREPEND ${SRC}/)
 find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Define cross-section file path
+set(XSECPATH ${CMAKE_CURRENT_SOURCE_DIR}/input)
+add_definitions(-DXSECPATH=\"${XSECPATH}\")
+
 # Create executable
 add_executable(sim ${SRC}/sim_Li6_alphapn.cpp ${SOURCES})
 target_link_libraries(sim ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)

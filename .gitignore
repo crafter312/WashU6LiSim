@@ -1,7 +1,11 @@
 *.png
+*.eps
 *.root
+rootfiles/*
 *.zip
 /bin/*.o
+sim
+sim_3+
 
 # Remove cmake generated files
 CMakeCache.txt

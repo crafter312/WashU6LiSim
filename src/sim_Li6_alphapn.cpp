@@ -12,8 +12,6 @@
 #include "TFile.h"
 #include "TF1.h"
 
-#define XSECPATH "/home/Li6Webb/Desktop/Li6Plus2IAS/li6sim/input/"
-
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -135,12 +133,12 @@ int main(int argc, char *argv[]) {
 	// and uses that to select a randomized value for phi and theta
 	string prefix = "7li12c_e" + strE;
 	string Xsecfiles[nexits] = {
-		string(XSECPATH) + prefix + "_xsec_2.out",
-		string(XSECPATH) + prefix + "_xsec_3.out",
-		string(XSECPATH) + prefix + "_xsec_4.out",
-		string(XSECPATH) + prefix + "_xsec_5.out"
+		string(XSECPATH) + "/" + prefix + "_xsec_2.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_3.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_4.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_5.out"
 	};
-	string elasXsecfile = string(XSECPATH) + prefix + "_xsec_1.out";
+	string elasXsecfile = string(XSECPATH) + "/" + prefix + "_xsec_1.out";
 	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
