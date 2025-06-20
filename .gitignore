@@ -15,3 +15,4 @@ libLi6sim.cxx
 libsim.rootmap
 libsim_rdict.pcm
 module.modulemap
+Makefile
