@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 project(li6sim)
 
+# Enable C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Setup directories.
 set(SRC ${PROJECT_SOURCE_DIR}/src)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
@@ -19,38 +23,48 @@ list(TRANSFORM LIBHEADERS PREPEND ${SRC}/)
 # Locate the ROOT package and define a number of useful targets and variables
 find_package(ROOT REQUIRED COMPONENTS RIO Tree Hist)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${ROOT_INCLUDE_DIRS})
 
 # Define cross-section file path
 set(XSECPATH ${CMAKE_CURRENT_SOURCE_DIR}/input)
 add_definitions(-DXSECPATH=\"${XSECPATH}\")
 
-# Generate ROOT dictionary
+# Generate the dictionary using ROOT_GENERATE_DICTIONARY
 ROOT_GENERATE_DICTIONARY(G__Li6sim ${LIBHEADERS} MODULE Li6sim LINKDEF ${SRC}/LinkDef.h)
 
-# Create a custom target to generate the dictionary
-add_custom_target(generate_dict ALL
-    COMMAND ${CMAKE_COMMAND} -E echo "Generating libLi6sim dictionary"
-    DEPENDS ${CMAKE_BINARY_DIR}/G__Li6sim.cxx
-)
+# Create a custom target for the dictionary generation
+add_custom_target(generate_dict ALL DEPENDS ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
+
+# Create an OBJECT library to handle the generated sources (with sim class)
+add_library(Li6simObjects OBJECT ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
+set_target_properties(Li6simObjects PROPERTIES EXCLUDE_FROM_ALL TRUE)
+target_link_libraries(Li6simObjects ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
+target_include_directories(Li6simObjects PRIVATE ${SIMLIB})
+add_dependencies(Li6simObjects generate_dict)
 
 # Create 6Li(2+2)->alpha+p+n executable
-add_executable(sim ${SRC}/sim_Li6_alphapn.cpp ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/G__Li6sim.cxx)
+add_executable(sim ${SRC}/sim_Li6_alphapn.cpp $<TARGET_OBJECTS:Li6simObjects>)
 target_link_libraries(sim ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(sim PRIVATE ${SIMLIB})
 set_target_properties(sim PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_dependencies(sim generate_dict)
 
 # Create 6Li(3+)->alpha+d executable
-add_executable(sim_3+ ${SRC}/sim_Li6_dalpha.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/G__Li6sim.cxx)
+add_executable(sim_3+ ${SRC}/sim_Li6_dalpha.cpp $<TARGET_OBJECTS:Li6simObjects>)
 target_link_libraries(sim_3+ ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(sim_3+ PRIVATE ${SIMLIB})
 set_target_properties(sim_3+ PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_dependencies(sim_3+ generate_dict)
 
 # Create library
-add_library(LI6SIM STATIC ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/G__Li6sim.cxx)
+add_library(LI6SIM STATIC $<TARGET_OBJECTS:Li6simObjects>)
 set_target_properties(LI6SIM PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(LI6SIM PRIVATE ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
 add_dependencies(LI6SIM generate_dict)
+
+# Define a special target for library only build
+add_custom_target(build_library
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target LI6SIM
+)

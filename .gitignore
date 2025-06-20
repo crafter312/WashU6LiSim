@@ -16,3 +16,4 @@ cmake_install.cmake
 *.pcm
 module.modulemap
 Makefile
+build/*
