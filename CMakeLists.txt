@@ -49,3 +49,8 @@ target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
 # Generate dictionaries and add them as a dependency of the library (via the MODULE parameter)
 ROOT_GENERATE_DICTIONARY(liblibLi6sim ${LIBHEADERS} MODULE LI6SIM LINKDEF ${SRC}/LinkDef.h)
 set_target_properties(liblibLi6sim PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+# Custom target to build library
+add_custom_target(LI6SIM_LIB)
+add_dependencies(LI6SIM_LIB liblibLi6sim LI6SIM)
+set_target_properties(LI6SIM_LIB PROPERTIES EXCLUDE_FROM_ALL TRUE)
