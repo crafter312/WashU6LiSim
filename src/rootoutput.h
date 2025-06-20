@@ -6,7 +6,7 @@
 #ifndef _rootoutput
 #define _rootoutput
 
-#include <math.h>
+#include <cmath>
 
 #include "TFile.h"
 #include "TTree.h"

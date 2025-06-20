@@ -3,6 +3,7 @@
 
 #include "loss.h"
 #include <string>
+#include <memory>
 #include "polyScat.h"
 #include "random.h"
 #include "frame.h"
@@ -26,9 +27,9 @@ class CFrag
   float CsI_res;   
 
 	//(float Z0, float mass0, string lossfile_CD2, string lossfile_Si, float CsI_res0, float thickness, Gobbiarray* array0, float scaleSmallAngle0, bool einstein0, bool useRealP0)
-  CFrag(float,float,string,string,float,float,Gobbiarray*,float=1.,bool=false,bool=false);
+  CFrag(float,float,string,string,float,float,shared_ptr<Gobbiarray>,float=1.,bool=false,bool=false);
   ~CFrag();
-  Gobbiarray* Array;
+  shared_ptr<Gobbiarray> Array;
 
   int hit(float,float);
   void getStripHit(int*, int*, int);

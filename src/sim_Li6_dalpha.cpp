@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <memory>
 #include "Gobbiarray.h"
 #include "frag.h"
 #include "decay.h"
@@ -11,8 +13,6 @@
 #include "TH2S.h"
 #include "TFile.h"
 #include "TF1.h"
-
-#define XSECPATH "/home/Li6Webb/Desktop/Li6Plus2IAS/li6sim/input/"
 
 using namespace std;
 
@@ -87,11 +87,11 @@ int main(int argc, char *argv[]) {
   float const targetSize    = 1.0;     // diameter of beam spot size in mm
 
 	// Initialize Gobbi array
-	Gobbiarray* gobbi = new Gobbiarray(distanceFromTarget, b, RadiusCollimator);
+	shared_ptr<Gobbiarray> gobbi = make_shared<Gobbiarray>(distanceFromTarget, b, RadiusCollimator);
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
-	size_t nexits        = 4;                                     // number of exit channels
-	double Exts[nexits]  = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
+	size_t nexits       = 4;                                     // number of exit channels
+	vector<double> Exts = { 0.0, 3.089443, 3.684507, 3.853807 }; // outgoing target excitation energy for each exit channel
 
 	// Simulation parameters
   int Nevents   = 100000; // events to simulation
@@ -115,9 +115,10 @@ int main(int argc, char *argv[]) {
 
 	// Initialize fragment objects
 	const int Nfrag = 2; // number of decay fragments
-  CFrag** frag = new CFrag*[Nfrag];
-	frag[0] = new CFrag(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);       // deuteron
-	frag[1] = new CFrag(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP); // alpha
+  vector<shared_ptr<CFrag>> frag;
+	frag.resize(Nfrag);
+	frag[0] = make_shared<CFrag>(1., Mass_d/m0, Loss_d_in_C, Loss_d_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);       // deuteron
+	frag[1] = make_shared<CFrag>(2., Mass_alpha/m0, Loss_He_in_C, Loss_He_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP); // alpha
 
   CFrag *fragBeam = new CFrag(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, CsiRes, thickness, gobbi, scale, einstein, useRealP);
 
@@ -127,13 +128,13 @@ int main(int argc, char *argv[]) {
   // Initiallizing the Correlations class reads in the CM cross section from a file
   // and uses that to select a randomized value for phi and theta
 	string prefix = "7li12c_e" + strE;
-	string Xsecfiles[nexits] = {
-		string(XSECPATH) + prefix + "_xsec_2.out",
-		string(XSECPATH) + prefix + "_xsec_3.out",
-		string(XSECPATH) + prefix + "_xsec_4.out",
-		string(XSECPATH) + prefix + "_xsec_5.out"
+	vector<string> Xsecfiles = {
+		string(XSECPATH) + "/" + prefix + "_xsec_2.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_3.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_4.out",
+		string(XSECPATH) + "/" + prefix + "_xsec_5.out"
 	};
-	string elasXsecfile = string(XSECPATH) + prefix + "_xsec_1.out";
+	string elasXsecfile = string(XSECPATH) + "/" + prefix + "_xsec_1.out";
 	Correlations* sampler = new Correlations(Xsecfiles, elasXsecfile, Ebeam, Ex, Exts, nexits, Loss_Li_in_C, thickness);
 
 	// Beam momentum and 1.2% MARS acceptance
@@ -335,13 +336,11 @@ int main(int argc, char *argv[]) {
   //cout << "mean " << mean << " sigma " << sigma << endl;
 
 	//clean up, clean up
-  delete[] frag;
   //everybody everywhere
   delete sampler;
   //clean up, clean up
 	delete fragBeam;
 	//everybody do your share
-	delete gobbi;
 
   //beep at me when finished (sadly doesn't work anymore)
   //cout << "\a";

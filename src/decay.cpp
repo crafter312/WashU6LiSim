@@ -11,7 +11,7 @@ CRandom CDecay::ran;
 \param einstein0 turns on relativistic calculations when true
  */
 
-CDecay::CDecay(int Nfrag0, CFrag ** frag0, bool einstein0){
+CDecay::CDecay(int Nfrag0, std::vector<std::shared_ptr<CFrag>> frag0, bool einstein0){
 
 	einstein = einstein0;
 	Nfrag = Nfrag0;
