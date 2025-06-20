@@ -40,17 +40,13 @@ target_include_directories(sim_3+ PRIVATE ${SIMLIB})
 set_target_properties(sim_3+ PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Create library
-add_library(LI6SIM STATIC ${SRC}/Li6sim_alphapn.cpp ${SOURCES})
+add_library(LI6SIM STATIC ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/libLi6sim.cxx)
 set_target_properties(LI6SIM PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(LI6SIM PRIVATE ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
 
-# Generate dictionaries and add them as a dependency of the library (via the MODULE parameter)
-ROOT_GENERATE_DICTIONARY(liblibLi6sim ${LIBHEADERS} MODULE LI6SIM LINKDEF ${SRC}/LinkDef.h)
-set_target_properties(liblibLi6sim PROPERTIES EXCLUDE_FROM_ALL TRUE)
-
 # Custom target to build library
 add_custom_target(LI6SIM_LIB)
-add_dependencies(LI6SIM_LIB liblibLi6sim LI6SIM)
+add_dependencies(LI6SIM_LIB libLi6sim LI6SIM)
 set_target_properties(LI6SIM_LIB PROPERTIES EXCLUDE_FROM_ALL TRUE)
