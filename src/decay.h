@@ -1,9 +1,14 @@
+#ifndef _CDecay
+#define _CDecay
+
 #include "frag.h"
 #include "random.h"
 #include "constants.h"
 #include "profile.h"
 
+#include <memory>
 #include <valarray>
+#include <vector>
 
 /**
  *!\brief selects the veloity vectors of the secondary fragments
@@ -23,12 +28,12 @@ class CDecay
     CFrame *plfRecon;
     CFrame *plfRecon2;
     CFrame *partCM[5];
-    CFrag  **frag;  //!< information about the decay fragments
+    std::vector<std::shared_ptr<CFrag>> frag;  //!< information about the decay fragments
     profile *prof;
 
     int Nfrag;
 
-    CDecay(int,CFrag**,bool einstein0);
+    CDecay(int,std::vector<std::shared_ptr<CFrag>>,bool einstein0);
     void GenerateProfile(double Ex, double Q);
     ~CDecay();
     float getErelReal();
@@ -53,3 +58,5 @@ class CDecay
     int neutronbranch;
 
 };
+
+#endif

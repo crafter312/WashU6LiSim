@@ -24,8 +24,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XSECPATH ${CMAKE_CURRENT_SOURCE_DIR}/input)
 add_definitions(-DXSECPATH=\"${XSECPATH}\")
 
-# Create executable
-add_executable(sim ${SRC}/sim_Li6_alphapn.cpp ${SOURCES})
+# Create 6Li(2+2)->alpha+p+n executable
+add_executable(sim ${SRC}/sim_Li6_alphapn.cpp ${SRC}/Li6sim_alphapn.cpp ${SOURCES})
 target_link_libraries(sim ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(sim PRIVATE ${SIMLIB})
 set_target_properties(sim PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -33,8 +33,15 @@ set_target_properties(sim PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR
 # Generate dictionaries and add them as a dependency of the executable (via the MODULE parameter)
 ROOT_GENERATE_DICTIONARY(libLi6sim ${LIBHEADERS} MODULE sim LINKDEF ${SRC}/LinkDef.h)
 
-# Create executable
+# Create 6Li(3+)->alpha+d executable
 add_executable(sim_3+ ${SRC}/sim_Li6_dalpha.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/libLi6sim.cxx)
 target_link_libraries(sim_3+ ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(sim_3+ PRIVATE ${SIMLIB})
 set_target_properties(sim_3+ PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# Create library
+add_library(LI6SIM STATIC ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/libLi6sim.cxx)
+set_target_properties(LI6SIM PROPERTIES EXCLUDE_FROM_ALL TRUE)
+target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
+target_include_directories(LI6SIM PRIVATE ${SIMLIB})
+target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})

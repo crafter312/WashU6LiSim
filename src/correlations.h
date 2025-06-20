@@ -4,9 +4,10 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "constants.h"
 #include "frame.h"
@@ -44,7 +45,7 @@ class SampledValues {
 
 class Correlations {
   public:
-    Correlations(string*, string, double, double, double*, size_t, string, float);
+    Correlations(vector<string>, string, double, double, vector<double>, size_t, string, float);
     ~Correlations();
 
     CRandom ran;
@@ -60,7 +61,7 @@ class Correlations {
 		SampledValues sampledValues;
 
 		// Inelastic exit channel input
-		string *filenames;  // inelastic input file names
+		vector<string> filenames;  // inelastic input file names
 		int *lengths;       // number of data points for #include "loss.h"each input file
 		double **th_file;   // angular array for each input file
     double **Xsec_file; // differential cross section array for each input file
@@ -71,9 +72,9 @@ class Correlations {
     double *th_elastic;
     double *Xsec_elastic;
 
-		int nexits;    // total number of inelastic exit channels
-		double *Xsecs; // total exit channel cross sections
-		double *Exts;  // target excitation for each exit channel
+		int nexits;           // total number of inelastic exit channels
+		double *Xsecs;        // total exit channel cross sections
+		vector<double> Exts;  // target excitation for each exit channel
 
     void randomAngles(double);         // samples elastic and inelastic scattering angles from input distributions
 		void readelastic(float);           // reads elastic differential cross section Fresco file

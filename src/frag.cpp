@@ -17,7 +17,8 @@ CRandom CFrag::ran;
 */
 
 CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float CsI_res0,
-			 float thickness, Gobbiarray* array0, float scaleSmallAngle0, bool einstein0, bool useRealP0) {			 
+	float thickness, shared_ptr<Gobbiarray> array0, float scaleSmallAngle0, bool einstein0, bool useRealP0)
+	: Array(array0) {			 
 	cout << "Fragment of Z = " << Z0 << ", mass = " << mass0 << endl;	
 	Z = Z0;
 	mass = mass0;
@@ -33,8 +34,6 @@ CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float
 	//float thick = thickness/1000./18.*6.02e23; // atoms/cm2
 	
 	pScat = new polyScat(Z, thickness);
-
-	Array = array0;
 
 	real = new CFrame(mass);
 	recon = new CFrame(mass);
