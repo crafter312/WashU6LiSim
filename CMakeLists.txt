@@ -38,6 +38,7 @@ add_executable(sim_3+ ${SRC}/sim_Li6_dalpha.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}
 target_link_libraries(sim_3+ ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(sim_3+ PRIVATE ${SIMLIB})
 set_target_properties(sim_3+ PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+add_dependencies(sim_3+ libLi6sim)
 
 # Create library
 add_library(LI6SIM STATIC ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${PROJECT_SOURCE_DIR}/libLi6sim.cxx)
@@ -45,8 +46,4 @@ set_target_properties(LI6SIM PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(LI6SIM PRIVATE ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
-
-# Custom target to build library
-add_custom_target(LI6SIM_LIB)
-add_dependencies(LI6SIM_LIB libLi6sim LI6SIM)
-set_target_properties(LI6SIM_LIB PROPERTIES EXCLUDE_FROM_ALL TRUE)
+add_dependencies(LI6SIM libLi6sim)
