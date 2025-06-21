@@ -38,7 +38,7 @@ CDecay::CDecay(int Nfrag0, std::vector<std::shared_ptr<CFrag>> frag0, bool einst
 	}
 }
 
-
+/*
 //add on to the constructor becasue some decays will need lineshape input
 void CDecay::GenerateProfile(double Ex, double Q)
 {
@@ -68,7 +68,7 @@ void CDecay::GenerateProfile(double Ex, double Q)
 
 	prof = new profile(ET0, DE, z1, z2, mu, ac, l1, l2, rwidth2_1, rwidth2_2, B_1, B_2);
 
-}
+}*/
 
 
 
@@ -303,6 +303,7 @@ void CDecay::Mode2Body(double Ex, double gamma, double Q) {
 //*************************************************************
 //
 //*************************************************************
+/*
 void CDecay::ModeLineShapes() {
 	// Find decay energy, use Breit Wigner distribution if gamma > 0
 
@@ -360,7 +361,7 @@ void CDecay::ModeLineShapes() {
 	real[1]->SetPhi(phi);
 	real[0]->Sph2CartV();
 	real[1]->Sph2CartV();
-}
+}*/
 
 //**************************************************************
 // This function is designed to simulate direct "microcanonical"
