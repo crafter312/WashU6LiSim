@@ -33,7 +33,7 @@ class CDecay
     int Nfrag;
 
     CDecay(int,std::vector<std::shared_ptr<CFrag>>,bool einstein0);
-    void GenerateProfile(double Ex, double Q);
+    //void GenerateProfile(double Ex, double Q);
     ~CDecay();
     float getErelReal();
     float getErelRecon();
@@ -45,7 +45,7 @@ class CDecay
     void Mode2Body(double Ex, double gamma, double Q);
     void Mode2BodyExact(double Ex, double gamma, double Q);
 		void ModeMicroCanonical(double Ex, double gamma, double Q);
-    void ModeLineShapes();
+    //void ModeLineShapes();
 
     float sumA;
     float ErelRecon; //!<reconstructed relative kinetic energy
