@@ -22,8 +22,8 @@ CFrag::CFrag(float Z0, float mass0, string lossfile_C, string lossfile_Si, float
 	cout << "Fragment of Z = " << Z0 << ", mass = " << mass0 << endl;	
 	Z = Z0;
 	mass = mass0;
-	ifstream ifile;
-	ifile.open("~/li6sim/src/teles.dat");
+	//ifstream ifile;
+	//ifile.open("~/li6sim/src/teles.dat");
 
 	extra = false;
 	loss_C = new CLoss(lossfile_C,mass);

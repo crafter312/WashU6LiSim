@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ using namespace std;
 CLoss::CLoss(string filename, float mass0){
   mass = mass0;
   
-  string longfilename = "loss/"+ filename;
+  string longfilename = string(LOSSPATH) + "/" + filename;
   ifstream File(longfilename.c_str());
   if (File.is_open() != 1){
     cout << " could not open loss file " << longfilename;

@@ -29,6 +29,10 @@ include_directories(${ROOT_INCLUDE_DIRS})
 set(XSECPATH ${CMAKE_CURRENT_SOURCE_DIR}/input)
 add_definitions(-DXSECPATH=\"${XSECPATH}\")
 
+# Define loss file path
+set(LOSSPATH ${CMAKE_CURRENT_SOURCE_DIR}/loss)
+add_definitions(-DLOSSPATH=\"${LOSSPATH}\")
+
 # Generate the dictionary using ROOT_GENERATE_DICTIONARY
 ROOT_GENERATE_DICTIONARY(G__Li6sim ${LIBHEADERS} MODULE Li6sim LINKDEF ${SRC}/LinkDef.h)
 
