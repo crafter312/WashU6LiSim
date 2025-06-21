@@ -37,10 +37,10 @@ add_definitions(-DLOSSPATH=\"${LOSSPATH}\")
 ROOT_GENERATE_DICTIONARY(G__LI6SIM ${LIBHEADERS} MODULE LI6SIM LINKDEF ${SRC}/LinkDef.h)
 
 # Create a custom target for the dictionary generation
-add_custom_target(generate_dict ALL DEPENDS ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
+add_custom_target(generate_dict ALL DEPENDS ${CMAKE_BINARY_DIR}/G__LI6SIM.cxx)
 
 # Create an OBJECT library to handle the generated sources (with sim class)
-add_library(Li6simObjects OBJECT ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
+add_library(Li6simObjects OBJECT ${SRC}/Li6sim_alphapn.cpp ${SOURCES} ${CMAKE_BINARY_DIR}/G__LI6SIM.cxx)
 set_target_properties(Li6simObjects PROPERTIES EXCLUDE_FROM_ALL TRUE)
 set_target_properties(Li6simObjects PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(Li6simObjects ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
