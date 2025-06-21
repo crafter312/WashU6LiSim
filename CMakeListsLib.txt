@@ -47,7 +47,7 @@ target_include_directories(Li6simObjects PRIVATE ${SIMLIB})
 add_dependencies(Li6simObjects generate_dict)
 
 # Create library
-add_library(LI6SIM STATIC $<TARGET_OBJECTS:Li6simObjects> ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
+add_library(LI6SIM SHARED $<TARGET_OBJECTS:Li6simObjects> ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(LI6SIM PUBLIC ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
