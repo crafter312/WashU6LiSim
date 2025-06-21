@@ -5,6 +5,8 @@
 
 #include "correlations.h"
 
+#include "constants.h"
+
 #include <iostream>
 #include <stdexcept>
 

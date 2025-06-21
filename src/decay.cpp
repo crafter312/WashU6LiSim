@@ -2,6 +2,8 @@
 
 #include "decay.h"
 
+#include "constants.h"
+
 CRandom CDecay::ran;
 
 /**

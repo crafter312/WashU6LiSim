@@ -13,7 +13,6 @@
 #include "TH1F.h"
 #include "TH2S.h"
 
-#include "constants.h"
 #include "correlations.h"
 #include "frame.h"
 

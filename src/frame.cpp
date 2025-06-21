@@ -2,6 +2,8 @@
 
 #include "frame.h"
 
+#include "constants.h"
+
 #include <iostream>
 
 KinematicValues::KinematicValues() {
