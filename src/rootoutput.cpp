@@ -5,6 +5,8 @@
 
 #include "rootoutput.h"
 
+#include "constants.h"
+
 // Input:
 //	nFrags -- number of decay fragments
 RootOutput::RootOutput(string suffix, int n) : nFrags(n) {

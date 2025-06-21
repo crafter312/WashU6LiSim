@@ -5,8 +5,6 @@
 
 #include <math.h>
 
-#include "constants.h"
-
 /**
  * Simple class to store important kinematic values for easy
  * ROOT output to a TTree object and do some basic conversions

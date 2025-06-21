@@ -44,8 +44,7 @@ add_dependencies(Li6simObjects generate_dict)
 
 # Create library
 add_library(LI6SIM STATIC $<TARGET_OBJECTS:Li6simObjects>)
-set_target_properties(LI6SIM PROPERTIES EXCLUDE_FROM_ALL TRUE)
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
-target_include_directories(LI6SIM PRIVATE ${SIMLIB})
+target_include_directories(LI6SIM PUBLIC ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
 add_dependencies(LI6SIM generate_dict)

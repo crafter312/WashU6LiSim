@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 
-#include "constants.h"
 #include "frame.h"
 #include "loss.h"
 #include "random.h"

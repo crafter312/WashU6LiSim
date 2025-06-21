@@ -3,7 +3,6 @@
 
 #include "frag.h"
 #include "random.h"
-#include "constants.h"
 #include "profile.h"
 
 #include <memory>
