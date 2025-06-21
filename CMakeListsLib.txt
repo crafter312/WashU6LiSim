@@ -34,7 +34,7 @@ set(LOSSPATH ${CMAKE_CURRENT_SOURCE_DIR}/loss)
 add_definitions(-DLOSSPATH=\"${LOSSPATH}\")
 
 # Generate the dictionary using ROOT_GENERATE_DICTIONARY
-ROOT_GENERATE_DICTIONARY(G__Li6sim ${LIBHEADERS} MODULE Li6sim LINKDEF ${SRC}/LinkDef.h)
+ROOT_GENERATE_DICTIONARY(G__LI6SIM ${LIBHEADERS} MODULE LI6SIM LINKDEF ${SRC}/LinkDef.h)
 
 # Create a custom target for the dictionary generation
 add_custom_target(generate_dict ALL DEPENDS ${CMAKE_BINARY_DIR}/G__Li6sim.cxx)
@@ -50,6 +50,7 @@ add_dependencies(Li6simObjects generate_dict)
 # Create library
 add_library(LI6SIM SHARED $<TARGET_OBJECTS:Li6simObjects>)
 set_target_properties(LI6SIM PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(LI6SIM PROPERTIES OUTPUT_NAME "LI6SIM")
 target_link_libraries(LI6SIM ${SIMLIB}/simlib.a ROOT::RIO ROOT::Tree ROOT::Hist)
 target_include_directories(LI6SIM PUBLIC ${SIMLIB})
 target_include_directories(LI6SIM PUBLIC ${SRC} ${ROOT_INCLUDE_DIRS})
