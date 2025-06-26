@@ -27,6 +27,9 @@ public:
 	void SetRelativistic(bool b) { einstein = b; }
 	void SetUseRealP(bool b) { useRealP = b; }
 	void SetEnableMARS(bool b) { mars = b; }
+	void SetEnableExternalNeutron(bool b) { externalNeutron = b; }
+
+	void SetExternalNeutronValues(double, double, double, double);
 
 	size_t GetNFrags() const { return Nfrag; }
 	std::string GetSuffix() const { return suffix; }
@@ -129,6 +132,11 @@ private:
 	int Nstuck{0};
 	int Ndet{0};
 	int Nbeamscat{0};
+
+	// Neutron variables
+	bool externalNeutron{false}; // flags whether the simulation should use externally set neutron information or not
+	double neutTime{-1};         // ns
+	double neutPos[3];           // x,y,z are indices 0,1,2, should be in cm
 };
 
 #endif
