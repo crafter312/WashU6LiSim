@@ -116,7 +116,7 @@ void Li6sim_alphapn::PrintSettings() {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-string Li6sim_alphapn::DoSingleEvent(RootOutput& output) {
+string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Make sure important variables are correctly initialized
 	if(frag.size() != Nfrag)
@@ -195,24 +195,6 @@ string Li6sim_alphapn::DoSingleEvent(RootOutput& output) {
 	output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
 	output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
 
-	/**** NEUTRON RECONSTRUCTION ****/
-
-	// Detector geometry not implemented yet, assume distance of 1 m
-	double neutDist = 100; // cm
-
-	// Fold in 1ns timing resolution
-	double neutV = frag[0]->real->GetVelocity(); // cm/ns
-	double neutT = neutDist / neutV; // ns
-	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes);
-	output.SetTNeut(neutT);
-	frag[0]->recon->SetVelocity(neutDist / neutT);
-
-	// Assume other values are exact
-	frag[0]->recon->SetTheta(frag[0]->real->GetTheta());
-	frag[0]->recon->SetPhi(frag[0]->real->GetPhi());
-	frag[0]->recon->Sph2CartV();
-	frag[0]->recon->getEnergy(&einstein);
-
 	/**** CHARGED FRAGMENT RECONSTRUCTION ****/
 
 	// Interaction of fragements in target and silicon detector materials
@@ -279,31 +261,14 @@ string Li6sim_alphapn::DoSingleEvent(RootOutput& output) {
 	output.SetIsFragDet(true);
 	Ndet++;
 
+	// Energy addback for half target
 	for (int i = 1; i < Nfrag; i++) {
 		frag[i]->Egain(thickness * 0.5);
 	}
 
+	// Output of charged fragment information
 	output.protonenergy->Fill(frag[1]->recon->GetEnergy());
 	output.alphaenergy->Fill(frag[2]->recon->GetEnergy());
-
-	//get reconstructed relative energy between fragements
-	float Erel_S = useRealP ? decay->getErelReal() : decay->getErelRecon();
-
-	//get reconstructed excitation energy
-	float Ex_S = Erel_S + Q;
-
-	decay->plfRecon->SetEnergy(Erel_S);
-	decay->plfRecon->RadToDeg();
-	output.SetEx(Ex_S);
-	output.SetCosThetaH(decay->cos_thetaH);
-	output.hist_Erel_thetaH->Fill(Erel_S, decay->cos_thetaH);
-
-	//look at transverse emisson for better resolutions
-	if (fabs(decay->cos_thetaH) < 0.7) output.hist_Ex_trans->Fill(Ex_S);
-	if (fabs(decay->cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
-
-	output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
-	output.SetReconValues(decay->plfRecon->GetKinematicValues());
 
 	x = frag[1]->recon->GetX() / 10.;
 	y = frag[1]->recon->GetY() / 10.;
@@ -314,7 +279,62 @@ string Li6sim_alphapn::DoSingleEvent(RootOutput& output) {
 	y = frag[2]->recon->GetY() / 10.;
 	output.coreXY_S->Fill(x,y);
 	output.SetReconFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->recon->GetEnergy(), x, y, frag[2]->recon->GetTheta()*rad_to_deg);
-	
+
+	// Reset neutron variables for next step
+	neutTime   = -1;
+	neutPos[0] = NAN;
+	neutPos[1] = NAN;
+	neutPos[2] = NAN;
+
+	return "";
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
+
+	/**** NEUTRON RECONSTRUCTION ****/
+
+	// Assumed default neutron values
+	double neutDist = 100;                       // cm
+	double neutV = frag[0]->real->GetVelocity(); // cm/ns
+	double neutT = neutDist / neutV;             // ns
+
+	// Use external values if relevant
+	if (externalNeutron && (neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
+		neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
+		neutT = neutTime;
+	}
+
+	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes); // apply time resolution
+	output.SetTNeut(neutT);
+	frag[0]->recon->SetVelocity(neutDist / neutT); // non-relativistic for now
+
+	// Assume other values are exact
+	frag[0]->recon->SetTheta(frag[0]->real->GetTheta());
+	frag[0]->recon->SetPhi(frag[0]->real->GetPhi());
+	frag[0]->recon->Sph2CartV();
+	frag[0]->recon->getEnergy(&einstein);
+
+	// Get reconstructed relative energy between fragements
+	float Erel_S = useRealP ? decay->getErelReal() : decay->getErelRecon();
+
+	// Get reconstructed excitation energy
+	float Ex_S = Erel_S + Q;
+
+	decay->plfRecon->SetEnergy(Erel_S);
+	decay->plfRecon->RadToDeg();
+	output.SetEx(Ex_S);
+	output.SetCosThetaH(decay->cos_thetaH);
+	output.hist_Erel_thetaH->Fill(Erel_S, decay->cos_thetaH);
+
+	// Look at transverse emisson for better resolutions
+	if (fabs(decay->cos_thetaH) < 0.7) output.hist_Ex_trans->Fill(Ex_S);
+	if (fabs(decay->cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
+
+	output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
+	output.SetReconValues(decay->plfRecon->GetKinematicValues());
+
 	output.SetENeut(frag[0]->recon->GetEnergy());
 	output.SetThetaNeut(frag[0]->recon->GetTheta()*rad_to_deg);
 	output.Fill();
@@ -338,6 +358,16 @@ void Li6sim_alphapn::DoFinalThings(int Nevents) {
 	cout << "(alpha + p + n) coincidence efficiency = " << (float)Ndet/(float)Nevents << endl;
 	cout << "(alpha + p + n) was stuck in target = " << Nstuck << ", fraction = " << (float)Nstuck/(float)Nevents << endl;
 	cout << "7Li beam elastic scatter det = " << (float)Nbeamscat/(float)Nevents << endl;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+// t should be in ns, position in cm
+void Li6sim_alphapn::SetExternalNeutronValues(double t, double x, double y, double z) {
+	neutTime = t;
+	neutPos[0] = x;
+	neutPos[1] = y;
+	neutPos[2] = z;
 }
 
 
