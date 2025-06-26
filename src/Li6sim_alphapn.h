@@ -46,11 +46,18 @@ public:
 	// This handles all the cout statements of the simulation parameters
 	void PrintSettings();
 
-	// This handles the contents of the event loop, taking a reference to RootOutput.
-	// Again, a non-empty string is returned if something has gone wrong, and it is
-	// the responsibility of the function caller to make sure the program exits
-	// properly if this happens.
-	std::string DoSingleEvent(RootOutput&);
+	// Together, these functions handle the contents of the event loop, taking a
+	// reference to RootOutput. Again, a non-empty string is returned if something
+	// has gone wrong, and it is the responsibility of the function caller to make
+	// sure the program exits properly if this happens.
+
+	// This function handles all of the elements of the simulation which do not
+	// make use of the neutron results from the decay calculation.
+	std::string DoSingleEventPreNeutron(RootOutput&);
+
+	// This function handles all simulation elements that require neutron results,
+	// which can be set from an external simulation if desired.
+	std::string DoSingleEventPostNeutron(RootOutput&);
 
 	// Handle final things like outputting statistics and such
 	void DoFinalThings(int);

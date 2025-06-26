@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
 		if (index%1000 == 0) cout << '\xd' <<	index << " of " << Nevents << flush;
 
 		// Execute contents of event loop
-		sim.DoSingleEvent(output);
+		sim.DoSingleEventPreNeutron(output);
+		sim.DoSingleEventPostNeutron(output);
 	}
 
 	// Output final statistics
