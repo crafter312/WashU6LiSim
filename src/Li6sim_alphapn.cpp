@@ -301,9 +301,15 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	double neutT = neutDist / neutV;             // ns
 
 	// Use external values if relevant
-	if (externalNeutron && (neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
-		neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
-		neutT = neutTime;
+	if (externalNeutron) {
+		if ((neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
+			neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
+			neutT = neutTime;
+		}
+		else {
+			output.Fill();
+			return "";
+		}
 	}
 
 	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes); // apply time resolution
