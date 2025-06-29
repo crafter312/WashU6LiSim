@@ -301,24 +301,35 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	double neutT = neutDist / neutV;             // ns
 
 	// Use external values if relevant
+	double theta;
+	double phi;
 	if (externalNeutron) {
 		if ((neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
 			neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
 			neutT = neutTime;
+			theta = acos(neutPos[2] / neutDist);
+			phi = atan2(neutPos[1], neutPos[0]);
+			phi += (phi < 0) * 2. * pi;
 		}
 		else {
 			output.Fill();
 			return "";
 		}
 	}
+	else {
+		theta = frag[0]->real->GetTheta();
+		phi = frag[0]->real->GetPhi();
+		neutPos[0] = neutDist * sin(theta) * cos(phi);
+		neutPos[1] = neutDist * sin(theta) * sin(phi);
+		neutPos[2] = neutDist * cos(theta);
+	}
 
 	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes); // apply time resolution
-	output.SetTNeut(neutT);
 	frag[0]->recon->SetVelocity(neutDist / neutT); // non-relativistic for now
 
 	// Assume other values are exact
-	frag[0]->recon->SetTheta(frag[0]->real->GetTheta());
-	frag[0]->recon->SetPhi(frag[0]->real->GetPhi());
+	frag[0]->recon->SetTheta(theta);
+	frag[0]->recon->SetPhi(phi);
 	frag[0]->recon->Sph2CartV();
 	frag[0]->recon->getEnergy(&einstein);
 
@@ -341,8 +352,14 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
 	output.SetReconValues(decay->plfRecon->GetKinematicValues());
 
-	output.SetENeut(frag[0]->recon->GetEnergy());
-	output.SetThetaNeut(frag[0]->recon->GetTheta()*rad_to_deg);
+	output.SetNeut(
+		neutT,
+		frag[0]->recon->GetEnergy(),
+		frag[0]->recon->GetTheta()*rad_to_deg,
+		neutPos[0],
+		neutPos[1],
+		neutPos[2]
+	);
 	output.Fill();
 
 	return "";

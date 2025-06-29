@@ -9,7 +9,7 @@
 
 // Input:
 //	nFrags -- number of decay fragments
-RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
+RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNeutron) {
 	realFragments.resize(nFrags);
 	reconFragments.resize(nFrags);
 	//for (int i = 0; i < nFrags; i++)
@@ -26,15 +26,17 @@ RootOutput::RootOutput(string suffix, int n) : nFrags(n) {
 	t->Branch("realFragments", &realFragments);
 	t->Branch("reconFragments", &reconFragments);
 	t->Branch("reconElastic", &elastic);
-	t->Branch("tNeut", &tNeut);
-	t->Branch("ENeut", &ENeut);
-  t->Branch("thetaNeut", &thetaNeut);
 	t->Branch("ErelPSampled", &ErelP);
 	t->Branch("ErelPReal", &ErelPRecon);
 	t->Branch("Ex", &Ex);
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
+
+	// Conditional neutron branches
+	if (hasNeutron) {
+		t->Branch("neutron", &neutron);
+	}
 
 	// Reworked simulation branches
 	t->Branch("sampler", &sampler);
@@ -108,9 +110,6 @@ void RootOutput::Clear() {
 		reconFragments[i].clear();
 	}
 	elastic.clear();
-	tNeut = NAN;
-	ENeut = NAN;
-	thetaNeut = NAN;
 	ErelP = NAN;
 	ErelPRecon = NAN;
 	Ex = NAN;
@@ -120,6 +119,8 @@ void RootOutput::Clear() {
 
 	sampler.Clear();
 	recon.Clear();
+
+	neutron.clear();
 }
 
 // Input:
@@ -172,20 +173,15 @@ void RootOutput::SetElastic(double de, double e, double recE, double _x, double 
   hist_theta_beam_S_recon->Fill(_theta);
 }
 
-// Time of neutron fragment
-void RootOutput::SetTNeut(double t) {
-	tNeut = t;
-}
-
-// Energy of neutron fragment
-void RootOutput::SetENeut(double E) {
-	ENeut = E;
-}
-
-// Polar angle of neutron fragment
-void RootOutput::SetThetaNeut(double nth) {
-	thetaNeut = nth;
-	hist_neut_theta->Fill(nth);
+// Time, energy, angle, and position of neutron fragment
+void RootOutput::SetNeut(double t, double E, double th, double x, double y, double z) {
+	neutron.t = t;
+	neutron.E = E;
+	neutron.thetaLab = th;
+	neutron.pos[0] = x;
+	neutron.pos[1] = y;
+	neutron.pos[2] = z;
+	hist_neut_theta->Fill(th);
 }
 
 // Primary relative energy (decay energy)

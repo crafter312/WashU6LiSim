@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 	sim.PrintSettings();
 
 	// Initialize output manager
-	RootOutput output(sim.GetSuffix(), sim.GetNFrags()-1); // -1 because neutron output handled separately
+	RootOutput output(sim.GetSuffix(), sim.GetNFrags(), true);
 
 	/**** MAIN EVENT LOOP ****/
 

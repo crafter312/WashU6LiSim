@@ -41,6 +41,25 @@ struct CFragS {
 };
 
 /**
+ * Energy, position, etc. of neutron fragment.
+ */
+struct NeutFrag {
+	double t{NAN};
+	double E{NAN};
+	double thetaLab{NAN};
+	double pos[3]{NAN, NAN, NAN};
+
+	void clear() {
+		t = NAN;
+		E = NAN;
+		thetaLab = NAN;
+		pos[0] = NAN;
+		pos[1] = NAN;
+		pos[2] = NAN;
+	};
+};
+
+/**
  * RootOutput class.
  * This handles the output file, histograms, and tree from the simulation.
  */
@@ -56,7 +75,7 @@ class RootOutput {
 		TH2S* protonXY_S;
   	TH2S* coreXY_S;
 
-		RootOutput(string, int);
+		RootOutput(string, int, bool = true);
 		~RootOutput();
 
 		void Fill();
@@ -65,9 +84,7 @@ class RootOutput {
 		void SetRealFragment(int, double, double, double, double, double, double);
 		void SetReconFragment(int, double, double, double, double, double, double);
 		void SetElastic(double, double, double, double, double, double);
-		void SetTNeut(double);
-		void SetENeut(double);
-		void SetThetaNeut(double);
+		void SetNeut(double, double, double, double, double, double);
 		void SetErelP(double);
 		void SetErelPRecon(double);
 		void SetEx(double);
@@ -102,15 +119,15 @@ class RootOutput {
 		std::vector<CFragS> reconFragments;
 		CFragS elastic;
 		int nFrags;
-		double tNeut {NAN};
-		double ENeut {NAN};
-		double thetaNeut {NAN};
 		double ErelP {NAN};      // this is the sampled Breit-Wigner distribution directly from the decay class
 		double ErelPRecon {NAN}; // this is the decay energy calculated from the real fragments immediately after the decay
 		double Ex {NAN};
 		double cosThetaH {NAN};
 		bool isElasticHit {false};
 		bool isFragDet {false};
+
+		// Conditional neutron values
+		NeutFrag neutron;
 
 		SampledValues sampler {};
 		KinematicValues recon {};
