@@ -134,14 +134,14 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Distance in target that produced has to pass to get out
 	double rand		  = decay->ran.Rndm();
-	double inthick	= thickness * rand;
+	inthick	= thickness * rand;
 	double outthick = thickness * (1. - rand);
 
 	// Beam spot at target
 	double rTarget = sqrt(decay->ran.Rndm())*targetSize/2.;
 	double theta = 2.*acos(-1.)*decay->ran.Rndm();
-	float xTarget = rTarget*cos(theta);
-	float yTarget = rTarget*sin(theta);
+	xTarget = rTarget*cos(theta);
+	yTarget = rTarget*sin(theta);
 
 	// Need to re-randomize the angles for each passthrough
 	sampler->randomAngles(inthick);

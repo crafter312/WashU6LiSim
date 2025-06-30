@@ -33,6 +33,14 @@ public:
 
 	size_t GetNFrags() const { return Nfrag; }
 	std::string GetSuffix() const { return suffix; }
+	bool GetEnableExternalNeutron() const { return externalNeutron; }
+	double GetTargetInThick() const { return inthick; }
+	float GetXTarget() const { return xTarget; }
+	float GetYTarget() const { return yTarget; }
+	double GetNeutVX() const { return frag[0]->real->GetVComp(0); }
+	double GetNeutVY() const { return frag[0]->real->GetVComp(1); }
+	double GetNeutVZ() const { return frag[0]->real->GetVComp(2); }
+	double GetNeutE() const { return frag[0]->real->GetEnergy(); }
 
 	// Extra functions
 	void AddExtraSuffix(std::string s) { suffix += "_" + s; }
@@ -132,6 +140,11 @@ private:
 	int Nstuck{0};
 	int Ndet{0};
 	int Nbeamscat{0};
+
+	// Other loop variables
+	double inthick{NAN}; // fraction of distance traveled in target before interaction
+	float xTarget{NAN};
+	float yTarget{NAN};
 
 	// Neutron variables
 	bool externalNeutron{false}; // flags whether the simulation should use externally set neutron information or not
