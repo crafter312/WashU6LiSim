@@ -325,7 +325,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	}
 
 	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes); // apply time resolution
-	frag[0]->recon->SetVelocity(neutDist / neutT); // non-relativistic for now
+	frag[0]->recon->SetVelocity(neutDist / neutT);
 
 	// Assume other values are exact
 	frag[0]->recon->SetTheta(theta);
