@@ -26,6 +26,7 @@ public:
 	void SetSmallAngleScatteringScale(float s) { scale = s; }
 	void SetRelativistic(bool b) { einstein = b; }
 	void SetUseRealP(bool b) { useRealP = b; }
+	void SetUseRealNeut(bool b) { useRealNeut = b; }
 	void SetEnableMARS(bool b) { mars = b; }
 	void SetEnableExternalNeutron(bool b) { externalNeutron = b; }
 
@@ -92,9 +93,14 @@ private:
 	bool einstein{true};        // switch for newtonian(false) or relativistic(true) kinematics
 	bool mars{false};           // switch to enable MARS momentum acceptance
 
-	bool useRealP{false}; // true means use real angle and energies of fragment
-	                      // for event reconstruction, to check effect of
-	                      // detector resolution
+	bool useRealP{false}; // true means use real angle and energies of all
+	                      // fragments for event reconstruction, to check
+	                      // effect of detector resolutions
+
+	bool useRealNeut{false}; // true means use real angle and energies of neutron
+                           // fragment for event reconstruction, to check
+                           // effect of TexNeut detector resolutions in isolation
+                           // from other detectors.
 
 	// These two can be changed using one of the constructors
 	float b{8.0};               // mm beam axis to Gobbi frame dimension,

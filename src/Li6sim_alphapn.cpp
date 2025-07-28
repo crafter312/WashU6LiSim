@@ -77,6 +77,7 @@ string Li6sim_alphapn::Init() {
 		return "Exit channel vector lengths don't match that expected of nexits = " + to_string(nexits);
 
 	if(useRealP) suffix += "_real";
+	if(useRealNeut) suffix += "_realNeut";
 
 	// It's important here that the heavy fragment (alpha) is the last fragment, and
 	// also that the neutron is the first fragment so that I can skip it.
@@ -303,7 +304,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	// Use external values if relevant
 	double theta;
 	double phi;
-	if (externalNeutron) {
+	if (externalNeutron && !useRealNeut) {
 		if ((neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
 			neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
 			neutT = neutTime;
@@ -324,8 +325,21 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 		neutPos[2] = neutDist * cos(theta);
 	}
 
-	if (!useRealP) neutT += decay->ran.Gaus(0., neutTRes); // apply time resolution
+	// Apply time resolution. The flag checks here are not strictly
+	// needed since the call to CDecay::getErelReal bypasses this,
+	// but I'm just being thorough.
+	if (!useRealNeut || !useRealP) neutT += decay->ran.Gaus(0., neutTRes);
 	frag[0]->recon->SetVelocity(neutDist / neutT);
+
+	// If perfect neutron reconstruction, use real velocity
+	// and set time and position to NAN
+	if (useRealNeut) {
+		frag[0]->recon->SetVelocity(frag[0]->real->GetVelocity());
+		neutTime   = -1;
+		neutPos[0] = NAN;
+		neutPos[1] = NAN;
+		neutPos[2] = NAN;
+	}
 
 	// Assume other values are exact
 	frag[0]->recon->SetTheta(theta);
