@@ -35,6 +35,7 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 
 	// Conditional neutron branches
 	if (hasNeutron) {
+		t->Branch("isNeutHit", &isNeutHit);
 		t->Branch("neutron", &neutron);
 	}
 
@@ -120,6 +121,7 @@ void RootOutput::Clear() {
 	sampler.Clear();
 	recon.Clear();
 
+	isNeutHit = false;
 	neutron.clear();
 }
 
@@ -214,10 +216,16 @@ void RootOutput::SetIsElasticHit(bool h) {
 	isElasticHit = h;
 }
 
-// Denotes a successful detection of the decay fragments
-// in the Si detectors
+// Denotes a successful detection of the charged decay
+// fragments in the Si detectors
 void RootOutput::SetIsFragDet(bool h) {
 	isFragDet = h;
+}
+
+// Denotes a successful detection of the neutron decay
+// fragment in the TexNeut detector
+void RootOutput::SetIsNeutDet(bool h) {
+	isNeutHit = h;
 }
 
 // Set values sampled from (in)elastic angular distributions

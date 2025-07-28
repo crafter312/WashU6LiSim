@@ -91,6 +91,7 @@ class RootOutput {
 		void SetCosThetaH(double);
 		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
+		void SetIsNeutDet(bool);
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
@@ -123,10 +124,11 @@ class RootOutput {
 		double ErelPRecon {NAN}; // this is the decay energy calculated from the real fragments immediately after the decay
 		double Ex {NAN};
 		double cosThetaH {NAN};
-		bool isElasticHit {false};
-		bool isFragDet {false};
+		bool isElasticHit {false}; // flag for valid elastic scattering hit in Gobbi
+		bool isFragDet {false};    // flag for valid alpha + p coincidence in Gobbi
 
 		// Conditional neutron values
+		bool isNeutHit {false}; // flag for valid neutron hit in TexNeut
 		NeutFrag neutron;
 
 		SampledValues sampler {};

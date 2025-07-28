@@ -304,7 +304,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	// Use external values if relevant
 	double theta;
 	double phi;
-	if (externalNeutron && !useRealNeut) {
+	if (externalNeutron) {
 		if ((neutT > 0) && !isnan(neutPos[0]) && !isnan(neutPos[1]) && !isnan(neutPos[2])) {
 			neutDist = sqrt((neutPos[0]*neutPos[0]) + (neutPos[1]*neutPos[1]) + (neutPos[2]*neutPos[2]));
 			neutT = neutTime;
@@ -331,9 +331,17 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	if (!useRealNeut || !useRealP) neutT += decay->ran.Gaus(0., neutTRes);
 	frag[0]->recon->SetVelocity(neutDist / neutT);
 
-	// If perfect neutron reconstruction, use real velocity
+	// For invalid neutron events with no hits, the position and/or
+	// time will remain unset by Geant4 and will be NAN. Setting
+	// this before the below if statement allows for proper
+	// comparison of perfect neutron reconstruction with other cases.
+	output.SetIsNeutDet(!isnan(neutDist / neutT));
+
+	// If perfect neutron reconstruction, use real kinematic values
 	// and set time and position to NAN
 	if (useRealNeut) {
+		theta = frag[0]->real->GetTheta();
+		phi = frag[0]->real->GetPhi();
 		frag[0]->recon->SetVelocity(frag[0]->real->GetVelocity());
 		neutTime   = -1;
 		neutPos[0] = NAN;
@@ -341,7 +349,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 		neutPos[2] = NAN;
 	}
 
-	// Assume other values are exact
+	// Calculate the rest of the neutron kinematic values
 	frag[0]->recon->SetTheta(theta);
 	frag[0]->recon->SetPhi(phi);
 	frag[0]->recon->Sph2CartV();
