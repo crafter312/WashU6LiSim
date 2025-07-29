@@ -374,10 +374,15 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
 	output.SetReconValues(decay->plfRecon->GetKinematicValues());
 
+	// Emission angle of neutron - which should be first in the list. Note
+	// that the velocity and Cartesian components are calculated above.
+	double cos_thetaN = frag[0]->recon->GetVComp(2) / frag[0]->recon->GetVelocity();
+
 	output.SetNeut(
 		neutT,
 		frag[0]->recon->GetEnergy(),
 		frag[0]->recon->GetTheta()*rad_to_deg,
+		cos_thetaN,
 		neutPos[0],
 		neutPos[1],
 		neutPos[2]
