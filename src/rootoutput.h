@@ -47,12 +47,14 @@ struct NeutFrag {
 	double t{NAN};
 	double E{NAN};
 	double thetaLab{NAN};
+	double cos_thetaN{NAN};
 	double pos[3]{NAN, NAN, NAN};
 
 	void clear() {
 		t = NAN;
 		E = NAN;
 		thetaLab = NAN;
+		cos_thetaN = NAN;
 		pos[0] = NAN;
 		pos[1] = NAN;
 		pos[2] = NAN;
@@ -84,7 +86,7 @@ class RootOutput {
 		void SetRealFragment(int, double, double, double, double, double, double);
 		void SetReconFragment(int, double, double, double, double, double, double);
 		void SetElastic(double, double, double, double, double, double);
-		void SetNeut(double, double, double, double, double, double);
+		void SetNeut(double, double, double, double, double, double, double);
 		void SetErelP(double);
 		void SetErelPRecon(double);
 		void SetEx(double);

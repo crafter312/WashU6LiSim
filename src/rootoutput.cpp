@@ -176,10 +176,11 @@ void RootOutput::SetElastic(double de, double e, double recE, double _x, double 
 }
 
 // Time, energy, angle, and position of neutron fragment
-void RootOutput::SetNeut(double t, double E, double th, double x, double y, double z) {
+void RootOutput::SetNeut(double t, double E, double th, double cos, double x, double y, double z) {
 	neutron.t = t;
 	neutron.E = E;
 	neutron.thetaLab = th;
+	neutron.cos_thetaN = cos;
 	neutron.pos[0] = x;
 	neutron.pos[1] = y;
 	neutron.pos[2] = z;
