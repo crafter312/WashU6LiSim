@@ -61,6 +61,9 @@ class CFrag
 	bool einstein;
   bool useRealP;   //<! use the real momentum, instead of detected value
   bool extra;
+
+ private:
+  float EgainHelper(float, CFrame*);
   
 };
 

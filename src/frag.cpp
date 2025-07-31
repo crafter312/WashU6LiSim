@@ -110,12 +110,17 @@ float CFrag::Eloss(float thick){
 \param thick is the thickness of target material though which the particle passed (mg/cm2)
 */
 float CFrag::Egain(float thick) {
-	if (thick > 0.)
-		recon->SetEnergy(loss_C->getEin(recon->GetEnergy(), thick / cos(recon->GetTheta())));
-
-	recon->getVelocity(&einstein);
-	return recon->GetEnergy();
+	if (useRealP) return EgainHelper(thick, real);
+	return EgainHelper(thick, recon);
 }
+
+float CFrag::EgainHelper(float thick, CFrame* frame) {
+	if (thick > 0.)
+		frame->SetEnergy(loss_C->getEin(frame->GetEnergy(), thick / cos(frame->GetTheta())));
+
+	frame->getVelocity(&einstein);
+	return frame->GetEnergy();
+} 
 //***********************************************
 //include multiple scattering
 /**
