@@ -44,6 +44,7 @@ struct CFragS {
  * Energy, position, etc. of neutron fragment.
  */
 struct NeutFrag {
+	bool wasDarkScattered{false};
 	double t{NAN};
 	double E{NAN};
 	double thetaLab{NAN};
@@ -51,6 +52,7 @@ struct NeutFrag {
 	double pos[3]{NAN, NAN, NAN};
 
 	void clear() {
+		wasDarkScattered = false;
 		t = NAN;
 		E = NAN;
 		thetaLab = NAN;
@@ -86,7 +88,7 @@ class RootOutput {
 		void SetRealFragment(int, double, double, double, double, double, double);
 		void SetReconFragment(int, double, double, double, double, double, double);
 		void SetElastic(double, double, double, double, double, double);
-		void SetNeut(double, double, double, double, double, double, double);
+		void SetNeut(bool, double, double, double, double, double, double, double);
 		void SetErelP(double);
 		void SetErelPRecon(double);
 		void SetEx(double);

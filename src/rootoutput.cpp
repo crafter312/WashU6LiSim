@@ -176,7 +176,8 @@ void RootOutput::SetElastic(double de, double e, double recE, double _x, double 
 }
 
 // Time, energy, angle, and position of neutron fragment
-void RootOutput::SetNeut(double t, double E, double th, double cos, double x, double y, double z) {
+void RootOutput::SetNeut(bool dark, double t, double E, double th, double cos, double x, double y, double z) {
+	neutron.wasDarkScattered = dark;
 	neutron.t = t;
 	neutron.E = E;
 	neutron.thetaLab = th;
