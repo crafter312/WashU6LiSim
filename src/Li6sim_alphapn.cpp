@@ -282,6 +282,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	output.SetReconFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->recon->GetEnergy(), x, y, frag[2]->recon->GetTheta()*rad_to_deg);
 
 	// Reset neutron variables for next step
+	wasDarkScattered = false;
 	neutTime   = -1;
 	neutPos[0] = NAN;
 	neutPos[1] = NAN;
@@ -378,6 +379,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	double cos_thetaN = decay->partCM[0]->GetVComp(2) / decay->partCM[0]->GetVelocity();
 
 	output.SetNeut(
+		wasDarkScattered,
 		neutT,
 		frag[0]->recon->GetEnergy(),
 		frag[0]->recon->GetTheta()*rad_to_deg,
@@ -412,7 +414,8 @@ void Li6sim_alphapn::DoFinalThings(int Nevents) {
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 // t should be in ns, position in cm
-void Li6sim_alphapn::SetExternalNeutronValues(double t, double x, double y, double z) {
+void Li6sim_alphapn::SetExternalNeutronValues(bool dark, double t, double x, double y, double z) {
+	wasDarkScattered = dark;
 	neutTime = t;
 	neutPos[0] = x;
 	neutPos[1] = y;

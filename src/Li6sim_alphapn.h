@@ -30,7 +30,7 @@ public:
 	void SetEnableMARS(bool b) { mars = b; }
 	void SetEnableExternalNeutron(bool b) { externalNeutron = b; }
 
-	void SetExternalNeutronValues(double, double, double, double);
+	void SetExternalNeutronValues(bool, double, double, double, double);
 
 	size_t GetNFrags() const { return Nfrag; }
 	std::string GetSuffix() const { return suffix; }
@@ -153,9 +153,10 @@ private:
 	float yTarget{NAN};
 
 	// Neutron variables
-	bool externalNeutron{false}; // flags whether the simulation should use externally set neutron information or not
-	double neutTime{-1};         // ns
-	double neutPos[3];           // x,y,z are indices 0,1,2, should be in cm
+	bool externalNeutron{false};  // flags whether the simulation should use externally set neutron information or not
+	bool wasDarkScattered{false}; // flag from Geant4 which says whether a C12 hit occured before the earliest proton hit or not
+	double neutTime{-1};          // ns
+	double neutPos[3];            // x,y,z are indices 0,1,2, should be in cm
 };
 
 #endif
