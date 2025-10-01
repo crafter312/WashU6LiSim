@@ -113,11 +113,13 @@ def read_data(readname, writename, element, targ, A):
 #srim runs for Carbon target
 #run srim from 100->100,000keV, density=2.253
 # read_data("Hydrogen in Carbon.txt", "Hydrogen_C.loss", "Hydrogen", "C", 1.008)
-read_data("Helium in Carbon.txt", "Helium_C.loss", "Helium", "C", 4.003)
+# read_data("Helium in Carbon.txt", "Helium_C.loss", "Helium", "C", 4.003)
 # read_data("Lithium in Carbon.txt", "Lithium_C.loss", "Lithium", "C", 7.016)
 # read_data("Beryllium in Carbon.txt", "Beryllium_C.loss", "Beryllium", "C", 9.012)
 # read_data("Boron in Carbon.txt", "Boron_C.loss", "Boron", "C", 11.009)
 # read_data("Carbon in Carbon.txt", "Carbon_C.loss", "Carbon", "C", 12.000)
+
+read_data("Lithium in Diamond.txt", "Lithium_Diamond.loss", "Lithium", "C", 7.016)
 
 #srim runs for Gold target
 #run srim from 100->100,000keV, density=19.311
