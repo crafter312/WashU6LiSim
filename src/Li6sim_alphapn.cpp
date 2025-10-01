@@ -138,6 +138,9 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	inthick	= thickness * rand;
 	double outthick = thickness * (1. - rand);
 
+	// Calculate energy dropped by beam in target, save for later
+	double dEbeamTarg = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
+
 	// Beam spot at target
 	double rTarget = sqrt(decay->ran.Rndm())*targetSize/2.;
 	double theta = 2.*acos(-1.)*decay->ran.Rndm();
@@ -201,10 +204,16 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	// Interaction of fragements in target and silicon detector materials
 	// Calculates energy loss in target, change in scatter angle, and
 	// wheter fragment is stopped within target
+	double dEfragsTarg = 0.;
 	for (int i = 1; i < Nfrag; i++) {
+		dEfragsTarg += frag[i]->real->GetEnergy();
 		frag[i]->targetInteraction(outthick, thickness);
+		dEfragsTarg -= frag[i]->real->GetEnergy();
 		frag[i]->SiliconInteraction();
 	}
+
+	// Save total target energy loss to output
+	output.SetTargetEloss(dEbeamTarg + dEfragsTarg);
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si

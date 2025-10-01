@@ -85,7 +85,7 @@ private:
 	double Q{NAN};
 
 	// Simulation-specific variables with default values
-	float thickness{3.026};     // target thickness in mg/cm^2 (copied from Nic's experiment)
+	float thickness{17.575};    // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
 	float neutTRes{0.5};        // neutron timing resolution (sigma) in ns
 	float GobbiRes{0.02};       // Si-Si resolution;
 	float targetSize{1.};       // diameter of beam spot size in mm
@@ -107,10 +107,16 @@ private:
 	float RadiusCollimator{0.}; // mm Gobbi collimator outer radius
 
 	// Files for energy loss in C target
-	std::string Loss_Li_in_C{"Lithium_C.loss"};
-	std::string Loss_He_in_C{"Helium_C.loss"};
-	std::string Loss_p_in_C{"Hydrogen_C.loss"};
-	std::string Loss_n_in_C{"Hydrogen_C.loss"}; // LOSS FILE NOT USED, TEMPORARY STAND-IN
+	//std::string Loss_Li_in_C{"Lithium_C.loss"};
+	//std::string Loss_He_in_C{"Helium_C.loss"};
+	//std::string Loss_p_in_C{"Hydrogen_C.loss"};
+	//std::string Loss_n_in_C{"Hydrogen_C.loss"}; // LOSS FILE NOT USED, TEMPORARY STAND-IN
+
+	// Files for energy loss in diamond target
+	std::string Loss_Li_in_C{"Lithium_Diamond.loss"};
+	std::string Loss_He_in_C{"Helium_Diamond.loss"};
+	std::string Loss_p_in_C{"Hydrogen_Diamond.loss"};
+	std::string Loss_n_in_C{"Hydrogen_Diamond.loss"}; // LOSS FILE NOT USED, TEMPORARY STAND-IN
 
 	// Files for energy loss in Si detector
 	std::string Loss_Li_in_Si{"Lithium_Si.loss"};
