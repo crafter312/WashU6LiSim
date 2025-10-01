@@ -96,6 +96,7 @@ class RootOutput {
 		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
 		void SetIsNeutDet(bool);
+		void SetTargetEloss(double);
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
@@ -124,12 +125,13 @@ class RootOutput {
 		std::vector<CFragS> reconFragments;
 		CFragS elastic;
 		int nFrags;
-		double ErelP {NAN};      // this is the sampled Breit-Wigner distribution directly from the decay class
-		double ErelPRecon {NAN}; // this is the decay energy calculated from the real fragments immediately after the decay
+		double ErelP {NAN};        // this is the sampled Breit-Wigner distribution directly from the decay class
+		double ErelPRecon {NAN};   // this is the decay energy calculated from the real fragments immediately after the decay
 		double Ex {NAN};
 		double cosThetaH {NAN};
 		bool isElasticHit {false}; // flag for valid elastic scattering hit in Gobbi
 		bool isFragDet {false};    // flag for valid alpha + p coincidence in Gobbi
+		double targEloss {NAN};    // total energy loss of beam and fragments in the target
 
 		// Conditional neutron values
 		bool isNeutHit {false}; // flag for valid neutron hit in TexNeut

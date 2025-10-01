@@ -26,6 +26,7 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("realFragments", &realFragments);
 	t->Branch("reconFragments", &reconFragments);
 	t->Branch("reconElastic", &elastic);
+	t->Branch("targEloss", &targEloss);
 	t->Branch("ErelPSampled", &ErelP);
 	t->Branch("ErelPReal", &ErelPRecon);
 	t->Branch("Ex", &Ex);
@@ -117,6 +118,7 @@ void RootOutput::Clear() {
 	cosThetaH = NAN;
 	isElasticHit = 0;
 	isFragDet = false;
+	targEloss = NAN;
 
 	sampler.Clear();
 	recon.Clear();
@@ -228,6 +230,11 @@ void RootOutput::SetIsFragDet(bool h) {
 // fragment in the TexNeut detector
 void RootOutput::SetIsNeutDet(bool h) {
 	isNeutHit = h;
+}
+
+// Set total energy loss of beam and fragments in target
+void RootOutput::SetTargetEloss(double dE) {
+	targEloss = dE;
 }
 
 // Set values sampled from (in)elastic angular distributions
