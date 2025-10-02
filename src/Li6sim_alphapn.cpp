@@ -276,7 +276,8 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Energy addback for half target
 	for (int i = 1; i < Nfrag; i++) {
-		frag[i]->Egain(thickness * 0.5);
+		//frag[i]->Egain(thickness * 0.5);
+		frag[i]->Egain((thickness - inthickrecon) / cos(frag[i]->recon->GetTheta()));
 	}
 
 	// Output of charged fragment information
