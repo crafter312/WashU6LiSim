@@ -96,7 +96,7 @@ class RootOutput {
 		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
 		void SetIsNeutDet(bool);
-		void SetTargetEloss(double, double);
+		void SetTargetEloss(double, double, double);
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
@@ -131,8 +131,9 @@ class RootOutput {
 		double cosThetaH {NAN};
 		bool isElasticHit {false}; // flag for valid elastic scattering hit in Gobbi
 		bool isFragDet {false};    // flag for valid alpha + p coincidence in Gobbi
-		double inthick {NAN};      // reaction position in target from upstream side, in mg/cm^2
 		double targEloss {NAN};    // total energy loss of beam and fragments in the target
+		double inthick {NAN};      // reaction position in target from upstream side, in mg/cm^2
+		double inthickrec {NAN};   // reconstructed reaction position in target from upstream side, in mg/cm^2
 
 		// Conditional neutron values
 		bool isNeutHit {false}; // flag for valid neutron hit in TexNeut
