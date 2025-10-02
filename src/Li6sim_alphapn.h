@@ -22,6 +22,7 @@ public:
 	void SetTargetThickness(float th) { thickness = th; }
 	void SetNeutTRes(float res) { neutTRes = res; }
 	void SetGobbiRes(float res) { GobbiRes = res; }
+	void SetDiamondResFWHM(float res) { diamondRes = res * 0.5 / sqrt(2. * log(2.)); }
 	void SetBeamSpotRadius(float r) { targetSize = r; }
 	void SetSmallAngleScatteringScale(float s) { scale = s; }
 	void SetRelativistic(bool b) { einstein = b; }
@@ -88,6 +89,7 @@ private:
 	float thickness{17.575};    // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
 	float neutTRes{0.5};        // neutron timing resolution (sigma) in ns
 	float GobbiRes{0.02};       // Si-Si resolution;
+	float diamondRes{0.1};      // diamond detector energy resolution (FWHM) (MeV)
 	float targetSize{1.};       // diameter of beam spot size in mm
 	float scale{1.38};          // scales the magnitude of small angle scattering
 	bool einstein{true};        // switch for newtonian(false) or relativistic(true) kinematics

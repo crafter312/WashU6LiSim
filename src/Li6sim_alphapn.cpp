@@ -54,6 +54,9 @@ Li6sim_alphapn::Li6sim_alphapn(double Eb, double GobbiDist, double _ex, double w
 	// Beam momentum
 	double massE = Ebeam + Mass_7Li;
 	pc0 = sqrt((massE*massE) - (Mass_7Li*Mass_7Li));
+
+	// Convert diamond resolution from FWHM to sigma
+	diamondRes *= 0.5 / sqrt(2. * log(2.));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -139,7 +142,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	double outthick = thickness * (1. - rand);
 
 	// Calculate energy dropped by beam in target, save for later
-	double dEbeamTarg = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
+	double dETarg = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
 
 	// Beam spot at target
 	double rTarget = sqrt(decay->ran.Rndm())*targetSize/2.;
@@ -204,16 +207,16 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	// Interaction of fragements in target and silicon detector materials
 	// Calculates energy loss in target, change in scatter angle, and
 	// wheter fragment is stopped within target
-	double dEfragsTarg = 0.;
 	for (int i = 1; i < Nfrag; i++) {
-		dEfragsTarg += frag[i]->real->GetEnergy();
+		dETarg += frag[i]->real->GetEnergy();
 		frag[i]->targetInteraction(outthick, thickness);
-		dEfragsTarg -= frag[i]->real->GetEnergy();
+		dETarg -= frag[i]->real->GetEnergy();
 		frag[i]->SiliconInteraction();
 	}
 
-	// Save total target energy loss to output
-	output.SetTargetEloss(inthick, dEbeamTarg + dEfragsTarg);
+	// Reconstruct reaction position in target from total target energy loss
+	double inthickrecon = max((dETarg + decay->ran.Gaus(0., diamondRes) - 5.10193) / 0.184146, 0.); // linear function from fitting dETarg vs. inthick
+	output.SetTargetEloss(dETarg, inthick, inthickrecon);
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
