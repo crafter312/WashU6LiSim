@@ -96,7 +96,7 @@ class RootOutput {
 		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
 		void SetIsNeutDet(bool);
-		void SetTargetEloss(double, double);
+		void SetTargetEloss(double, double, double);
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
