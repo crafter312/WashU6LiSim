@@ -26,6 +26,7 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("realFragments", &realFragments);
 	t->Branch("reconFragments", &reconFragments);
 	t->Branch("reconElastic", &elastic);
+	t->Branch("inthick", &inthick);
 	t->Branch("targEloss", &targEloss);
 	t->Branch("ErelPSampled", &ErelP);
 	t->Branch("ErelPReal", &ErelPRecon);
@@ -118,6 +119,7 @@ void RootOutput::Clear() {
 	cosThetaH = NAN;
 	isElasticHit = 0;
 	isFragDet = false;
+	inthick = NAN;
 	targEloss = NAN;
 
 	sampler.Clear();
@@ -233,7 +235,8 @@ void RootOutput::SetIsNeutDet(bool h) {
 }
 
 // Set total energy loss of beam and fragments in target
-void RootOutput::SetTargetEloss(double dE) {
+void RootOutput::SetTargetEloss(double, ithk, double dE) {
+	inthick = ithk;
 	targEloss = dE;
 }
 

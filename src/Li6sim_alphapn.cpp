@@ -134,7 +134,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	output.Clear();
 
 	// Distance in target that produced has to pass to get out
-	double rand		  = decay->ran.Rndm();
+	double rand = decay->ran.Rndm();
 	inthick	= thickness * rand;
 	double outthick = thickness * (1. - rand);
 
@@ -213,7 +213,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	}
 
 	// Save total target energy loss to output
-	output.SetTargetEloss(dEbeamTarg + dEfragsTarg);
+	output.SetTargetEloss(inthick, dEbeamTarg + dEfragsTarg);
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
