@@ -235,7 +235,7 @@ void RootOutput::SetIsNeutDet(bool h) {
 }
 
 // Set total energy loss of beam and fragments in target
-void RootOutput::SetTargetEloss(double, ithk, double dE) {
+void RootOutput::SetTargetEloss(double ithk, double dE) {
 	inthick = ithk;
 	targEloss = dE;
 }
