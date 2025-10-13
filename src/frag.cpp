@@ -57,12 +57,13 @@ CFrag::~CFrag() {
 //**********************************************************
 /**
 * logical function determines if a particle is detected
+* inthick - the percentage of the target thickness from the upstream side at which the reaction happened
 */
-int CFrag::hit(float xTarget, float yTarget) {
+int CFrag::hit(float inthick, float xTarget, float yTarget) {
 	//stopped is calculated in targetinteraction, determines if fragments is stopped in the target or in the DeltaE
 	if (stopped) return -1;
 
-	is_hit = Array->hit(real->GetTheta(), real->GetPhi(), xTarget, yTarget, DeltaEnergy, FrontEnergy) ;
+	is_hit = Array->hit(real->GetTheta(), real->GetPhi(), inthick, xTarget, yTarget, DeltaEnergy, FrontEnergy) ;
 
 	if (is_hit) {
 		recon->SetTheta(Array->thetaRecon);

@@ -31,7 +31,7 @@ class CFrag
   ~CFrag();
   shared_ptr<Gobbiarray> Array;
 
-  int hit(float,float);
+  int hit(float,float,float);
   void getStripHit(int*, int*, int);
   int is_hit;
 

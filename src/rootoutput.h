@@ -100,6 +100,7 @@ class RootOutput {
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
+		void SetDETests(std::vector<double>&);
 
 	private:
 		TFile* file;
@@ -123,6 +124,7 @@ class RootOutput {
 
 		std::vector<CFragS> realFragments;
 		std::vector<CFragS> reconFragments;
+		std::vector<double> dETests;
 		CFragS elastic;
 		int nFrags;
 		double ErelP {NAN};        // this is the sampled Breit-Wigner distribution directly from the decay class

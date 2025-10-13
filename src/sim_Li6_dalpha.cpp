@@ -81,13 +81,14 @@ int main(int argc, char *argv[]) {
 
 	// Physical experiment parameters
   float thickness           = 3.026;   // target thickness in mg/cm^2
+	float density             = 2260.;   // target density in mg/cm^3 (2260 for graphite)
   float CsiRes              = 0.02;    // resolution of Csi not needed for Si-Si (was 0.00888)
 	float b                   = 8.;      // mm beam axis to Gobbi frame dimension,
 	float RadiusCollimator    = 0.;      // mm Gobbi collimator outer radius (was 38.1/2.)
   float const targetSize    = 1.0;     // diameter of beam spot size in mm
 
 	// Initialize Gobbi array
-	shared_ptr<Gobbiarray> gobbi = make_shared<Gobbiarray>(distanceFromTarget, b, RadiusCollimator);
+	shared_ptr<Gobbiarray> gobbi = make_shared<Gobbiarray>(distanceFromTarget, thickness / density * 10., b, RadiusCollimator);
 
 	// Total cross sections in mb of exit channels for different target excited states from Fresco
 	size_t nexits       = 4;                                     // number of exit channels
@@ -191,7 +192,7 @@ int main(int argc, char *argv[]) {
     // determine if the beam hits the detector
 		fragBeam->targetInteraction(outthick,thickness);
 		fragBeam->SiliconInteraction();
-		int beamhit = fragBeam->hit(xTarget,yTarget);
+		int beamhit = fragBeam->hit(inthick, xTarget, yTarget);
 		double x, y;
 		if (beamhit) {
 			x = fragBeam->recon->GetX() / 10.;
@@ -243,7 +244,7 @@ int main(int argc, char *argv[]) {
 		int stripx[Nfrag];
     int stripy[Nfrag];
     for (int i = 0; i < Nfrag; i++) {
-      ishit = frag[i]->hit(xTarget, yTarget);
+      ishit = frag[i]->hit(inthick, xTarget, yTarget);
 			frag[i]->getStripHit(stripx, stripy, i);
       nhit += ishit;
       if (ishit)

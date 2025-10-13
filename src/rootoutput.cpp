@@ -29,6 +29,7 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("targEloss", &targEloss);
 	t->Branch("inthick", &inthick);
 	t->Branch("inthickrec", &inthickrec);
+	t->Branch("dETests", &dETests);
 	t->Branch("ErelPSampled", &ErelP);
 	t->Branch("ErelPReal", &ErelPRecon);
 	t->Branch("Ex", &Ex);
@@ -113,6 +114,7 @@ void RootOutput::Clear() {
 		realFragments[i].clear();
 		reconFragments[i].clear();
 	}
+	dETests.clear();
 	elastic.clear();
 	ErelP = NAN;
 	ErelPRecon = NAN;
@@ -257,6 +259,10 @@ void RootOutput::SetSampledValues(SampledValues* s) {
 // Set reconstructed values from CDecay class
 void RootOutput::SetReconValues(KinematicValues* r) {
 	recon = *r;
+}
+
+void RootOutput::SetDETests(std::vector<double>& dEs) {
+	dETests = dEs;
 }
 
 
