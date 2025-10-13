@@ -4,10 +4,14 @@
 
 using namespace std;
 
-Gobbiarray::Gobbiarray(float dist0, float b0, float radColl)
+// dist0 - Gobbi distance from target center (mm)
+// th - target thickness (mm)
+// b0 - Gobbi frame inner dimension (mm)
+// radColl - Gobbi collimator outer radius (mm)
+Gobbiarray::Gobbiarray(float dist0, float th, float b0, float radColl)
 {
   dist = dist0;
-  //dist = 138.; // mm target to plane of E detector distance
+  thick = th;
   b = b0;// mm beam axis to frame dimension,
   length = 72.37; // length of Si frame
   Dactive = 64.2; // active dimension of Si
@@ -30,15 +34,17 @@ Gobbiarray::~Gobbiarray()
   delete Tele[3];
 }
 //**********************************************************
-int Gobbiarray::hit(float theta, float phi, float xTarget, float yTarget, float dE, float E)
+// inthick - the percentage of the target thickness from the upstream side at which the reaction happened
+int Gobbiarray::hit(float theta, float phi, float inthick, float xTarget, float yTarget, float dE, float E)
 {
   int ihit = 0;
   
   //Hit Beam blocker donut
   if (theta < thetaCollimator) { return ihit;}
   
-  float x = dist*tan(theta)*cos(phi) + xTarget;
-  float y = dist*tan(theta)*sin(phi) + yTarget;
+  float distTot = dist - (0.5 * inthick * thick);
+  float x = distTot*tan(theta)*cos(phi) + xTarget;
+  float y = distTot*tan(theta)*sin(phi) + yTarget;
 
   
   //search each quadrant of gobbi array

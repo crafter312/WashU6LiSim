@@ -11,19 +11,20 @@ class Gobbiarray
 {
  public:
   tele *Tele[4];
-  Gobbiarray(float, float, float);
+  Gobbiarray(float, float, float, float);
   ~Gobbiarray();
   static CRandom ran;
 
 
-  int hit(float,float,float,float,float,float);
+  int hit(float, float, float, float, float, float, float);
 
   float thetaRecon;
   float phiRecon;
   float xRecon;
   float yRecon;
   int itele;
-  float dist;
+  float dist;  // Gobbi distance from target center (mm)
+  float thick; // Target thickness (mm)
   float length;
   float b;
   float Dactive;

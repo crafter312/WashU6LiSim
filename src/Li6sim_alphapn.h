@@ -19,7 +19,7 @@ public:
 	~Li6sim_alphapn();
 
 	// Functions to set simulation-specific variables
-	void SetTargetThickness(float th) { thickness = th; }
+	void SetTargetThickness(float th, float dens) { thickness = th; density = dens; }
 	void SetNeutTRes(float res) { neutTRes = res; }
 	void SetGobbiRes(float res) { GobbiRes = res; }
 	void SetDiamondResFWHM(float res) { diamondRes = res * 0.5 / sqrt(2. * log(2.)); }
@@ -86,7 +86,8 @@ private:
 	double Q{NAN};
 
 	// Simulation-specific variables with default values
-	float thickness{17.575};    // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
+	float thickness{3.026};     // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
+	float density{2260.};       // target density in mg/cm^3 (2260 for graphite)
 	float neutTRes{0.5};        // neutron timing resolution (sigma) in ns
 	float GobbiRes{0.02};       // Si-Si resolution;
 	float diamondRes{0.1};      // diamond detector energy resolution (FWHM) (MeV)
@@ -165,6 +166,17 @@ private:
 	bool wasDarkScattered{false}; // flag from Geant4 which says whether a C12 hit occured before the earliest proton hit or not
 	double neutTime{-1};          // ns
 	double neutPos[3];            // x,y,z are indices 0,1,2, should be in cm
+
+	// List of target reaction z position test points (in % from upstream side, must range 0-1)
+	std::vector<double> thickTests = { 0., 0.25, 0.5, 0.75, 1. };
+	std::vector<double> dETests;
+
+	// Helper function to calculate the total target energy loss using a given target reaction z position, the
+	// reconstructed Gobbi variables, and other known experimental parameters. Here, the only unknown value
+	// is the target reaction z position. The idea is to calculate this for a few different points, fit a
+	// function, and then use this fit function to invert the non-trivial target energy loss function.
+	double CalcTargELoss(double);
+
 };
 
 #endif

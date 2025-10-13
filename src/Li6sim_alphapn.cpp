@@ -9,7 +9,7 @@ using namespace std;
 Li6sim_alphapn::Li6sim_alphapn(double Eb, double GobbiDist, double _ex, double width, string suf)
 	: Ebeam(Eb), distanceFromTarget(GobbiDist), Ex(_ex), gamma(width), suffix(suf) {
 
-	gobbi = make_shared<Gobbiarray>(GobbiDist, b, RadiusCollimator);
+	gobbi = make_shared<Gobbiarray>(GobbiDist, thickness / density * 10., b, RadiusCollimator);
 
 	if(suffix != "") suffix = "_" + suffix;
 
@@ -57,6 +57,8 @@ Li6sim_alphapn::Li6sim_alphapn(double Eb, double GobbiDist, double _ex, double w
 
 	// Convert diamond resolution from FWHM to sigma
 	diamondRes *= 0.5 / sqrt(2. * log(2.));
+
+	dETests.resize(thickTests.size());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -171,7 +173,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	// Determine if the beam hits the detector
 	fragBeam->targetInteraction(outthick,thickness);
 	fragBeam->SiliconInteraction();
-	int beamhit = fragBeam->hit(xTarget,yTarget);
+	int beamhit = fragBeam->hit(inthick, xTarget, yTarget);
 	double x, y;
 	if (beamhit) {
 		x = fragBeam->recon->GetX() / 10.;
@@ -232,7 +234,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	int stripx[Nfrag - 1];
 	int stripy[Nfrag - 1];
 	for (int i = 1; i < Nfrag; i++) {
-		ishit = frag[i]->hit(xTarget, yTarget);
+		ishit = frag[i]->hit(inthick, xTarget, yTarget);
 		frag[i]->getStripHit(stripx, stripy, i);
 		nhit += ishit;
 		if (ishit)
@@ -274,7 +276,14 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	output.SetIsFragDet(true);
 	Ndet++;
 
-	// Energy addback for half target
+	// Calculate target total energy loss test points before addback
+	dETests.clear();
+	dETests.resize(thickTests.size());
+	for (int i = 0; i < thickTests.size(); i++)
+		dETests[i] = CalcTargELoss(thickTests[i]);
+	output.SetDETests(dETests);
+
+	// Energy addback for (half) target
 	for (int i = 1; i < Nfrag; i++) {
 		//frag[i]->Egain(thickness * 0.5);
 		frag[i]->Egain((thickness - inthickrecon) / cos(frag[i]->recon->GetTheta()));
@@ -434,6 +443,23 @@ void Li6sim_alphapn::SetExternalNeutronValues(bool dark, double t, double x, dou
 	neutPos[1] = y;
 	neutPos[2] = z;
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+// Helper function to calculate the total target energy loss using a given target reaction z position, the
+// reconstructed Gobbi variables, and other known experimental parameters. Here, the only unknown value
+// is the target reaction z position. The idea is to calculate this for a few different points, fit a
+// function, and then use this fit function to invert the non-trivial target energy loss function.
+// inthick - reaction z position in target from upstream side (mg / cm^2)
+double Li6sim_alphapn::CalcTargELoss(double inthick) {
+	double dETarg   = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
+	double outthick = thickness - inthick;
+	double dEAlpha  = frag[2]->loss_C->getEin(frag[2]->recon->GetEnergy(), outthick / cos(frag[2]->recon->GetTheta())) - frag[2]->recon->GetEnergy();
+	double dEProton = frag[1]->loss_C->getEin(frag[1]->recon->GetEnergy(), outthick / cos(frag[1]->recon->GetTheta())) - frag[1]->recon->GetEnergy();
+	return dETarg + dEAlpha + dEProton;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 
 
