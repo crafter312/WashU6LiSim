@@ -2,6 +2,9 @@
 
 #include "constants.h"
 
+#include <TF1.h>
+#include <TGraph.h>
+
 #include <iostream>
 
 using namespace std;
@@ -217,8 +220,8 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	}
 
 	// Reconstruct reaction position in target from total target energy loss
-	double inthickrecon = max((dETarg + decay->ran.Gaus(0., diamondRes) - 5.10193) / 0.184146, 0.); // linear function from fitting dETarg vs. inthick
-	output.SetTargetEloss(dETarg, inthick, inthickrecon);
+	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
+	double inthickrecon = max((dETargRecon - 5.10193) / 0.184146, 0.); // linear function from fitting dETarg vs. inthick
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
@@ -282,6 +285,19 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	for (int i = 0; i < thickTests.size(); i++)
 		dETests[i] = CalcTargELoss(thickTests[i]);
 	output.SetDETests(dETests);
+
+	// Linear fit to target total energy loss function
+	TF1 elossFit("linear", "([0]*x)+[1]");
+	elossFit.SetParName(0, "Slope");
+	elossFit.SetParName(1, "Intercept");
+	elossFit.SetRange(-0.1, thickness+0.1);
+	
+	TGraph elossGraph(thickTests.size(), &thickTests[0], &dETests[0]);
+	elossGraph.Fit(&elossFit, "NRQ", "", -0.1, thickness+0.1);
+
+	// Invert target energy loss function and calculate target reaction position
+	double inthickreconimproved = (dETargRecon - elossFit.GetParameter(1)) / elossFit.GetParameter(0);
+	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
 
 	// Energy addback for (half) target
 	for (int i = 1; i < Nfrag; i++) {
