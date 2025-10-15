@@ -283,7 +283,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	dETests.clear();
 	dETests.resize(thickTests.size());
 	for (int i = 0; i < thickTests.size(); i++)
-		dETests[i] = CalcTargELoss(thickTests[i]);
+		dETests[i] = CalcTargELoss(thickTests[i]*thickness);
 	output.SetDETests(dETests);
 
 	// Linear fit to target total energy loss function
