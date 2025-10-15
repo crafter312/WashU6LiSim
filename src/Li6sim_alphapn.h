@@ -23,6 +23,7 @@ public:
 	void SetNeutTRes(float res) { neutTRes = res; }
 	void SetGobbiRes(float res) { GobbiRes = res; }
 	void SetDiamondResFWHM(float res) { diamondRes = res * 0.5 / sqrt(2. * log(2.)); }
+	void SetNTestPoints(size_t n) { nTestPoints = n; }
 	void SetBeamSpotRadius(float r) { targetSize = r; }
 	void SetSmallAngleScatteringScale(float s) { scale = s; }
 	void SetRelativistic(bool b) { einstein = b; }
@@ -168,7 +169,8 @@ private:
 	double neutPos[3];            // x,y,z are indices 0,1,2, should be in cm
 
 	// List of target reaction z position test points (in % from upstream side, must range 0-1)
-	std::vector<double> thickTests = { 0., 0.25, 0.5, 0.75, 1. };
+	size_t nTestPoints{5};
+	std::vector<double> thickTests; // MUST BE IN mg/cm^2 (this is automatically filled in the Init function using the set number of test points)
 	std::vector<double> dETests;
 
 	// Helper function to calculate the total target energy loss using a given target reaction z position, the
