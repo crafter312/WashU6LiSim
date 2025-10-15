@@ -60,8 +60,6 @@ Li6sim_alphapn::Li6sim_alphapn(double Eb, double GobbiDist, double _ex, double w
 
 	// Convert diamond resolution from FWHM to sigma
 	diamondRes *= 0.5 / sqrt(2. * log(2.));
-
-	dETests.resize(thickTests.size());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -106,6 +104,13 @@ string Li6sim_alphapn::Init() {
 
 	// Update momentum acceptance, in case 1.2% MARS acceptance was enabled
 	P_acceptance = mars * .012;
+
+	// Set up target total energy loss function test point vectors
+	thickTests.resize(nTestPoints);
+	dETests.resize(nTestPoints);
+	double h = thickness / (double)(nTestPoints - 1);
+	for (int i = 0; i < nTestPoints; i++)
+		thickTests[i] = h * (double)i;
 
 	return "";
 }
@@ -283,7 +288,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	dETests.clear();
 	dETests.resize(thickTests.size());
 	for (int i = 0; i < thickTests.size(); i++)
-		dETests[i] = CalcTargELoss(thickTests[i]*thickness);
+		dETests[i] = CalcTargELoss(thickTests[i]);
 	output.SetDETests(dETests);
 
 	// Linear fit to target total energy loss function
