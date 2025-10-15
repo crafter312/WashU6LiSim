@@ -221,7 +221,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
-	double inthickrecon = min(max(((useRealP ? dETarg : dETargRecon) - 5.10193) / 0.184146, 0.), thickness); // linear function from fitting dETarg vs. inthick
+	double inthickrecon = min(max(((useRealP ? dETarg : dETargRecon) - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
@@ -296,7 +296,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	elossGraph.Fit(&elossFit, "NRQ", "", -0.1, thickness+0.1);
 
 	// Invert target energy loss function and calculate target reaction position
-	double inthickreconimproved = min(max(((useRealP ? dETarg : dETargRecon) - elossFit.GetParameter(1)) / elossFit.GetParameter(0), 0.), thickness);
+	double inthickreconimproved = min(max(((useRealP ? dETarg : dETargRecon) - elossFit.GetParameter(1)) / elossFit.GetParameter(0), 0.), (double)thickness);
 	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
 
 	// Energy addback for (half) target
@@ -470,8 +470,8 @@ void Li6sim_alphapn::SetExternalNeutronValues(bool dark, double t, double x, dou
 double Li6sim_alphapn::CalcTargELoss(double inthick) {
 	double dETarg   = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
 	double outthick = thickness - inthick;
-	CFrame* alphaFrame = frag[2]->recon;
-	CFrame* protFrame  = frag[1]->recon;
+	CFrame* alphFrame = frag[2]->recon;
+	CFrame* protFrame = frag[1]->recon;
 	if (useRealP) {
 		alphFrame = frag[2]->real;
 		protFrame = frag[1]->real;
