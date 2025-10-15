@@ -221,7 +221,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
-	double inthickrecon = max((dETargRecon - 5.10193) / 0.184146, 0.); // linear function from fitting dETarg vs. inthick
+	double inthickrecon = min(max(((useRealP ? dETarg : dETargRecon) - 5.10193) / 0.184146, 0.), thickness); // linear function from fitting dETarg vs. inthick
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
@@ -296,13 +296,13 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	elossGraph.Fit(&elossFit, "NRQ", "", -0.1, thickness+0.1);
 
 	// Invert target energy loss function and calculate target reaction position
-	double inthickreconimproved = (dETargRecon - elossFit.GetParameter(1)) / elossFit.GetParameter(0);
+	double inthickreconimproved = min(max(((useRealP ? dETarg : dETargRecon) - elossFit.GetParameter(1)) / elossFit.GetParameter(0), 0.), thickness);
 	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
 
 	// Energy addback for (half) target
 	for (int i = 1; i < Nfrag; i++) {
 		//frag[i]->Egain(thickness * 0.5);
-		frag[i]->Egain((thickness - inthickrecon) / cos(frag[i]->recon->GetTheta()));
+		frag[i]->Egain((thickness - inthickreconimproved) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
 	}
 
 	// Output of charged fragment information
@@ -470,8 +470,14 @@ void Li6sim_alphapn::SetExternalNeutronValues(bool dark, double t, double x, dou
 double Li6sim_alphapn::CalcTargELoss(double inthick) {
 	double dETarg   = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
 	double outthick = thickness - inthick;
-	double dEAlpha  = frag[2]->loss_C->getEin(frag[2]->recon->GetEnergy(), outthick / cos(frag[2]->recon->GetTheta())) - frag[2]->recon->GetEnergy();
-	double dEProton = frag[1]->loss_C->getEin(frag[1]->recon->GetEnergy(), outthick / cos(frag[1]->recon->GetTheta())) - frag[1]->recon->GetEnergy();
+	CFrame* alphaFrame = frag[2]->recon;
+	CFrame* protFrame  = frag[1]->recon;
+	if (useRealP) {
+		alphFrame = frag[2]->real;
+		protFrame = frag[1]->real;
+	}
+	double dEAlpha  = frag[2]->loss_C->getEin(alphFrame->GetEnergy(), outthick / cos(alphFrame->GetTheta())) - alphFrame->GetEnergy();
+	double dEProton = frag[1]->loss_C->getEin(protFrame->GetEnergy(), outthick / cos(protFrame->GetTheta())) - protFrame->GetEnergy();
 	return dETarg + dEAlpha + dEProton;
 }
 
