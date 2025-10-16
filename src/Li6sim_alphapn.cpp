@@ -291,24 +291,31 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 		dETests[i] = CalcTargELoss(thickTests[i]);
 	output.SetDETests(dETests);
 
-	// Linear fit to target total energy loss function
-	TF1 elossFit("linear", "([0]*x)+[1]");
-	elossFit.SetParName(0, "Slope");
-	elossFit.SetParName(1, "Intercept");
+	// Quadratic fit to target total energy loss function
+	TF1 elossFit("quadratic", "([0]*x*x)+([1]*x)+[2]");
 	elossFit.SetRange(-0.1, thickness+0.1);
+	elossFit.SetParameter(0, 1);
+	elossFit.SetParLimits(0, 0, 1);
 	
 	TGraph elossGraph(thickTests.size(), &thickTests[0], &dETests[0]);
 	elossGraph.Fit(&elossFit, "NRQ", "", -0.1, thickness+0.1);
 
 	// Invert target energy loss function and calculate target reaction position
-	double inthickreconimproved = min(max(((useRealP ? dETarg : dETargRecon) - elossFit.GetParameter(1)) / elossFit.GetParameter(0), 0.), (double)thickness);
+	double a = elossFit.GetParameter(0);
+	double b = elossFit.GetParameter(1);
+	double c = elossFit.GetParameter(2) - (useRealP ? dETarg : dETargRecon);
+	double disc = (b*b) - (4. * a * c);
+	double inthickreconimproved = -1;
+	if (disc >= 0) {
+		inthickreconimproved = 0.5 * (-b + sqrt(disc)) / a;
+		inthickreconimproved = min(max(inthickreconimproved, 0.), (double)thickness); // clamp value to within target dimensions
+	}
+	else cout << "Discriminant < 0, something went very wrong!" << endl;
 	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
 
-	// Energy addback for (half) target
-	for (int i = 1; i < Nfrag; i++) {
-		//frag[i]->Egain(thickness * 0.5);
-		frag[i]->Egain((thickness - inthickreconimproved) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
-	}
+	// Energy addback for target
+	for (int i = 1; i < Nfrag; i++)
+		frag[i]->Egain((thickness - ((disc >= 0) ? inthickreconimproved : inthickrecon)) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
 
 	// Output of charged fragment information
 	output.protonenergy->Fill(frag[1]->recon->GetEnergy());
