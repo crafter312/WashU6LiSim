@@ -226,7 +226,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
-	double inthickrecon = min(max(((useRealP ? dETarg : dETargRecon) - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
+	double inthickrecon = min(max((dETargRecon - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
@@ -303,7 +303,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	// Invert target energy loss function and calculate target reaction position
 	double a = elossFit.GetParameter(0);
 	double b = elossFit.GetParameter(1);
-	double c = elossFit.GetParameter(2) - (useRealP ? dETarg : dETargRecon);
+	double c = elossFit.GetParameter(2) - dETargRecon;
 	double disc = (b*b) - (4. * a * c);
 	double inthickreconimproved = -1;
 	if (disc >= 0) {
