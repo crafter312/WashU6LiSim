@@ -152,7 +152,8 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	double outthick = thickness * (1. - rand);
 
 	// Calculate energy dropped by beam in target, save for later
-	double dETarg = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
+	double beamEloss = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
+	double dETarg = beamEloss;
 
 	// Beam spot at target
 	double rTarget = sqrt(decay->ran.Rndm())*targetSize/2.;
@@ -311,11 +312,19 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 		inthickreconimproved = min(max(inthickreconimproved, 0.), (double)thickness); // clamp value to within target dimensions
 	}
 	else cout << "Discriminant < 0, something went very wrong!" << endl;
+	//inthickreconimproved = inthick; // uncomment this if you want a perfect reaction position reconstruction
 	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
 
 	// Energy addback for target
-	for (int i = 1; i < Nfrag; i++)
-		frag[i]->Egain((thickness - ((disc >= 0) ? inthickreconimproved : inthickrecon)) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
+	double fragEgain = 0.;
+	for (int i = 1; i < Nfrag; i++) {
+		fragEgain -= (useRealP ? frag[i]->real : frag[i]->recon)->GetEnergy();
+		fragEgain += frag[i]->Egain((thickness - ((disc >= 0) ? inthickreconimproved : inthickrecon)) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
+	}
+
+	// Calculate Eloss-Egain for the fragments in the target, for debugging purposes
+	dETarg -= beamEloss;
+	output.SetFragElossEgain(dETarg, fragEgain);
 
 	// Output of charged fragment information
 	output.protonenergy->Fill(frag[1]->recon->GetEnergy());
