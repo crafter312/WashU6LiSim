@@ -115,19 +115,29 @@ float CLoss::getEout(float energy, float thick)
   */
 float CLoss::getEin(float energy, float thick)
 {
-
-  float dthick = 1.;
+  float dthick = 0.01;
   float de;
-  float Einput= energy;
-   for(;;)
-   {
-     float thickness = min(thick,dthick);
-     de = getDedx(Einput);
-     Einput += de*thickness;
-     if (thickness == thick) break;
-     thick -= dthick;
-   }
-   return Einput;
+  float Ein= energy;
+
+  //take small steps of thickness to increase the energy of fragment
+  while(thick > 0.0){
+    float thickness = min(thick,dthick);
+    de = getDedx(Ein);
+    Ein += de*thickness;
+    if (Ein < 0. || Ein != Ein) return -1;
+    thick -= dthick;
+  }
+
+  /* old loop
+  for(;;){
+    float thickness = min(thick,dthick);
+    de = getDedx(Einput);
+    Einput += de*thickness;
+    if (thickness == thick) break;
+    thick -= dthick;
+  }
+  */
+  return Ein;
 }
 
 

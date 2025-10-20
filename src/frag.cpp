@@ -116,12 +116,11 @@ float CFrag::Egain(float thick) {
 }
 
 float CFrag::EgainHelper(float thick, CFrame* frame) {
-	if (thick > 0.)
-		frame->SetEnergy(loss_C->getEin(frame->GetEnergy(), thick / cos(frame->GetTheta())));
-
+	if (thick <= 0.) return frame->GetEnergy();
+	frame->SetEnergy(loss_C->getEin(frame->GetEnergy(), thick));
 	frame->getVelocity(&einstein);
 	return frame->GetEnergy();
-} 
+}
 //***********************************************
 //include multiple scattering
 /**
