@@ -97,6 +97,7 @@ class RootOutput {
 		void SetIsFragDet(bool);
 		void SetIsNeutDet(bool);
 		void SetTargetEloss(double, double, double, double, double);
+		void SetFragElossEgain(double, double);
 
 		void SetSampledValues(SampledValues*);
 		void SetReconValues(KinematicValues*);
@@ -134,7 +135,9 @@ class RootOutput {
 		bool isElasticHit {false};  // flag for valid elastic scattering hit in Gobbi
 		bool isFragDet {false};     // flag for valid alpha + p coincidence in Gobbi
 		double targEloss {NAN};     // real total energy loss of beam and fragments in the target
-		double targElossRec {NAN};  // total energy loss of beam and fragments in the target + diamond detector resolution
+		double targElossRec {NAN};  // total energy loss of beam and fragments in the target + resolution effects
+		double targFragEloss {NAN}; // real total fragment energy loss in the target
+		double targFragEgain {NAN}; // total fragment energy gain in the target + resolution effects
 		double inthick {NAN};       // reaction position in target from upstream side, in mg/cm^2
 		double inthickrec {NAN};    // reconstructed reaction position in target from upstream side, in mg/cm^2
 		double inthickrecimp {NAN}; // reconstructed reaction position in target from upstream side using improved procedure, in mg/cm^2

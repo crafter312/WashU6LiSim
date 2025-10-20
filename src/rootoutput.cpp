@@ -28,6 +28,8 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("reconElastic", &elastic);
 	t->Branch("targEloss", &targEloss);
 	t->Branch("targElossRec", &targElossRec);
+	t->Branch("targFragEloss", &targFragEloss);
+	t->Branch("targFragEgain", &targFragEgain);
 	t->Branch("inthick", &inthick);
 	t->Branch("inthickrec", &inthickrec);
 	t->Branch("inthickrecimp", &inthickrecimp);
@@ -126,6 +128,8 @@ void RootOutput::Clear() {
 	isFragDet = false;
 	targEloss = NAN;
 	targElossRec = NAN;
+	targFragEloss = NAN;
+	targFragEgain = NAN;
 	inthick = NAN;
 	inthickrec = NAN;
 	inthickrecimp = NAN;
@@ -249,6 +253,12 @@ void RootOutput::SetTargetEloss(double dE, double dErec, double ithk, double ith
 	inthick = ithk;
 	inthickrec = ithkrec;
 	inthickrecimp = ithkrecimp;
+}
+
+// Set total fragment energy loss and gain in target
+void RootOutput::SetFragElossEgain(double Eloss, double Egain) {
+	targFragEloss = Eloss;
+	targFragEgain = Egain;
 }
 
 // Set values sampled from (in)elastic angular distributions
