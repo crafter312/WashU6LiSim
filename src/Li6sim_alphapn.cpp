@@ -188,7 +188,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 		x = fragBeam->recon->GetX() / 10.;
 		y = fragBeam->recon->GetY() / 10.;
 		fragBeam->Egain(thickness * 0.5);
-		output.SetElastic(fragBeam->FrontEnergy, fragBeam->DeltaEnergy, fragBeam->recon->GetEnergy(), x, y, fragBeam->recon->GetTheta()*rad_to_deg);
+		output.SetElastic(fragBeam->DeltaEnergy, fragBeam->FrontEnergy, fragBeam->recon->GetEnergy(), x, y, fragBeam->recon->GetTheta()*rad_to_deg);
 		output.SetIsElasticHit(true);
 		Nbeamscat++;
 	}
@@ -210,8 +210,8 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	output.SetErelPRecon(decay->getErelReal());
 
 	// Save real charged fragment information
-	output.SetRealFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
-	output.SetRealFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
+	output.SetRealFragment(0, frag[1]->DeltaEnergy, frag[1]->FrontEnergy, frag[1]->real->GetEnergy(), 0., 0., frag[1]->real->GetTheta()*rad_to_deg);
+	output.SetRealFragment(1, frag[2]->DeltaEnergy, frag[2]->FrontEnergy, frag[2]->real->GetEnergy(), 0., 0., frag[2]->real->GetTheta()*rad_to_deg);
 
 	/**** CHARGED FRAGMENT RECONSTRUCTION ****/
 
@@ -333,12 +333,12 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	x = frag[1]->recon->GetX() / 10.;
 	y = frag[1]->recon->GetY() / 10.;
 	output.protonXY_S->Fill(x,y);
-	output.SetReconFragment(0, frag[1]->FrontEnergy, frag[1]->DeltaEnergy, frag[1]->recon->GetEnergy(), x, y, frag[1]->recon->GetTheta()*rad_to_deg);
+	output.SetReconFragment(0, frag[1]->DeltaEnergy, frag[1]->FrontEnergy, frag[1]->recon->GetEnergy(), x, y, frag[1]->recon->GetTheta()*rad_to_deg);
 
 	x = frag[2]->recon->GetX() / 10.;
 	y = frag[2]->recon->GetY() / 10.;
 	output.coreXY_S->Fill(x,y);
-	output.SetReconFragment(1, frag[2]->FrontEnergy, frag[2]->DeltaEnergy, frag[2]->recon->GetEnergy(), x, y, frag[2]->recon->GetTheta()*rad_to_deg);
+	output.SetReconFragment(1, frag[2]->DeltaEnergy, frag[2]->FrontEnergy, frag[2]->recon->GetEnergy(), x, y, frag[2]->recon->GetTheta()*rad_to_deg);
 
 	// Reset neutron variables for next step
 	wasDarkScattered = false;
@@ -431,7 +431,7 @@ string Li6sim_alphapn::DoSingleEventPostNeutron(RootOutput& output) {
 	if (fabs(decay->cos_thetaH) < 0.7) output.hist_Ex_trans->Fill(Ex_S);
 	if (fabs(decay->cos_thetaH) < 0.5) output.hist_Ex_trans_narrow->Fill(Ex_S);
 
-	output.hist_Ex_DE->Fill(Ex_S, frag[2]->FrontEnergy);
+	output.hist_Ex_DE->Fill(Ex_S, frag[2]->DeltaEnergy);
 	output.SetReconValues(decay->plfRecon->GetKinematicValues());
 
 	// Calculate cos(theta_N) using neutron CM values from either getErelReal or getErelRecon

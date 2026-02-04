@@ -81,7 +81,7 @@ float CLoss::getDedx(float energy){
 */
 float CLoss::getEout(float energy, float thick)
 {
-  float dthick = 0.001;
+  float dthick = 0.005;
   float de;
   float Eout= energy;
   
@@ -115,7 +115,7 @@ float CLoss::getEout(float energy, float thick)
   */
 float CLoss::getEin(float energy, float thick)
 {
-  float dthick = 0.001;
+  float dthick = 0.005;
   float de;
   float Ein= energy;
 
