@@ -139,8 +139,8 @@ class RootOutput {
 		double targFragEloss {NAN}; // real total fragment energy loss in the target
 		double targFragEgain {NAN}; // total fragment energy gain in the target + resolution effects
 		double inthick {NAN};       // reaction position in target from upstream side, in mg/cm^2
-		double inthickrec {NAN};    // reconstructed reaction position in target from upstream side, in mg/cm^2
-		double inthickrecimp {NAN}; // reconstructed reaction position in target from upstream side using improved procedure, in mg/cm^2
+		double inthickrecavg {NAN}; // reconstructed reaction position in target from upstream side using average method, in mg/cm^2
+		double inthickrec {NAN};    // reconstructed reaction position in target from upstream side using per event method, in mg/cm^2
 
 		// Conditional neutron values
 		bool isNeutHit {false}; // flag for valid neutron hit in TexNeut

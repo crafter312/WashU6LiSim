@@ -31,8 +31,8 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("targFragEloss", &targFragEloss);
 	t->Branch("targFragEgain", &targFragEgain);
 	t->Branch("inthick", &inthick);
+	t->Branch("inthickrecavg", &inthickrecavg);
 	t->Branch("inthickrec", &inthickrec);
-	t->Branch("inthickrecimp", &inthickrecimp);
 	t->Branch("dETests", &dETests);
 	t->Branch("ErelPSampled", &ErelP);
 	t->Branch("ErelPReal", &ErelPRecon);
@@ -131,8 +131,8 @@ void RootOutput::Clear() {
 	targFragEloss = NAN;
 	targFragEgain = NAN;
 	inthick = NAN;
+	inthickrecavg = NAN;
 	inthickrec = NAN;
-	inthickrecimp = NAN;
 
 	sampler.Clear();
 	recon.Clear();
@@ -247,12 +247,12 @@ void RootOutput::SetIsNeutDet(bool h) {
 }
 
 // Set total energy loss of beam and fragments in target
-void RootOutput::SetTargetEloss(double dE, double dErec, double ithk, double ithkrec, double ithkrecimp) {
+void RootOutput::SetTargetEloss(double dE, double dErec, double ithk, double ithkrecavg, double ithkrec) {
 	targEloss = dE;
 	targElossRec = dErec;
 	inthick = ithk;
+	inthickrecavg = ithkrecavg;
 	inthickrec = ithkrec;
-	inthickrecimp = ithkrecimp;
 }
 
 // Set total fragment energy loss and gain in target

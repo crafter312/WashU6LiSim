@@ -227,7 +227,7 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
-	double inthickrecon = min(max((dETargRecon - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
+	double inthickreconavg = min(max((dETargRecon - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
 
 	// check for and skip protons that punch through back Si layer
 	// 15.5 value is from Lise++ with proton and 1.5 mm of Si
@@ -306,20 +306,20 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	double b = elossFit.GetParameter(1);
 	double c = elossFit.GetParameter(2) - dETargRecon;
 	double disc = (b*b) - (4. * a * c);
-	double inthickreconimproved = -1;
+	double inthickrecon = -1;
 	if (disc >= 0) {
-		inthickreconimproved = 0.5 * (-b + sqrt(disc)) / a;
-		inthickreconimproved = min(max(inthickreconimproved, 0.), (double)thickness); // clamp value to within target dimensions
+		inthickrecon = 0.5 * (-b + sqrt(disc)) / a;
+		inthickrecon = min(max(inthickrecon, 0.), (double)thickness); // clamp value to within target dimensions
 	}
 	else cout << "Discriminant < 0, something went very wrong!" << endl;
-	//inthickreconimproved = inthick; // uncomment this if you want a perfect reaction position reconstruction
-	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickrecon, inthickreconimproved);
+	//inthickrecon = inthick; // uncomment this if you want a perfect reaction position reconstruction
+	output.SetTargetEloss(dETarg, dETargRecon, inthick, inthickreconavg, inthickrecon);
 
 	// Energy addback for target
 	double fragEgain = 0.;
 	for (int i = 1; i < Nfrag; i++) {
 		fragEgain -= (useRealP ? frag[i]->real : frag[i]->recon)->GetEnergy();
-		fragEgain += frag[i]->Egain((thickness - ((disc >= 0) ? inthickreconimproved : inthickrecon)) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
+		fragEgain += frag[i]->Egain((thickness - ((disc >= 0) ? inthickrecon : inthickreconavg)) / cos((useRealP ? frag[i]->real : frag[i]->recon)->GetTheta()));
 	}
 
 	// Calculate Eloss-Egain for the fragments in the target, for debugging purposes
