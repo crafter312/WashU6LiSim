@@ -22,24 +22,34 @@ class SampledValues {
 
 		void Clear();
 
-		void CalculateCartesian();
+		void CalculateCartesianFragment();
+		void CalculateCartesianTarget();
 		
 		double GetPhiRad();
 		double GetThetaElasticRad();
 		double GetThetaLabRad();
 
-		double phi {NAN};          // azimuthal angle sampled from uniform distribution in degrees
+		double phi {NAN};            // azimuthal angle sampled from uniform distribution in degrees
+		double phiRecoil {NAN};      // azimuthal angle of recoil target nuclei
 
 		// Elastic values
-		double thetaElastic {NAN}; // sampled elastic polar angle in lab frame in degrees
+		double thetaElastic {NAN};   // sampled elastic polar angle in lab frame in degrees
 
-		// Inelastic values
-		double Ext {NAN};          // target excitation energy
-		double thetaLab {NAN};     // lab angle of outgoing projectile in degrees
-		double Vpplab {NAN};       // total lab velocity of outgoing projectile
-		double VppX {NAN};         // lab velocity x component
-		double VppY {NAN};         // lab velocity y component
-		double VppZ {NAN};         // lab velocity z component
+		// Inelastic outgoing parent fragment values
+		double thetaLab {NAN};       // lab angle of outgoing projectile in degrees
+		double Vpplab {NAN};         // total lab velocity of outgoing projectile
+		double VppX {NAN};           // lab velocity x component
+		double VppY {NAN};           // lab velocity y component
+		double VppZ {NAN};           // lab velocity z component
+
+		// Inelastic outgoing target recoil values
+		double Ext {NAN};            // target excitation energy
+		double recoilEnergy {NAN};   // total lab energy of recoil target nuclei
+		double recoilThetaLab {NAN}; // lab angle of recoil target nuclei
+		double Vttlab {NAN};         // total lab velocity of recoil target nuclei
+		double VttX {NAN};           // lab velocity x component
+		double VttY {NAN};           // lab velocity y component
+		double VttZ {NAN};           // lab velocity z component
 };
 
 class Correlations {
@@ -53,8 +63,6 @@ class Correlations {
 		double E;            // incoming beam energy
     double Exp;          // projectile excitation energy
     double thetaCM;      // sampled inelastic polar angle in CM frame
-    double thetaTarg;    // lab angle of outgoing target
-    double Vttlab;       // lab velocity of outgoing target
 
 		// Kinematic values to be saved
 		SampledValues sampledValues;
