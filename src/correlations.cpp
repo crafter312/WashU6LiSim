@@ -18,18 +18,32 @@ SampledValues::~SampledValues() {}
 
 void SampledValues::Clear() {
 	phi = NAN;
+	phiRecoil = NAN;
 	thetaElastic = NAN;
 	thetaLab = NAN;
 	Vpplab = NAN;
 	VppX = NAN;
 	VppY = NAN;
 	VppZ = NAN;
+	Ext = NAN;
+	recoilEnergy = NAN;
+	recoilThetaLab = NAN;
+	Vttlab = NAN;
+	VttX = NAN;
+	VttY = NAN;
+	VttZ = NAN;
 }
 
-void SampledValues::CalculateCartesian() {
+void SampledValues::CalculateCartesianFragment() {
 	VppX = Vpplab * sin(thetaLab) * cos(phi); // x
 	VppY = Vpplab * sin(thetaLab) * sin(phi); // y
 	VppZ = Vpplab * cos(thetaLab);            // z
+}
+
+void SampledValues::CalculateCartesianTarget() {
+	VttX = Vttlab * sin(recoilThetaLab) * cos(phiRecoil); // x
+	VttY = Vttlab * sin(recoilThetaLab) * sin(phiRecoil); // y
+	VttZ = Vttlab * cos(recoilThetaLab);                  // z
 }
 
 double SampledValues::GetPhiRad() {
@@ -221,26 +235,32 @@ void Correlations::calculateLabAngles(double thick) {
 	/**** lab velocity and angle of the projectile ****/
 	sampledValues.Vpplab = framepp->GetVelocity();
 	sampledValues.thetaLab = framepp->GetTheta();
-	sampledValues.CalculateCartesian();
+	sampledValues.CalculateCartesianFragment();
 
 	// Set values of outgoing target in CM frame (180 deg from frag)
 	framett->SetTheta(pi - thetaCM);
-	framett->SetPhi(sampledValues.phi - (pi * (1 - (2 * (sampledValues.phi < pi))))); // -pi for phi>=pi, +pi for phi<pi
+
+	sampledValues.phiRecoil = sampledValues.phi - (pi * (1 - (2 * (sampledValues.phi < pi)))); // -pi for phi>=pi, +pi for phi<pi
+	framett->SetPhi(sampledValues.phiRecoil);
 	framett->totEnergy = sqrt((mtt*mtt) + (PCCMout*PCCMout));
 	framett->SetVelocity(PCCMout * c / framett->totEnergy);
 	framett->Sph2CartV();
 
-	// Transform outgoing parent fragment to lab frame
-	framepp->transformVelocityRel(VCMvec);
+	// Transform outgoing recoiled target to lab frame
+	framett->transformVelocityRel(VCMvec);
+	sampledValues.recoilEnergy = framett->GetEnergy();
 
 	/**** lab velocity and angle of the target ****/
-	Vttlab = framett->GetVelocity();
-	thetaTarg = framett->GetTheta();
+	sampledValues.Vttlab = framett->GetVelocity();
+	sampledValues.recoilThetaLab = framett->GetTheta();
+	sampledValues.CalculateCartesianTarget();
 
 	// Convert angles to degrees
 	sampledValues.phi *= rad_to_deg;
+	sampledValues.phiRecoil *= rad_to_deg;
 	sampledValues.thetaElastic *= rad_to_deg;
 	sampledValues.thetaLab *= rad_to_deg;
+	sampledValues.recoilThetaLab *= rad_to_deg;
 }
 
 // Elastic scattering angles are converted to the lab frame when reading the file

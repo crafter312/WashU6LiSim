@@ -225,6 +225,9 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 		frag[i]->SiliconInteraction();
 	}
 
+	// Add recoil energy loss to total energy loss in target, assuming zero quenching and all energy is deposited
+	dETarg += sampler->sampledValues.recoilEnergy;
+
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
 	double inthickreconavg = min(max((dETargRecon - 5.10193) / 0.184146, 0.), (double)thickness); // linear function from fitting dETarg vs. inthick
