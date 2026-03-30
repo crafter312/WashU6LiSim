@@ -8,6 +8,7 @@
 #include "rootoutput.h"
 
 #include <cmath>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,10 +23,17 @@ public:
 	void SetTargetThickness(float th, float dens) { thickness = th; density = dens; }
 	void SetNeutTRes(float res) { neutTRes = res; }
 	void SetGobbiRes(float res) { GobbiRes = res; }
-	void SetDiamondResFWHM(float res) { diamondRes = res * 0.5 / sqrt(2. * log(2.)); }
+	void SetDiamondResFWHM(float res) { diamondResFWHM = res; diamondRes = res * 0.5 / sqrt(2. * log(2.)); }
 	void SetNTestPoints(size_t n) { nTestPoints = n; }
 	void SetBeamSpotRadius(float r) { targetSize = r; }
 	void SetSmallAngleScatteringScale(float s) { scale = s; }
+	void SetRecoilQuenchingFactor(float q) {
+		if ((q < 0.) || (q > 1.)) {
+			std::cerr << "WARNING: " << q << " is not a valid quenching factor, ignoring" << std::endl;
+			return;
+		}
+		quenchRecoil = q;
+	}
 	void SetRelativistic(bool b) { einstein = b; }
 	void SetUseRealP(bool b) { useRealP = b; }
 	void SetUseRealNeut(bool b) { useRealNeut = b; }
@@ -87,15 +95,17 @@ private:
 	double Q{NAN};
 
 	// Simulation-specific variables with default values
-	float thickness{3.026};     // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
-	float density{2260.};       // target density in mg/cm^3 (2260 for graphite)
-	float neutTRes{0.5};        // neutron timing resolution (sigma) in ns
-	float GobbiRes{0.02};       // Si-Si resolution;
-	float diamondRes{0.1};      // diamond detector energy resolution (FWHM) (MeV)
-	float targetSize{1.};       // diameter of beam spot size in mm
-	float scale{1.38};          // scales the magnitude of small angle scattering
-	bool einstein{true};        // switch for newtonian(false) or relativistic(true) kinematics
-	bool mars{false};           // switch to enable MARS momentum acceptance
+	float thickness{3.026};                                  // target thickness in mg/cm^2 (3.026 copied from Nic's experiment)
+	float density{2260.};                                    // target density in mg/cm^3 (2260 for graphite)
+	float neutTRes{0.5};                                     // neutron timing resolution (sigma) in ns
+	float GobbiRes{0.02};                                    // Si-Si resolution;
+	float diamondResFWHM{0.1};                               // diamond detector energy resolution (FWHM) (MeV)
+	float diamondRes{diamondResFWHM*.5f/sqrt(2.f*log(2.f))}; // diamond detector energy resolution (sigma) (MeV)
+	float targetSize{1.};                                    // diameter of beam spot size in mm
+	float scale{1.38};                                       // scales the magnitude of small angle scattering
+	float quenchRecoil{0.};                                  // quenching factor of recoil in target (min 0 = full energy deposition, max 1 = no energy deposition)
+	bool einstein{true};                                     // switch for newtonian(false) or relativistic(true) kinematics
+	bool mars{false};                                        // switch to enable MARS momentum acceptance
 
 	bool useRealP{false}; // true means use real angle and energies of all
 	                      // fragments for event reconstruction, to check

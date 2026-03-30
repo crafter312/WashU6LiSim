@@ -5,7 +5,8 @@
 #include <TF1.h>
 #include <TGraph.h>
 
-#include <iostream>
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -78,12 +79,47 @@ Li6sim_alphapn::~Li6sim_alphapn() {}
 
 string Li6sim_alphapn::Init() {
 
-	// First, double check the exit channel vector lengths
+	/******** FILE SUFFIX CREATION ********/
+
+	ostringstream oss;
+
+	// Source - https://stackoverflow.com/a/46424921
+	// Posted by Ivan Folgueira Bande, modified by community. See post 'Timeline' for change history
+	// Retrieved 2026-03-30, License - CC BY-SA 4.0
+	oss << noshowpoint << neutTRes;
+
+	AddExtraSuffix("neutsigma" + oss.str() + "ns");
+	
+	// Source - https://stackoverflow.com/a/7623670
+	// Posted by Darcy Rayner
+	// Retrieved 2026-03-30, License - CC BY-SA 3.0
+	oss.str("");
+	oss.clear(); // Clear state flags.
+
+	oss << noshowpoint << (diamondResFWHM * 1000.);
+	AddExtraSuffix("diamond" + oss.str() + "keV");
+
+	AddExtraSuffix("loss0-005step");
+
+	oss.str("");
+	oss.clear();
+
+	oss << noshowpoint << quenchRecoil;
+	AddExtraSuffix(oss.str() + "recoilquench");
+
+	if(useRealP) AddExtraSuffix("real");
+	if(useRealNeut) AddExtraSuffix("realNeut");
+
+	// Source - https://stackoverflow.com/a/2896627
+	// Posted by Kirill V. Lyadvinsky, modified by community. See post 'Timeline' for change history
+	// Retrieved 2026-03-30, License - CC BY-SA 3.0
+	replace(suffix.begin(), suffix.end(), '.', '-');
+
+	/******** FRAGMENT SETUP ********/
+
+	// Double check the exit channel vector lengths
 	if((Exts.size() != nexits) || (Xsecfiles.size() != nexits))
 		return "Exit channel vector lengths don't match that expected of nexits = " + to_string(nexits);
-
-	if(useRealP) suffix += "_real";
-	if(useRealNeut) suffix += "_realNeut";
 
 	// It's important here that the heavy fragment (alpha) is the last fragment, and
 	// also that the neutron is the first fragment so that I can skip it.
@@ -95,6 +131,8 @@ string Li6sim_alphapn::Init() {
 
 	// Initialize beam fragment
 	fragBeam = make_unique<CFrag>(3., Mass_7Li/m0, Loss_Li_in_C, Loss_Li_in_Si, GobbiRes, thickness, gobbi, scale, einstein, useRealP);
+
+	/******** OTHER SETUP ********/
 
 	// Initialize decay class
 	decay = make_unique<CDecay>(Nfrag, frag, einstein);
@@ -226,7 +264,11 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	}
 
 	// Add recoil energy loss to total energy loss in target, assuming zero quenching and all energy is deposited
-	dETarg += sampler->sampledValues.recoilEnergy;
+	// Here, the recoil quenching factor is how much quenching there is. In other words, a factor of 0 means
+	// that there is no quenching, so the full recoil energy is depositied as measurable light. A factor of 1
+	// means that there is 100% quenching, so the recoil deposits no measurable light. Hence, why the recoil
+	// factor is subtracted from 1 here.
+	dETarg += (1. - quenchRecoil) * sampler->sampledValues.recoilEnergy;
 
 	// Reconstruct reaction position in target from total target energy loss
 	double dETargRecon = dETarg + decay->ran.Gaus(0., diamondRes);
