@@ -11,7 +11,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_INSTALL_LIBDIR ${PROJECT_BINARY_DIR}/lib)
-set(SIMLIB /home/Li6Webb/simlib)
+
+set(USER_HOME_DIRECTORY $ENV{HOME})
+message(STATUS "User Home Directory: ${USER_HOME_DIRECTORY}")
+set(SIMLIB ${USER_HOME_DIRECTORY}/simlib)
 
 # Set project sources
 set(SOURCES decay.cpp frag.cpp Gobbiarray.cpp loss.cpp polyScat.cpp mScat.cpp random.cpp frame.cpp tele.cpp correlations.cpp rootoutput.cpp)
