@@ -60,7 +60,7 @@ double SampledValues::GetThetaLabRad() {
 
 /**********************************************************************************************/
 
-Correlations::Correlations(vector<string> filenamein, string fileelasticin, double E0, double Ex0, vector<double> Ext0s, size_t n, string lossfile_C, float thickness) {
+Correlations::Correlations(vector<string> filenamein, string fileelasticin, double& E0, double Ex0, vector<double> Ext0s, size_t n, string lossfile_C, float thickness) : E(E0) /* MeV */ {
 	if((filenamein.size() != n) || (Ext0s.size() != n))
 		throw invalid_argument("vector filenamein and Ext0s lengns ");
 
@@ -70,7 +70,6 @@ Correlations::Correlations(vector<string> filenamein, string fileelasticin, doub
 
 	nexits = n;
 
-	E    = E0;	  // MeV
 	Exp  = Ex0;   // MeV
 	Exts = Ext0s; // MeV
 
@@ -114,7 +113,7 @@ Correlations::~Correlations() {
 	delete []th_file;
 	delete []Xsec_file;
 	delete []th_elastic;
-  delete []Xsec_elastic;
+	delete []Xsec_elastic;
 
 	delete framep;
 	delete framet;

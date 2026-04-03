@@ -54,13 +54,13 @@ class SampledValues {
 
 class Correlations {
   public:
-    Correlations(vector<string>, string, double, double, vector<double>, size_t, string, float);
+    Correlations(vector<string>, string, double&, double, vector<double>, size_t, string, float);
     ~Correlations();
 
     CRandom ran;
     
     // Kinematic values
-		double E;            // incoming beam energy
+	double& E;            // incoming beam energy
     double Exp;          // projectile excitation energy
     double thetaCM;      // sampled inelastic polar angle in CM frame
 
