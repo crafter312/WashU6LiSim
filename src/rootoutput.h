@@ -79,7 +79,7 @@ class RootOutput {
 		TH2S* protonXY_S;
   	TH2S* coreXY_S;
 
-		RootOutput(string, int, bool = true);
+		RootOutput(string, int, bool = false);
 		~RootOutput();
 
 		void Fill();

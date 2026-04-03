@@ -58,9 +58,6 @@ Li6sim_alphapn::Li6sim_alphapn(double Eb, double GobbiDist, double _ex, double w
 	// Beam momentum
 	double massE = Ebeam + Mass_7Li;
 	pc0 = sqrt((massE*massE) - (Mass_7Li*Mass_7Li));
-
-	// Convert diamond resolution from FWHM to sigma
-	diamondRes *= 0.5 / sqrt(2. * log(2.));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -188,6 +185,12 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	double rand = decay->ran.Rndm();
 	inthick	= thickness * rand;
 	double outthick = thickness * (1. - rand);
+	
+	// Simulate MARS having +-1.2% acceptance range, if enabled
+	if (P_acceptance != 0.) {
+		double pc = pc0*(1.-P_acceptance/2.) + decay->ran.Rndm()*P_acceptance*pc0;
+		Ebeam = sqrt(pow(pc,2) + pow(Mass_7Li,2)) - Mass_7Li;
+	}
 
 	// Calculate energy dropped by beam in target, save for later
 	double beamEloss = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
@@ -202,10 +205,6 @@ string Li6sim_alphapn::DoSingleEventPreNeutron(RootOutput& output) {
 	// Need to re-randomize the angles for each passthrough
 	sampler->randomAngles(inthick);
 	output.SetSampledValues(&sampler->sampledValues); // save info on beam primary distributions
-
-	// Simulate MARS having +-1.2% acceptance range, if enabled
-	double pc = pc0*(1.-P_acceptance/2.) + decay->ran.Rndm()*P_acceptance*pc0;
-	double Ebeam = sqrt(pow(pc,2) + pow(Mass_7Li,2)) - Mass_7Li;
 
 	/**** BEAM FRAGMENT PHYSICS ****/
 
