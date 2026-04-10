@@ -3,9 +3,22 @@
 #include "rootoutput.h"
 #include "Li6sim_alphapn.h"
 
+#include <Math/MinimizerOptions.h>
+#include <TSystem.h>
+#include <TInterpreter.h>
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
+
+	// Make sure dictionary is properly linked and stuff
+	cout << "Loading simlib shared library from: " << string(SOFILE) << endl;
+	cout << "Loading simlib ROOT dictionary from: " << string(PCMFILE) << endl;
+	gSystem->Load(SOFILE);
+	TInterpreter::Instance()->AddIncludePath(PCMFILE);
+
+	// Default minimizer
+	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit", "Migrad");
 	
 	/**** INPUT ARGUMENTS ****/
 

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include "cuts.h"
 #include "Gobbiarray.h"
 #include "frag.h"
 #include "decay.h"
@@ -12,15 +13,27 @@
 #include "correlations.h"
 #include "rootoutput.h"
 
+#include <Math/MinimizerOptions.h>
 #include <TH1F.h>
 #include <TH2S.h>
 #include <TFile.h>
 #include <TF1.h>
 #include <TGraph.h>
+#include <TSystem.h>
+#include <TInterpreter.h>
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+
+	// Make sure dictionary is properly linked and stuff
+	cout << "Loading simlib shared library from: " << string(SOFILE) << endl;
+	cout << "Loading simlib ROOT dictionary from: " << string(PCMFILE) << endl;
+	gSystem->Load(SOFILE);
+	TInterpreter::Instance()->AddIncludePath(PCMFILE);
+
+	// Default minimizer
+	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit", "Migrad");
 	
 	/**** INPUT ARGUMENTS ****/
 
@@ -29,8 +42,8 @@ int main(int argc, char *argv[]) {
 	//double Ebeam = 42.82126; // Brho=0.8331 TM (was 42.7 MeV before I revisited Nic's experiment notebooks)
 	double Ebeam = 56;
 
-	double Ex     = 2.186; // excitation energy of parent fragment in MeV
-	double gamma  = 0.024; // width of excited state of parent fragment in MeV
+	double Ex    = 2.186; // excitation energy of parent fragment in MeV
+	double gamma = 0.024; // width of excited state of parent fragment in MeV
 
 	// Default physical experiment parameters
 	double distanceFromTarget = 90;           // distance of Gobbi from the target in mm, 235 for Nic's experiment
@@ -85,7 +98,7 @@ int main(int argc, char *argv[]) {
 	float b                   = 8.;      // mm beam axis to Gobbi frame dimension,
 	float RadiusCollimator    = 0.;      // mm Gobbi collimator outer radius (was 38.1/2.)
 	float const targetSize    = 1.0;     // diameter of beam spot size in mm
-	float quenchRecoil = .5;             // quenching factor of recoil in target (min 0 = full energy deposition, max 1 = no energy deposition)
+	float quenchRecoil = .0;             // quenching factor of recoil in target (min 0 = full energy deposition, max 1 = no energy deposition)
 	
 	float diamondResFWHM = 0.1;                                     // diamond detector energy resolution (FWHM) (MeV)
 	float diamondRes = diamondResFWHM * .5f / sqrt(2.f * log(2.f)); // diamond detector energy resolution (sigma) (MeV)
@@ -194,9 +207,10 @@ int main(int argc, char *argv[]) {
 	// Helper function to calculate the total target energy loss using a given target reaction z position, the
 	// reconstructed Gobbi variables, and other known experimental parameters. Here, the only unknown value
 	// is the target reaction z position. The idea is to calculate this for a few different points, fit a
-	// function, and then use this fit function to invert the non-trivial target energy loss function.
-	// inthick - reaction z position in target from upstream side (mg / cm^2)
-	auto CalcTargELoss = [&](double inthick) {
+	// function, and then use this fit function to invert the non-trivial target energy loss function. THIS IS 
+	// THE FULLY QUENCHED VERSION.
+	//     inthick - reaction z position in target from upstream side (mg / cm^2).
+	auto CalcTargELossQuenched = [&](double inthick) {
 		double dETarg   = Ebeam - fragBeam->loss_C->getEout(Ebeam, inthick);
 		double outthick = thickness - inthick;
 		CFrame* alphFrame = frag[1]->recon;
@@ -208,6 +222,29 @@ int main(int argc, char *argv[]) {
 		double dEAlpha  = frag[1]->loss_C->getEin(alphFrame->GetEnergy(), outthick / cos(alphFrame->GetTheta())) - alphFrame->GetEnergy();
 		double dEDeut = frag[0]->loss_C->getEin(deutFrame->GetEnergy(), outthick / cos(deutFrame->GetTheta())) - deutFrame->GetEnergy();
 		return dETarg + dEAlpha + dEDeut;
+	};
+
+	// Helper function to calculate the total target energy loss using a given target reaction z position, the
+	// reconstructed Gobbi variables, and other known experimental parameters. Here, the two unknown values
+	// are the reaction depth and the recoil excitation energy. The latter is determined externally per event
+	// by gating on diamond energy and total Gobbi energy. This function is then applied to a few different 
+	// test reaction depths. The results are fit with a function, which is then inverted to convert a diamond
+	// energy into a reaction depth. THIS VERSION HAS ZERO QUENCHING.
+	//     inthick - reaction z position in target from upstream side (mg / cm^2)
+	//     ext     - excitation energy of target recoil nucleus, determined externally
+	auto CalcTargELoss = [&](double inthick, double ext) {
+		double outthick = thickness - inthick;
+		CFrame* temp_frags[Nfrag];
+		double temp_dEtarg = Ebeam;
+		for (size_t i = 0; i < Nfrag; i++) {
+			temp_frags[i] = new CFrame(*(useRealP ? frag[i]->real : frag[i]->recon));
+			temp_dEtarg -= temp_frags[i]->GetEnergy();
+			temp_dEtarg += frag[i]->EgainHelper(outthick / cos(temp_frags[i]->GetTheta()), temp_frags[i]);
+		}
+
+		temp_dEtarg -= decay.getErel(temp_frags) + sampler->GetQValue() - ext;
+
+		return temp_dEtarg;
 	};
 
 	/**** OUTPUT FILE AND HISTOGRAMS ****/
@@ -370,12 +407,28 @@ int main(int argc, char *argv[]) {
 		output.SetIsFragDet(true);
 		Ndet++;
 
+		/******** REACTION DEPTH RECONSTRUCTION ********/
+
+		// First, identify the target recoil nucleus' excitation energy
+		double sumGobbiE = 0.;
+		for (size_t i = 0; i < Nfrag; i++)
+			sumGobbiE += (useRealP ? frag[i]->real : frag[i]->recon)->GetEnergy();
+		double Ext = -1;
+		if (cut_gs.IsInside(sumGobbiE, dETargRecon)) {
+			Ext = Exts[0];
+			output.SetValidExt(true);
+		}
+		else if (cut_52p.IsInside(sumGobbiE, dETargRecon)) {
+			Ext = Exts[3];
+			output.SetValidExt(true);
+		}
+
 		// Calculate target total energy loss test points before addback
 		dETests.clear();
 		dETests.resize(thickTests.size());
 
 		for (int i = 0; i < thickTests.size(); i++)
-			dETests[i] = CalcTargELoss(thickTests[i]);
+			dETests[i] = CalcTargELoss(thickTests[i], Ext);
 		output.SetDETests(dETests);
 
 		// Quadratic fit to target total energy loss function

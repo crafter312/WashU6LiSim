@@ -4,8 +4,11 @@
 rootfiles/*
 *.zip
 /bin/*.o
+*.so
 sim
 sim_3+
+cut_13C_52p.C
+cut_13C_gs.C
 
 # Remove cmake generated files
 CMakeCache.txt

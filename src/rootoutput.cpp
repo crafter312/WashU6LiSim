@@ -40,6 +40,7 @@ RootOutput::RootOutput(string suffix, int n, bool hasNeutron) : nFrags(n - hasNe
 	t->Branch("cosThetaH", &cosThetaH);
 	t->Branch("isElasticHit", &isElasticHit);
 	t->Branch("isFragDet", &isFragDet);
+	t->Branch("validExt", &validExt);
 
 	// Conditional neutron branches
 	if (hasNeutron) {
@@ -126,6 +127,7 @@ void RootOutput::Clear() {
 	cosThetaH = NAN;
 	isElasticHit = 0;
 	isFragDet = false;
+	validExt = false;
 	targEloss = NAN;
 	targElossRec = NAN;
 	targFragEloss = NAN;
@@ -238,6 +240,12 @@ void RootOutput::SetIsElasticHit(bool h) {
 // fragments in the Si detectors
 void RootOutput::SetIsFragDet(bool h) {
 	isFragDet = h;
+}
+
+// Denotes a successful identification of the target
+// recoil nucleus' excitation energy
+void RootOutput::SetValidExt(bool b) {
+	validExt = b;
 }
 
 // Denotes a successful detection of the neutron decay

@@ -87,6 +87,8 @@ class Correlations {
 		void readelastic(float);           // reads elastic differential cross section Fresco file
     double readinelastic(string, int); // reads inelastic differential cross section Fresco file for given exit channel, returns integrated cross section
 
+		double GetQValue() const { return Qrxn; }
+
 	// Define constants used for calculations here
 	private:
 		double Mp;             // mass of projectile (amu)
