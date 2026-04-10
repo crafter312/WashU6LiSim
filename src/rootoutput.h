@@ -95,6 +95,7 @@ class RootOutput {
 		void SetCosThetaH(double);
 		void SetIsElasticHit(bool);
 		void SetIsFragDet(bool);
+		void SetValidExt(bool);
 		void SetIsNeutDet(bool);
 		void SetTargetEloss(double, double, double, double, double);
 		void SetFragElossEgain(double, double);
@@ -134,6 +135,7 @@ class RootOutput {
 		double cosThetaH {NAN};
 		bool isElasticHit {false};  // flag for valid elastic scattering hit in Gobbi
 		bool isFragDet {false};     // flag for valid alpha + p coincidence in Gobbi
+		bool validExt {false};      // flag for valid identification of target recoil nucleus' excitation energy
 		double targEloss {NAN};     // real total energy loss of beam and fragments in the target
 		double targElossRec {NAN};  // total energy loss of beam and fragments in the target + resolution effects
 		double targFragEloss {NAN}; // real total fragment energy loss in the target

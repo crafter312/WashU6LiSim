@@ -1,0 +1,71 @@
+# Installation instructions:
+
+1. In the desired location on your computer, run `git clone git@github.com:crafter312/WashU6LiSim.git`. Make sure to replace the URL `git@github.com:crafter312/WashU6LiSim.git` with the desired format, if different.
+2. Next, run `cd WashU6LiSim`, and then follow the below instructions to build the code.
+
+# Build instructions:
+
+1. In the main project directory, run `cmake -DROOT_DIR=/opt/root/cmake .`, where `/opt/root/cmake` should be replaced with the corresponding file path for your ROOT installation. If you only have one ROOT version installed, you can ignore the `-DROOT_DIR=/opt/root/cmake` flag entirely.
+2. In the main project directory, run `make clean` and then `make -j`
+3. When working on your code normally, most of the time you can skip the `cmake` step and just follow step 2.
+
+# To use as library only in parent project:
+
+1. First, if you haven't already, make a spot to hold your submodules with `mkdir lib` and `cd lib` in your main project directory
+2. In your parent project's main directory, run `git submodule add git@github.com:crafter312/WashU6LiSim.git`, again adjusting the URL as needed.
+3. Then, in your `CMakeLists.txt` or other relevant file, include at the top `include(ExternalProject)`
+4. With this project now set up as a submodule, you can now add it as an external project to your CMake file:
+
+	# Include the charged particle simulation library
+	ExternalProject_Add(li6sim
+		SOURCE_DIR ${CMAKE_SOURCE_DIR}/lib/Li6sim                          # Path to the source directory of the external project
+		BINARY_DIR ${CMAKE_BINARY_DIR}/lib/Li6sim-build                    # Path to build directory
+		CMAKE_ARGS
+			-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib/Li6sim-install    # Installation path
+			-DLI6SIM_LIBRARY_ONLY=ON                                         # Build the library instead of the executables
+		BUILD_COMMAND ${CMAKE_COMMAND} --build . --target LI6SIM           # Custom build target
+		INSTALL_COMMAND ""                                                 # Skip the installation step
+		BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/lib/Li6sim-build/libLI6SIM.so # Path to built library
+	)
+
+	add_library(LI6SIM_IMPORTED STATIC IMPORTED GLOBAL)
+	set_target_properties(LI6SIM_IMPORTED PROPERTIES
+		IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/lib/Li6sim-build/libLI6SIM.so
+		INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/lib/Li6sim/src;${SIMLIB}"
+	)
+
+	# Ensure the external project is built before this target is used
+	add_dependencies(LI6SIM_IMPORTED li6sim)
+
+   Make sure that `SOURCE_DIR` matches the location of this project as a submodule in your parent project (i.e. lib/WashU6LiSim/ or similar).
+5. Additionally, before running your parent project, it is very important to make sure that the shared library for this project is located next to your executable and can be seen at runtime. For this to happen, first add the following to the end of your CMakeLists.txt file:
+
+	# Define dictionary file path
+	set(PCMFILE ${CMAKE_BINARY_DIR}/libLI6SIM_rdict.pcm)
+	add_definitions(-DPCMFILE=\"${PCMFILE}\")
+
+	# Define shared library file path (this also forces the correct file name)
+	set(SOFILE ${CMAKE_BINARY_DIR}/libLI6SIM.so)
+	add_definitions(-DSOFILE=\"${SOFILE}\")
+
+	# Set up copying of ROOT dictionary files and library after project is built
+	ExternalProject_Get_Property(li6sim BINARY_DIR)
+
+	add_custom_command(
+		OUTPUT ${PCMFILE} ${CMAKE_BINARY_DIR}/libLI6SIM.rootmap ${SOFILE}
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${BINARY_DIR}/libLI6SIM_rdict.pcm
+			${PCMFILE}
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${BINARY_DIR}/libLI6SIM.rootmap
+			${CMAKE_BINARY_DIR}/libLI6SIM.rootmap
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${BINARY_DIR}/libLI6SIM.so
+			${SOFILE}
+		DEPENDS li6sim
+		COMMENT "Copying ROOT dictionary files and library from li6sim build directory"
+	)
+
+	add_custom_target(copy_li6sim_dict_files ALL
+		DEPENDS ${PCMFILE} ${CMAKE_BINARY_DIR}/libLI6SIM.rootmap ${SOFILE}
+	)

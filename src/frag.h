@@ -37,6 +37,7 @@ class CFrag
 
   void AddVelocity(double*);
   float Eloss(float); // energy loss in target
+	float EgainHelper(float, CFrame*);
   float Egain(float); // corrects for energy loss in target
   void MultiScat(float);
   //void findVectors(float*,float*,float*,float*,float*,float,float,float,float,float,float,float,float,float);
@@ -61,9 +62,6 @@ class CFrag
 	bool einstein;
   bool useRealP;   //<! use the real momentum, instead of detected value
   bool extra;
-
- private:
-  float EgainHelper(float, CFrame*);
   
 };
 
